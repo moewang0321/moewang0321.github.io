@@ -1,67 +1,45 @@
-# Site settings
+# Site Info
+title:              "The Plain"
+description:        "A minimalist Jekyll theme"
+author_name:        "Heiswayi Nrird" # change this to your name
+logo_url:           https://avatars0.githubusercontent.com/u/13794983?v=4 # Get it from GitHub API: https://api.github.com/users/<username>
 
-author: Yourname
-email: example@email.com
-twitter_username: twitter
-github_username:  github
-googleplus_username: google
+# Site Settings
+url:                https://heiswayi.github.io # main url
+baseurl:            /the-plain
+permalink:          /:title # Post permalink
+timezone:           Asia/Kuala_Lumpur # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+mathjax:            true  # enables support for mathjax - set to 'false' to disable
 
-head-title: Your blog
-title: Your blog
-
-baseurl: "/materialize-jekyll"    # the subpath of your site, "/blog"
-url: ""
-
-# footer 
-description: "I know that what I'm doing looks stupid, but I'm a big boy and really want to do this."
-
-favo: "春梦随云散，飞花逐水流"
-descrpt: "“巧者劳而智者忧，无能者无所求，饱食而遨游，泛若不系之舟”  ——《南华经》"
-
-
-#
-# Build settings
-#
-
-#exclude: [vendor]
-
-markdown: kramdown
-highlighter: rouge
-
+# Site Build
+highlighter:        rouge
+markdown:           kramdown
 kramdown:
-  input: GFM
-  hard_wrap: false
-  highlight: true
-  auto_ids:  true
-
+    input:          GFM
 sass:
-  style: compressed
+    style:          :compressed
 
-permalink: /posts/:categories/:title.html
-
-paginate: 7
-#paginate_path: 'page/:num'
-
-gems: [jekyll-paginate, jekyll-last-modified-at, jemoji]
-
-
-#
-# Custom
-#
-
-# Color
-# All css class, see: http://materializecss.com/color.html
-header-color: "indigo lighten-1"
-head-theme-color: "#5c6bc0"     # MUST in hex format, may the same as header-color. This color is for android chrome browser.
-
-footer-color: "indigo lighten-1"
-footer-button-color: "indigo lighten-2"
-footer-link-color: "red-text text-accent-1"
-
-share-button-color: "pink"
-share-button-small-color: ""
+# Other Params
+include:            [ "robots.txt" ]
+exclude:            [ "LICENSE", "README.md", "CNAME", "vendor", "Gemfile", "script" ]
+plugins:
+  - jekyll-sitemap
 
 
-##
-#excerpt_separator: <!-- excerpt_end -->       # for post.excerpt
 
+defaults:
+  -
+    scope:
+      path:         ""
+    values:
+      layout:       "null"
+  -
+    scope:
+      type:         "pages"
+    values:
+      layout:       "page"
+  -
+    scope:
+      type:         "posts"
+    values:
+      layout:       "post"

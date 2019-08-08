@@ -1,6 +1,8 @@
-source 'https://rubygems.org'
-gem 'jekyll'
-gem 'nokogiri'
-gem 'jekyll-paginate'
-gem 'jekyll-last-modified-at'
-gem 'jemoji'
+source "https://rubygems.org"
+gemspec
+group :jekyll_plugins do
+    gem "jekyll-sitemap"
+end
+gem 'html-proofer'
+gem 'tzinfo'
+gem 'tzinfo-data'

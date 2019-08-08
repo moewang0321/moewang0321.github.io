@@ -1,81 +1,60 @@
-Materialize - jekyll
-==============
+# The Plain
 
+> The Plain is a minimalist Jekyll theme, ideally designed for your personal blog use. This Jekyll theme provides a minimum distraction so you can focus on writing that matters to you and your readers. This theme is originally inspired from [Leonard Lamprecht's _leo_ theme](https://github.com/leo/leo.github.io).
 
-## Introducton
+[![LICENSE](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![GENERATOR](https://img.shields.io/badge/made_with-jekyll-blue.svg) ![VERSION](https://img.shields.io/badge/current_version-4.0-green.svg) ![TRAVIS-CI](https://travis-ci.org/heiswayi/the-plain.svg?branch=master)
 
-This jekyll theme is based on [materialize](http://materializecss.com).
-(NOTE: this theme is only made for my own, but you can modify it freely.)
+- **Demo:** https://heiswayi.github.io/the-plain/
 
-[Open demo](https://mumuxme.github.io/materialize-jekyll/)
+![SCREENSHOT](https://i.imgur.com/FITKN1H.png)
 
+## Usage
 
-## Getting start
+### On an unlimited Jekyll host
 
-#### Install
+> **NOTE** This does NOT work on GitHub, see the next section.
 
-You may need some dev headers, for debian/linux, just run:
+Put this in your *Gemfile*:
 
-```
-# apt-get install liblzma-dev zlib1g-dev
-```
+	gem 'the-plain'
 
-(Other dependencies may also needed.)
+and run `bundle install` to install the plugin.
 
-```
-$ git clone https://github.com/mumuxme/materialize-jekyll
-$ cd materialize-jekyll
-$ bundle install
-```
+Add this to your sites *_config.yml* file:
 
-#### Run
+	theme: the-plain
 
-1. Modify `_config.yml`, `about.md` and other(whatever you need).
-2. You can add a `favicon.ico` file in the project root directory.
-3. If you want to use google analytics, add your `google-analytics.js` into `js` directory.
+Then copy some of the settings from this repo's *_config.yml* file to your own, and modify them.
 
-Then:
+### On GitHub
 
-```
-$ bundle exec jekyll s
+GitHub - for your user account pages or repository gh-pages - only supports a limited set of themes.
 
-# or start with draft
-$ bundle exec jekyll s --drafts
-```
+Therefore, you need to use the 'remote\_theme:' setting instead of 'theme:', which is supported by [a 3rd party plugin](https://github.com/benbalter/jekyll-remote-theme).
 
-## Or start with docker
+Put this in your *Gemfile*:
 
-```
-cd materialize-jekyll
+	gem 'jekyll-remote-theme'
 
-# export GEM_MIRROR=mirror.https://rubygems.org
-export GEM_MIRROR='Your-ruby-gem-mirror'
+and run `bundle install` to install the plugin.
 
-make build
-make run
-```
+Add the following to your site's *_config.yml* to activate the plugin and to select this theme:
 
+	plugins:
+	  - jekyll-remote-theme
 
-## Other
+	remote_theme: heiswayi/the-plain
 
-#### Emoji
+This will grab the theme directly from the GitHub repo.
 
-You can use GitHub-flavored emoji. See [emoji cheat sheet](http://www.webpagefx.com/tools/emoji-cheat-sheet/)
+Now copy some of the settings from this repo's *_config.yml* file to your own, and modify them.
 
-#### TODO
+## Authors
 
-- Add comment. (???)
-- Add options to choose self host or cdn.
+- [**Heiswayi Nrird**](https://heiswayi.nrird.com)
 
+See also the list of [contributors](https://github.com/heiswayi/the-plain/graphs/contributors) who participated in this project.
 
 ## License
 
-[GNU GPL v3](http://www.gnu.org/licenses/).
-
-Others:
-
-- jquery: <https://jquery.com>
-- materialize: <http://materializecss.com>
-- material-scrolltop: [bartholomej/material-scrolltop](https://github.com/bartholomej/material-scrolltop)
-- material design icon: [Templarian/MaterialDesign](https://github.com/Templarian/MaterialDesign) or <https://materialdesignicons.com/getting-started>
-- GitHub-flavored emoji plugin: [jemoji](https://github.com/jekyll/jemoji)
+[MIT](LICENSE)
