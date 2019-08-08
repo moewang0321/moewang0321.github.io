@@ -1,16 +1,25 @@
-<aside class="logo">
+<div class="container-fluid v-center">
+  <div class="row-fluid">
+    <div class="col-xs-12 span12">
+      <div class="container-fluid" id="LG">
+        <div class="row-fluid">
+          <div class="col-xs-10 span9">
+            <h3 class="text-right">
+              <strong><a href="{{ site.url }}">{{ site.title }}</a></strong>
+            </h3>
+          </div>
+          <div class="col-xs-2 span3">
+            <img alt="MileWang" height="60" src="/images/milew.ico" class="img-circle miaopasi" /></div>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="col-xs-10 span9">
+          <!-- sub menu -->
+          <ul class="navbar navbar-default" role="navigation">
+            <div class="navbar-header navbar-right">
+              <a class="nav navbar-brand" href="/">主页</a>
+              <a class="nav navbar-brand" href="/about">谢谢模板</a>
 
-	{% if page.url == '/index.html' or page.url == '/' %}
-		{% assign link = '/about' %}
-		{% assign prompt = 'About the Author' %}
-	{% else %}
-		{% assign link = '/' %}
-		{% assign prompt = 'Back to Index' %}
-	{% endif %}
-
-	<a href="{{ link | prepend: site.baseurl | prepend: site.url }}">
-		<img src="{{ site.logo_url }}" alt="" class="logo-avatar">
-	</a>
-	<span class="logo-prompt code">{{ prompt }}</span>
-
-</aside>
+              &nbsp;&nbsp;&nbsp;
+            </div>
+          </ul>

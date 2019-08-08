@@ -2,30 +2,31 @@
 layout: default
 ---
 
-<section>
+{% for post in paginator.posts %}
+<!-- main articles -->
+<h2 class="text-right">
+  <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+</h2>
+<h4 class="text-right"><small>{{ post.date | date: "%b %-d, %Y" }}</small></h4>
+        {% if post.description %}
+            {{ post.description | strip_html | strip_newlines | truncate: 250 }}
+            <p align="right"><a class="btn" href="{{ post.url | prepend: site.baseurl }}">Read more »</a></p>
+            {% include tags.html %}
+        {% else %}
+            {{ post.content | strip_html | strip_newlines | truncate: 250 }}
+            <p align="right"><a class="btn" href="{{ post.url | prepend: site.baseurl }}">Read more »</a></p>
+            {% include tags.html %}
+        {% endif %}
 
-	{% for post in site.posts %}
-		{% unless post.next %}
-			<h3 class="code">{{ post.date | date: '%Y' }}</h3>
-		{% else %}
-			{% capture year %}{{ post.date | date: '%Y' }}{% endcapture %}
-			{% capture nyear %}{{ post.next.date | date: '%Y' }}{% endcapture %}
-			{% if year != nyear %}
-				<h3 class="code">{{ post.date | date: '%Y' }}</h3>
-			{% endif %}
-		{% endunless %}
+<hr>
+<!-- article ends -->
+{% endfor %}
 
-		<ul>
-			<li>
-				<div class="post-date code">
-					<span>{{ post.date | date: "%b %d" }}</span>
-				</div>
-				<div class="title">
-					<a href="{{ post.url | prepend: site.baseurl | prepend: site.url }}">{{ post.title }}</a>
-				</div>
-			</li>
-		</ul>
-
-	{% endfor %}
-
-</section>
+<ul class="pager">
+  {% if paginator.previous_page %}
+      <li class="previous"><a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&larr; Newer</a></li>
+  {% endif %}
+    {% if paginator.next_page %}
+      <li class="next"><a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">Older &rarr;</a></li>
+  {% endif %}
+</ul>
