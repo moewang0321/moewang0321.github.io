@@ -1,0 +1,80 @@
+// Font
+
+@each $google-font in $google-fonts {
+    @import url('https://fonts.googleapis.com/css?family=' + $google-font);
+}
+
+@font-face {
+    font-family: 'Delius';
+    src: url('../lib/font/Delius/Delius-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Delius_Swash_Caps';
+    src: url('../lib/font/Delius_Swash_Caps/DeliusSwashCaps-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+// Material scrolltop
+
+.material-scrolltop {
+    background-color: #ff4081 !important;
+    display: block;
+    position: fixed;
+    width: 0;
+    height: 0;
+    bottom: 42px;
+    right: 30px;
+    padding: 0;
+    overflow: hidden;
+    outline: none;
+    border: none;
+    border-radius: 2px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+    cursor: hand;
+    border-radius: 50%;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-transition: all 0.3s cubic-bezier(0.25, 0.25, 0, 1);
+    -ms-transition: all 0.3s cubic-bezier(0.25, 0.25, 0, 1);
+    -moz-transition: all 0.3s cubic-bezier(0.25, 0.25, 0, 1);
+    -o-transition: all 0.3s cubic-bezier(0.25, 0.25, 0, 1);
+    transition: all 0.3s cubic-bezier(0.25, 0.25, 0, 1);
+}
+
+.material-scrolltop:hover {
+    //background-color: $pink;
+    text-decoration: none;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5), 0 3px 15px rgba(0, 0, 0, 0.5);
+}
+
+.material-scrolltop.reveal {
+    width: 56px;
+    height: 56px;
+}
+
+.material-scrolltop,
+.material-scrolltop::before {
+    background-position: center 50%;
+    background-repeat: no-repeat;
+}
+
+
+// table of content plugin
+
+#toc-container {
+    position: fixed;
+    bottom: 0px;
+    top: auto;
+    right: 0px;
+    left: auto;
+    z-index: 999;
+    border-bottom: 2px solid #ee6e73;
+}
+
+.toctext {
+    font-size: 14px;
+}
