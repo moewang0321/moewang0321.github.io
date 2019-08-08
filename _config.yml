@@ -2,7 +2,7 @@
 title:              "爱摸鱼的Mile"
 description:        "damn Blog"
 author_name:        "MileWang" # change this to your name
-logo_url:           https://github.com/milewang0321/milewang0321.github.io # Get it from GitHub API: https://api.github.com/users/<username>
+logo_url:           https://github.com/milewang0321/milewang0321.github.io/blob/master/assets/milew.ico # Get it from GitHub API: https://api.github.com/users/<username>
 
 # Site Settings
 url:                 # main url
