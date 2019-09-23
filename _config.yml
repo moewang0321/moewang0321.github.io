@@ -14,13 +14,13 @@
 # please change the belowing settings to your own.
 
 # Site settings
-title: ai摸鱼的Mile
+title: ai摸鱼的Moe
 email: wm1079771176@163.com
 description: 个人学习记录用
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site
 twitter_username:
-github_username:  milewang0321
+github_username:  moewang0321
 
 # Build settings
 markdown: kramdown
