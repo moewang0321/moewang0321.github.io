@@ -1,29 +1,48 @@
-# Welcome to Jekyll and Thank you for using Renge as your theme.
+plugins: [jekyll-paginate]
 
-# Renge is designed by Junchao (www.junchaowang.com) and inspired by amination
-# “のんのんびより” and named by one of the Characters "Renge Miyauchi (宮内 れんげ Miyauchi Renge)".
-# If you have any questions, you can reach me via https://github.com/billyfish152 by submitting
-# an issue or via email billyfish152@gmail.com.
+permalink: /:categories/:title/
 
-# Please install jekyll-paginate before build it.
-# sudo gem install jekyll-paginate in linux or MacOS.
-# gem install jekyll-paginate in Windows.
-
-# Renge supports categories and tags, which are defined in each of your posts.
-# Also, You can add or removed links in /_includes/sider.html .
-# please change the belowing settings to your own.
-
-# Site settings
-title: ai摸鱼的Moe
-email: wm1079771176@163.com
-description: 个人学习记录用
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site
-twitter_username:
-github_username:  moewang0321
-
-# Build settings
+highlighter: rouge
 markdown: kramdown
-paginate: 3
-gems: [jekyll-paginate]
-paginate_path: "/page/:num"
+kramdown:
+  input:  GFM
+  syntax_highlighter: rouge
+
+
+paginate: 10
+paginate_path: "page/:num"
+baseurl: ""
+
+
+
+defaults:
+  -
+    scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+      styles : [highlight.css,gitment.css,post.css]
+      scripts : [gitment.js, post.js]
+
+
+
+title: "bit-ranger"
+email: sincerebravefight@gmail.com
+description: ""
+github:
+  username: bit-ranger
+swiftype:
+  searchId: iXZyPokVfxFaBTvi64Y6
+gitment:
+    repo: blog
+    client_id: a6fb73b3e790e234bab8
+    client_secret: cc10aaff53a03d05ab2ee002dbf401dd7627c7a3
+
+url: "https://bit-ranger.github.io/blog"
+imgrepo: "https://bit-ranger.github.io/blog/static/img"
+
+
+#url: "http://127.0.0.1:4000"
+#imgrepo: "http://127.0.0.1:4000/static/img"
+
