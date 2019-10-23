@@ -1,13 +1,16 @@
 <head>
-  <title>{% if page.title %}{{ page.title | escape }} | {{ site.title | escape }}{% else %}{{ site.title | escape }}{% endif %}</title>
-  <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+  <title>{% if page.title %}{{ page.title | escape }} |
+    {{ site.title | escape }}{% else %}{{ site.title | escape }}{% endif %}</title>
+  <meta name="description"
+    content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
   <link rel="stylesheet" href="{{ "/css/bootstrap.min.css" | prepend: site.baseurl }}">
   <link rel="stylesheet" href="{{ "/css/renge.css" | prepend: site.baseurl }}">
   <link rel="stylesheet" href="{{ "/css/spider.css" | prepend: site.baseurl }}">
   <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
-  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}">
-  <link rel="shortcut icon" href="../images/favicon.ico"/>
-  <link rel="bookmark" href="../images/favicon.ico"/>
+  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}"
+    href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}">
+  <link rel="shortcut icon" href="../images/favicon.ico" />
+  <link rel="bookmark" href="../images/favicon.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <!--[if lt IE 9]>
@@ -16,4 +19,23 @@
   <![endif]-->
   <script type="text/javascript" src="https://cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>　　
 
+  <style>
+    table {
+      border-left: 1px solid #000000;
+      border-top: 1px solid #000000;
+      width: 100%;
+      word-wrap: break-word;
+      word-break: break-all;
+    }
+
+    table th {
+      text-align: center;
+    }
+
+    table th,
+    td {
+      border-right: 1px solid #000000;
+      border-bottom: 1px solid #000000;
+    }
+  </style>
 </head>
