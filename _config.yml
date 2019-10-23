@@ -23,7 +23,7 @@ twitter_username:
 github_username:  moewang0321
 
 # Build settings
-markdown: kramdown
+markdown: Redcarpet
 paginate: 5
 gems: [jekyll-paginate]
 paginate_path: "/page/:num"
