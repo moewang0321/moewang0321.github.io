@@ -18,7 +18,7 @@ avatar: https://i.loli.net/2019/12/02/lu5zo8PiAUXYRNG.png
 # avatar: https://i.loli.net/2019/12/02/kleyn7gxzcXRKCv.png
 
 # 你的favicon（出现在浏览器tab上）图片URL，建议使用较小(64px × 64px)的图片
-favicon: https://i.loli.net/2019/12/02/kleyn7gxzcXRKCv.png
+favicon: https://i.loli.net/2019/12/02/nGFVv4fIX7xMt6E.png
 
 
 # 菜单中的按钮
@@ -57,7 +57,13 @@ footer-links:
 footer-text: Copyright (c) 2019 来自Moe
 
 # 输入Disqus shortname，即可添加评论区，细节可阅读文档。
-disqus: loffer #shortname
+#disqus: loffer #shortname
+
+gitalk:
+  clientID: e0bed5988111b1331814
+  clientSecret: a3f5173be44ba27539e0b3461fb17d0473cc9f5f
+  repo: moewang0321.github.io
+  owner: moewang0321
 
 # 输入Google Analytics web tracking code
 google_analytics:
