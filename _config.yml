@@ -64,7 +64,7 @@ footer-text: Copyright (c) 2019 来自中世界
 # 评论，注意，请不要同时添加多种不同的评论区
 
 # 输入Disqus shortname，即可添加评论区
-disqus: loffer #shortname
+# disqus: loffer #shortname
 
 # 输入Gitalk相关设定，即可添加评论区
 gitalk:
