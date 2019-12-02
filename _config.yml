@@ -5,9 +5,9 @@
 # 你的博客名称，请用你想要的博客名替换“LOFFER”，以下修改都可类似处理
 # 注意，“name: LOFFER”，冒号后面的空格不可以省略。
 # 井号后面的文字是说明文档，不会被程序读取。
-name: Moe
+name: Moe🐟
 # 描述/签名
-description: 鱼？摸就完事了
+description: 鱼🐟？摸就完事了
 #
 # 下面的设定都是可选的
 #
@@ -56,7 +56,7 @@ footer-links:
   youtube: # channel/<your_long_string> or user/<user-name>
 
 # 站点页脚的文字
-footer-text: Copyright (c) 2019 来自Moe
+footer-text: Copyright (c) 2019 来自Moe🐟
 
 
 # 评论，注意，请不要同时添加多种不同的评论区
