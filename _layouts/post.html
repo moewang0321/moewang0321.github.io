@@ -1,3 +1,10 @@
+<!--
+ * @Author: MoeWang
+ * @Date: 2019-12-02 14:45:32
+ * @LastEditors: 
+ * @LastEditTime: 2019-12-02 15:48:57
+ * @FilePath: \moewang0321.github.io\_layouts\post.html
+ -->
 ---
 layout: default
 ---
@@ -31,17 +38,17 @@ layout: default
 
 <div class="pagination">
   {% if page.previous.url %}
-    <span class="prev" >
-      <a href="{{ site.url }}{{ site.baseurl }}{{ page.previous.url }}">
-        ← 上一篇
-      </a>
-    </span>
+  <span class="prev">
+    <a href="{{ site.baseurl }}{{ page.previous.url }}">
+      ← 上一篇
+    </a>
+  </span>
   {% endif %}
   {% if page.next.url %}
-    <span class="next" >
-      <a href="{{ site.url }}{{ site.baseurl }}{{ page.next.url }}">
-        下一篇 →
-      </a>
-    </span>
+  <span class="next">
+    <a href="{{ site.baseurl }}{{ page.next.url }}">
+      下一篇 →
+    </a>
+  </span>
   {% endif %}
 </div>
