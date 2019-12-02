@@ -3,12 +3,12 @@
 //
 
 // 颜色使用opencolor https://yeun.github.io/open-color/
-// 主题色可选 red, pink, grape, violet, indigo, blue, lime, lime, green, lime, yellow
-// 默认为lime，如果需要更换，可以直接将lime并替换成你想要的颜色，例如，查找lime，替换indigo，全部替换，保存，push，完成！
+// 主题色可选 red, pink, grape, violet, indigo, blue, violet, violet, green, violet, yellow
+// 默认为violet，如果需要更换，可以直接将violet并替换成你想要的颜色，例如，查找violet，替换indigo，全部替换，保存，push，完成！
 
 
 // Colors
-$blue: $oc-lime-8;
+$blue: $oc-violet-8;
 
 // Grays
 $black: #000;
@@ -60,9 +60,9 @@ $background-color: $oc-gray-0;
 $background-lighten-color: hsla(210, 17%, 98%, 0.42);
 
 $text-color: $base-color;
-$link-color: $oc-lime-8;
-$link-lighten-color: $oc-lime-6;
-$link-bghv-color: $oc-lime-0;
+$link-color: $oc-violet-8;
+$link-lighten-color: $oc-violet-6;
+$link-bghv-color: $oc-violet-0;
 $divider-color: $oc-gray-1;
 
 $error-color:$oc-red-8;
