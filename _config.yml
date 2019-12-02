@@ -69,7 +69,7 @@ disqus: loffer #shortname
 # 输入Gitalk相关设定，即可添加评论区
 gitalk:
   clientID: e0bed5988111b1331814
-  clientSecret: a3f5173be44ba27539e0b3461fb17d0473cc9f5f
+  clientSecret: f07c128ec001e7252bfbd3caa9480a7d9945ac7d
   repo: moewang0321.github.io
   owner: moewang0321
 
