@@ -1,16 +1,46 @@
 ---
 layout: default
 ---
-<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
-  <header class="post-header">
-    <h1 align="right" class="post-title" itemprop="name headline">{{ page.title }}</h1>
-    <h4 class="text-right"><small><time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time></small></h4>
-  </header>
+<article class="posts">
+  <h1>{{ page.title }}</h1>
 
-  <div class="post-content" itemprop="articleBody">
+  <div clsss="meta">
+    <span class="date">
+      {{ page.date | date: "%Y-%m-%d" }}
+    </span>
+
+    <ul class="tag">
+      {% for tag in page.tags %}
+      <li>
+        <a href="{{ site.url }}{{ site.baseurl }}/tags#{{ tag }}">
+          {{ tag }}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="entry">
     {{ content }}
   </div>
-  {% include tags.html %}
 
+  {% include disqus.html %}
 </article>
+
+<div class="pagination">
+  {% if page.previous.url %}
+    <span class="prev" >
+      <a href="{{ site.url }}{{ site.baseurl }}{{ page.previous.url }}">
+        ← 上一篇
+      </a>
+    </span>
+  {% endif %}
+  {% if page.next.url %}
+    <span class="next" >
+      <a href="{{ site.url }}{{ site.baseurl }}{{ page.next.url }}">
+        下一篇 →
+      </a>
+    </span>
+  {% endif %}
+</div>

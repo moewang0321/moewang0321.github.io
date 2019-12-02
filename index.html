@@ -2,32 +2,55 @@
 layout: default
 ---
 
-{% for post in paginator.posts %}
+{% if site.posts.size == 0 %}
+  <h2>No post found</h2>
+{% endif %}
 
-<!-- main articles -->
-<h2 class="text-right">
-  <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
-</h2>
-<h4 class="text-right"><small>{{ post.date | date: "%b %-d, %Y" }}</small></h4>
-        {% if post.description %}
-            {{ post.description | strip_html | strip_newlines | truncate: 250 }}
-            <p align="right"><a class="btn" href="{{ post.url | prepend: site.baseurl }}">Read more »</a></p>
-            {% include tags.html %}
-        {% else %}
-            {{ post.content | strip_html | strip_newlines | truncate: 250 }}
-            <p align="right"><a class="btn" href="{{ post.url | prepend: site.baseurl }}">Read more »</a></p>
-            {% include tags.html %}
-        {% endif %}
+<div class="posts">
+  {% for post in paginator.posts %}
+    <article class="post">
+      <h1>
+        <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
+      </h1>
 
-<hr>
-<!-- article ends -->
-{% endfor %}
+      <div clsss="meta">
+        <span class="date">
+          {{ post.date | date: "%Y-%m-%d" }}
+        </span>
 
-<ul class="pager">
+        <ul class="tag">
+          {% for tag in post.tags %}
+          <li>
+            <a href="{{ site.url }}{{ site.baseurl }}/tags#{{ tag }}">
+              {{ tag }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="entry">
+        {{ post.excerpt | truncate: 200 }}
+      </div>
+
+      <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a>
+    </article>
+  {% endfor %}
+</div>
+
+<div class="pagination">
   {% if paginator.previous_page %}
-      <li class="previous"><a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&larr; Newer</a></li>
+    <span class="prev">
+      <a href="{{ site.baseurl }}{{ paginator.previous_page_path }}" class="prev">
+        ← 上一页
+      </a>
+    </span>
   {% endif %}
-    {% if paginator.next_page %}
-      <li class="next"><a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">Older &rarr;</a></li>
+  {% if paginator.next_page %}
+    <span class="next">
+      <a href="{{ site.baseurl}}{{ paginator.next_page_path }}" class="next">
+        下一页 →
+      </a>
+    </span>
   {% endif %}
-</ul>
+</div>
