@@ -1,15 +1,23 @@
+<!--
+ * @Author: MoeWang
+ * @Date: 2019-12-02 14:45:32
+ * @LastEditors: 
+ * @LastEditTime: 2019-12-02 14:51:34
+ * @FilePath: \moewang0321.github.io\_includes\fonts.html
+ -->
 <!-- Async font loading -->
 <script>
-  window.WebFontConfig = {
-      custom: {
-          families: ['Spoqa Han Sans:100,300,400,700'],
-          urls: ['https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css']
-      },
-      timeout: 60000
-  };
-  (function(d) {
-      var wf = d.createElement('script'), s = d.scripts[0];
-      wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js';
-      s.parentNode.insertBefore(wf, s);
-  })(document);
+    window.WebFontConfig = {
+        custom: {
+            families: ['Spoqa Han Sans:100,300,400,700'],
+            urls: ['https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css']
+        },
+        timeout: 60000
+    };
+    (function (d) {
+        var wf = d.createElement('script'),
+            s = d.scripts[0];
+        wf.src = 'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js';
+        s.parentNode.insertBefore(wf, s);
+    })(document);
 </script>
