@@ -2,7 +2,7 @@
 title: immutable.js
 teaser:	持久化数据结构？？
 category: study
-tags: [React，immutable.js]
+tags: [React,immutable.js]
 
 ---
 
