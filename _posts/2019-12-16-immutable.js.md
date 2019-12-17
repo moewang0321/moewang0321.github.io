@@ -6,6 +6,8 @@ tags: [React，immutable.js]
 
 ---
 
+<img src="https://upload-images.jianshu.io/upload_images/2165169-cebb05bca02f1772?imageMogr2/auto-orient/strip|imageView2/2/w/613/format/webp" style="zoom:80%;" />
+
 ## 什么是Immutable Data？
 
 扔一段官方文档，我也看不明白（过了个假六级）
@@ -16,7 +18,7 @@ tags: [React，immutable.js]
 
 也就是用旧数据创建新数据的时候要保证旧数据同时可用且不变，而且为了避免深拷贝把所有节点复制一遍带来的性能损耗，Immutable使用了`Structural Sharing`（结构共享），就是说如果对象数中一个节点发生变化，只修改这个节点和受它影响的父节点，其他节点共享，如图
 
-![](https://upload-images.jianshu.io/upload_images/2165169-cebb05bca02f1772?imageMogr2/auto-orient/strip|imageView2/2/w/613/format/webp )
+
 
 ## 优点
 
