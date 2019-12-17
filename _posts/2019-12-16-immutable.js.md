@@ -16,7 +16,7 @@ tags: [React，immutable.js]
 
 也就是用旧数据创建新数据的时候要保证旧数据同时可用且不变，而且为了避免深拷贝把所有节点复制一遍带来的性能损耗，Immutable使用了`Structural Sharing`（结构共享），就是说如果对象数中一个节点发生变化，只修改这个节点和受它影响的父节点，其他节点共享，如图
 
-[结构共享]: https://upload-images.jianshu.io/upload_images/2165169-cebb05bca02f1772?imageMogr2/auto-orient/strip|imageView2/2/w/613/format/webp	"结构共享"
+![结构共享](https://upload-images.jianshu.io/upload_images/2165169-cebb05bca02f1772?imageMogr2/auto-orient/strip|imageView2/2/w/613/format/webp )
 
 ## 优点
 
@@ -57,8 +57,15 @@ a.get('filter') === b.get('filter'); // true
 ## Immutable.js的数据类型
 
 >- List：有序序列集，类似Array
+>
 >- Map：无序序列集，类似Object
->- Seq：这表示一系列值，但不能由具体的数据结构支持。https://cloud.tencent.com/developer/section/1489381
+>
+>- Seq：这表示一系列值，但不能由具体的数据结构支持。
+>
+>  []: https://cloud.tencent.com/developer/section/1489381
+>
+>  
+>
 >- 等……（以后再添加）
 
 ## Immutable.js 常用API
@@ -187,19 +194,76 @@ a.get('filter') === b.get('filter'); // true
     //     "subSubObject": Map { "subSubKey": "ha ha ha!" }
     //   }
     // }
+        
+    
+    ```
+  
+- `update()`
+
+  - 更新数据
+
+  - ```dart
+    ////List
+    const list = List([ 'a', 'b', 'c' ])
+    const result = list.update(2, val => val.toUpperCase())
+    
+    ///Map
+    const aMap = Map({ key: 'value' })
+    const newMap = aMap.update('key', value => value + value)
+        
     ```
 
+## 关于merge
 
+​	merge
 
+作用：浅合并，新数据与旧数据对比，旧数据中不存在的属性直接添加，就数据中已存在的属性用新数据中的覆盖
 
+###### mergrWith
 
+作用：自定义浅合并，可自行设置某些属性的值
 
+###### mergeIn
 
+作用：对深层数据进行浅合并
 
+###### mergeDeep
 
+作用：深合并，新旧数据中同时存在的的属性为新旧数据合并之后的数据
 
+###### mergeDeepIn
 
+作用：对深层数据进行深合并
 
+###### mergrDeepWith
+
+作用：自定义深合并，可自行设置某些属性的值
+
+这里用一段示例彻底搞懂merge，此示例为Map结构，List与Map原理相同
+
+```dart
+ const Map1 = Immutable.fromJS({a:111,b:222,c:{d:333,e:444}});
+ const Map2 = Immutable.fromJS({a:111,b:222,c:{e:444,f:555}});
+
+ const Map3 = Map1.merge(Map2);
+  //Map {a:111,b:222,c:{e:444,f:555}}
+ const Map4 = Map1.mergeDeep(Map2);
+  //Map {a:111,b:222,c:{d:333,e:444,f:555}}
+ const Map5 = Map1.mergeWith((oldData,newData,key)=>{
+      if(key === 'a'){
+        return 666;
+      }else{
+        return newData
+      }
+    },Map2);
+  //Map {a:666,b:222,c:{e:444,f:555}}
+```
+
+---
+
+更多API见
+
+[github]: https://github.com/immutable-js/immutable-js
 
 
 
