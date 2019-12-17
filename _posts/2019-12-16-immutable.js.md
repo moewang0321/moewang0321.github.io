@@ -28,7 +28,7 @@ tags: [React，immutable.js]
 
 因为是结构共享，所以Immutable使用这种方式会尽量复用内存
 
-```javascript
+```dart
 import { Map } from 'immutable';
 let a = Map({
   select: 'users',
@@ -63,7 +63,131 @@ a.get('filter') === b.get('filter'); // true
 
 ## Immutable.js 常用API
 
+- `fromJS()`
 
+  - 作用：把一个JS数据转换成Immutable类型数据
+  - 用法：`fromJS(value , converter)`
+  - 参数：value是要转变的数据，converter[可选]是要做的操作，默认会把数组转成LIst，对象转成Map
+
+- `toJS()`
+
+  - 作用：把Immutable类型数据转换成JS类型数据
+  - 用法：`value.toJS()`
+
+- `is()`
+
+  - 作用：对两个对象进行比较
+  - 用法：`is(map1 , map2)`
+  - 简介：和JS中的对象比较不同，JS中比较两个对象是比较地址，而Immutable中比较的是对象的hashCode和valueOf，只要两者hashCode相等，值就相同，避免深度遍历，提高性能
+
+- `List()`和`Map()`
+
+  - 作用：创建一个新的List/Map对象
+
+  - 用法
+
+  - ```dart
+    //List
+    Immutable.List(); // 空List
+    Immutable.List([1, 2]);
+    
+    //Map
+    Immutable.Map(); // 空Map
+    Immutable.Map({ a: '1', b: '2' });
+    ```
+
+- `get()`、`getIn()`
+
+  - 获取数据结构中的数据
+
+  - ```dart
+    //获取List索引的元素
+    ImmutableData.get(0);
+    
+    // 获取Map对应key的value
+    ImmutableData.get('a');
+    
+    // 获取嵌套数组中的数据
+    ImmutableData.getIn([1, 2]);
+    
+    // 获取嵌套map的数据
+    ImmutableData.getIn(['a', 'b']);
+    ```
+
+- `has()`、`hasIn()`
+
+  - 判断是否存在某个key
+
+  - ```dart
+    Immutable.fromJS([1,2,3,{a:4,b:5}]).has('0'); //true
+    Immutable.fromJS([1,2,3,{a:4,b:5}]).has('0'); //true
+    Immutable.fromJS([1,2,3,{a:4,b:5}]).hasIn([3,'b']) //true
+    ```
+
+- 设置`set()`、`setIn()`
+
+  - set  =>  设置第一层key ， index的值
+
+  - setIn =>  设置深层结构中属性的值
+
+  - ```dart
+    const originalList = List([ 0 ]);
+    // List [ 0 ]
+    originalList.set(1, 1);
+    // List [ 0, 1 ]
+    originalList.set(0, 'overwritten');
+    // List [ "overwritten" ]
+    originalList.set(2, 2);
+    // List [ 0, undefined, 2 ]
+    
+    List().set(50000, 'value').size;
+    // 50001
+    
+    const originalMap = Map()
+    const newerMap = originalMap.set('key', 'value')
+    const newestMap = newerMap.set('key', 'newer value')
+    
+    originalMap
+    // Map {}
+    newerMap
+    // Map { "key": "value" }
+    newestMap
+    // Map { "key": "newer value" }
+    ```
+
+  - **跟js中不同，List中不存在空位，[,,,],List中若没有值，则为undefined。**
+
+  - `setIn()`
+
+  - ```dart
+    const originalMap = Map({
+      subObject: Map({
+        subKey: 'subvalue',
+        subSubObject: Map({
+          subSubKey: 'subSubValue'
+        })
+      })
+    })
+    
+    const newMap = originalMap.setIn(['subObject', 'subKey'], 'ha ha!')
+    // Map {
+    //   "subObject": Map {
+    //     "subKey": "ha ha!",
+    //     "subSubObject": Map { "subSubKey": "subSubValue" }
+    //   }
+    // }
+    
+    const newerMap = originalMap.setIn(
+      ['subObject', 'subSubObject', 'subSubKey'],
+      'ha ha ha!'
+    )
+    // Map {
+    //   "subObject": Map {
+    //     "subKey": "subvalue",
+    //     "subSubObject": Map { "subSubKey": "ha ha ha!" }
+    //   }
+    // }
+    ```
 
 
 
