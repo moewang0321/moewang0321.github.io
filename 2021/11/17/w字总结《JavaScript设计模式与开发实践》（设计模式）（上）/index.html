@@ -1,0 +1,837 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Moe Wang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="设计模式（上）单例模式 保证一个类仅有一个实例，并提供一个访问它的全局访问点  实现单例模式举个最常用的例子，我们登录的时候，页面中会出现一个登录浮窗，而它是唯一的，无论点多少次登录按钮，浮窗只会被创建一次，不会每次点击都创建新的实例。 简易的单例模式实现起来并不复杂，无非就是用一个变量来记录当前是否已为该类创建过对象，是则在下次获取该类实例时直接返回之前创建的对象。 12345678910111">
+<meta property="og:type" content="article">
+<meta property="og:title" content="w字总结《JavaScript设计模式与开发实践》（设计模式）（上）">
+<meta property="og:url" content="https://moewang0321.github.io/2021/11/17/w%E5%AD%97%E6%80%BB%E7%BB%93%E3%80%8AJavaScript%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%BC%80%E5%8F%91%E5%AE%9E%E8%B7%B5%E3%80%8B%EF%BC%88%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%EF%BC%89%EF%BC%88%E4%B8%8A%EF%BC%89/index.html">
+<meta property="og:site_name" content="moe_大杂烩">
+<meta property="og:description" content="设计模式（上）单例模式 保证一个类仅有一个实例，并提供一个访问它的全局访问点  实现单例模式举个最常用的例子，我们登录的时候，页面中会出现一个登录浮窗，而它是唯一的，无论点多少次登录按钮，浮窗只会被创建一次，不会每次点击都创建新的实例。 简易的单例模式实现起来并不复杂，无非就是用一个变量来记录当前是否已为该类创建过对象，是则在下次获取该类实例时直接返回之前创建的对象。 12345678910111">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b327fc81be69401faddd887b6caef99c~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="article:published_time" content="2021-11-17T08:59:51.000Z">
+<meta property="article:modified_time" content="2023-02-14T08:53:44.891Z">
+<meta property="article:author" content="Moe Wang">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b327fc81be69401faddd887b6caef99c~tplv-k3u1fbpfcp-zoom-1.image">
+  
+  
+  
+  <title>w字总结《JavaScript设计模式与开发实践》（设计模式）（上） - moe_大杂烩</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"moewang0321.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>moe_大杂烩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="w字总结《JavaScript设计模式与开发实践》（设计模式）（上）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-11-17 16:59" pubdate>
+          2021年11月17日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          22k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          181 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">w字总结《JavaScript设计模式与开发实践》（设计模式）（上）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="设计模式（上）"><a href="#设计模式（上）" class="headerlink" title="设计模式（上）"></a>设计模式（上）</h1><h2 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h2><blockquote>
+<p>保证一个类仅有一个实例，并提供一个访问它的全局访问点</p>
+</blockquote>
+<h3 id="实现单例模式"><a href="#实现单例模式" class="headerlink" title="实现单例模式"></a>实现单例模式</h3><p>举个最常用的例子，我们登录的时候，页面中会出现一个登录浮窗，而它是唯一的，无论点多少次登录按钮，浮窗只会被创建一次，不会每次点击都创建新的实例。</p>
+<p>简易的单例模式实现起来并不复杂，无非就是用一个变量来记录当前是否已为该类创建过对象，是则在下次获取该类实例时直接返回之前创建的对象。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> <span class="hljs-title class_">Singleton</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"> name </span>)&#123; <br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = name; <br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">instance</span> = <span class="hljs-literal">null</span>; <br>&#125;; <br><span class="hljs-title class_">Singleton</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">getName</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123; <br>    alert ( <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> ); <br>&#125;; <br><span class="hljs-title class_">Singleton</span>.<span class="hljs-property">getInstance</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"> name </span>)&#123; <br>    <span class="hljs-keyword">if</span> ( !<span class="hljs-variable language_">this</span>.<span class="hljs-property">instance</span> )&#123; <br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">instance</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Singleton</span>( name ); <br>    &#125; <br>    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">instance</span>; <br>&#125;; <br><span class="hljs-keyword">var</span> a = <span class="hljs-title class_">Singleton</span>.<span class="hljs-title function_">getInstance</span>( <span class="hljs-string">&#x27;sven1&#x27;</span> ); <br><span class="hljs-keyword">var</span> b = <span class="hljs-title class_">Singleton</span>.<span class="hljs-title function_">getInstance</span>( <span class="hljs-string">&#x27;sven2&#x27;</span> ); <br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>( a === b ); <span class="hljs-comment">// true</span><br></code></pre></td></tr></table></figure>
+
+<p>代码很简单，但是这样的写法意义不大，因为类是“不透明”的，使用者必须知道这是一个单例类，且需要使用Singleton.getInstance获取对象。</p>
+<h3 id="透明的单例模式（代理）"><a href="#透明的单例模式（代理）" class="headerlink" title="透明的单例模式（代理）"></a>透明的单例模式（代理）</h3><p>我们需要做的是能够实现一个透明的单例类，使用方式像其他任何普通类一样且足够灵活。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> <span class="hljs-title class_">CreateDiv</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"> html </span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">html</span> = html<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">init</span>()<br>&#125;<br><span class="hljs-title class_">CreateDiv</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">init</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">var</span> div = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;div&#x27;</span>)<br>    div.<span class="hljs-property">innerHTML</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">html</span><br>    <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-title function_">appendChild</span>(div)<br>&#125;<br><br><span class="hljs-comment">// 代理类</span><br><span class="hljs-keyword">var</span> <span class="hljs-title class_">ProxySingletonCreateDiv</span> = (<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">var</span> instance<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span>(<span class="hljs-params">html</span>) &#123;<br>        <span class="hljs-keyword">if</span>(!instance) &#123;<br>            instance = <span class="hljs-keyword">new</span> <span class="hljs-title class_">CreateDiv</span>(html)<br>        &#125;<br>        <span class="hljs-keyword">return</span> instance<br>    &#125;<br>&#125;)()<br><br><span class="hljs-keyword">var</span> a = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ProxySingletonCreateDiv</span>(<span class="hljs-string">&#x27;a&#x27;</span>)<br><span class="hljs-keyword">var</span> b = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ProxySingletonCreateDiv</span>(<span class="hljs-string">&#x27;b&#x27;</span>)<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(a === b)<br></code></pre></td></tr></table></figure>
+
+<p>上述代码中我们通过代理类<code>ProxySingletonCreateDiv</code>实现了对CreateDiv的单例化（代理模式，在后面介绍），与之前不同的是，<code>CreateDiv</code>变成了普通的类，如果业务场景中需要创建多个实例时，我们可以直接使用<code>CreateDiv</code>创建。二者组合达到了单例模式的效果。</p>
+<h3 id="惰性单例"><a href="#惰性单例" class="headerlink" title="惰性单例"></a>惰性单例</h3><p>顾名思义，惰性单例只有在<em>需要的时候</em>才创建对象实例。实现思路如最开始，用一个变量来标志是否创建过对象，是则返回创建好的对象。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> getSingle = <span class="hljs-keyword">function</span>(<span class="hljs-params">fn</span>) &#123;<br>    <span class="hljs-keyword">var</span> result <br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> result || (result = fn.<span class="hljs-title function_">apply</span>(<span class="hljs-variable language_">this</span>,<span class="hljs-variable language_">arguments</span>))<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这里结合了<a target="_blank" rel="noopener" href="https://juejin.cn/post/7031003499898880037">基础篇</a>中的许多知识，我们可以传入任何方法，之后让getSingle返回一个新的函数，并用result保存fn的计算结果，因为result在闭包中，它永远不会被销毁，以后再请求时，如果result存在，那么它将返回这个值。</p>
+<h2 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h2><blockquote>
+<p>定义一系列的算法，把它们一个个封装起来，并且使它们可以互相替换。策略模式的目的就是将算法的使用与算法的实现分离。</p>
+</blockquote>
+<h3 id="计算奖金"><a href="#计算奖金" class="headerlink" title="计算奖金"></a>计算奖金</h3><p>书里举了一个计算奖金的例子。</p>
+<p>很多公司的年终奖是根据员工的工资基数和年底绩效情况来发放的。例如，绩效为 S 的人年终奖有 4 倍工资，绩效为 A的人年终奖有 3 倍工资，而绩效为 B 的人年终奖是 2 倍工资。假设财务部要求我们提供一段代码，来方便他们计算员工的年终奖。</p>
+<p>在这个例子中，算法的使用方法不变，目的都是为了取得计算后的奖金，而算法的实现不一定相同，每种绩效对应不同计算规则。</p>
+<p>基于策略模式的程序由两部分组成，第一部分是策略类，其中封装具体算法，并负责具体计算过程。第二部分是环境类，负责接受客户请求，并把请求委托给某个策略类。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> strategies = &#123;<br>    <span class="hljs-string">&#x27;S&#x27;</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">num</span>) &#123;<br>        <span class="hljs-keyword">return</span> num * <span class="hljs-number">4</span><br>    &#125;,<br>    <span class="hljs-string">&#x27;A&#x27;</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">num</span>) &#123;<br>        <span class="hljs-keyword">return</span> num * <span class="hljs-number">3</span><br>    &#125;,<br>    <span class="hljs-string">&#x27;B&#x27;</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">num</span>) &#123;<br>        <span class="hljs-keyword">return</span> num * <span class="hljs-number">2</span><br>    &#125;,<br>&#125;<br><span class="hljs-comment">// </span><br><span class="hljs-keyword">var</span> calculate = <span class="hljs-keyword">function</span>(<span class="hljs-params">level , num</span>) &#123;<br>    <span class="hljs-keyword">return</span> strategies[level](num)<br>&#125; <br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-title function_">calculate</span>(<span class="hljs-string">&#x27;S&#x27;</span> , <span class="hljs-number">4</span>));<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-title function_">calculate</span>(<span class="hljs-string">&#x27;A&#x27;</span> , <span class="hljs-number">3</span>));<br></code></pre></td></tr></table></figure>
+
+<h3 id="多态在策略模式中的体现"><a href="#多态在策略模式中的体现" class="headerlink" title="多态在策略模式中的体现"></a>多态在策略模式中的体现</h3><p>通过使用策略模式重构代码，我们消除了原程序中大片的条件分支语句。所有跟计算奖金有关的逻辑不再放在Context中，而是分布在各个策略对象中。Context并没有计算奖金的能力，而是把这个职责委托给了某个策略对象。每个策略对象负责的算法已被各自封装在对象内部。当我们对这些策略对象发出“计算奖金”的请求时，它们会返回各自不同的计算结果，这正是对象多态性的体现，也是“它们可以相互替换”的目的。替换 Context 中当前保存的策略对象，便能执行不同的算法来得到我们想要的结果。</p>
+<h3 id="策略模式优缺点"><a href="#策略模式优缺点" class="headerlink" title="策略模式优缺点"></a>策略模式优缺点</h3><ul>
+<li><p>优点</p>
+<ul>
+<li>策略模式利用组合、委托、多态等技术及思想，避免多重条件选择语句。</li>
+<li>策略模式完美支持<em>开放-封闭原则</em>，将算法封装在strategy中，易于切换、理解和扩展。</li>
+<li>策略模式中的算法也可以复用在其他地方。</li>
+<li>策略模式中利用组合和委托来让 Context 拥有执行算法的能力，这也是继承的一种更轻便的替代方案。</li>
+</ul>
+</li>
+<li><p>缺点</p>
+<ul>
+<li>在程序中添加许多策略类或策略对象</li>
+<li>必须了解所有的 strategy，必须了解各个 strategy 之间的不同点，这样才能选择一个合适的 strategy、</li>
+</ul>
+</li>
+</ul>
+<h2 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式</h2><blockquote>
+<p>代理模式给某一个对象提供一个代理对象，并由代理对象控制对原对象的引用。通俗的来讲代理模式就是我们生活中常见的中介。</p>
+</blockquote>
+<h3 id="送花问题"><a href="#送花问题" class="headerlink" title="送花问题"></a>送花问题</h3><p>在四月一个晴朗的早晨，小明遇见了他的百分百女孩，我们暂且称呼小明的女神为A。两天之后，小明决定给A送一束花来表白。刚好小明打听到 A 和他有一个共同的朋友B，于是内向的小明决定让B来代替自己完成送花这件事情。当A在心情好的时候收到花，小明表白成功的几率有60%，而当 A 在心情差的时候收到花，小明表白的成功率无限趋近于0。</p>
+<p>这时候需要用到代理模式，小明无法得知A的心情，而B却了解，把花交给B，B会监听A的心情变化，选择心情好的时候再转交。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> <span class="hljs-title class_">Flower</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123;&#125;<br><br><span class="hljs-keyword">var</span> xiaoming = &#123;<br>    <span class="hljs-attr">sendFlower</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">target</span>) &#123;<br>        <span class="hljs-keyword">var</span> flower = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Flower</span>()<br>        target.<span class="hljs-title function_">receiveFlower</span>(flower)<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">var</span> B = &#123;<br>    <span class="hljs-attr">receiveFlower</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">flower</span>) &#123;<br>        A.<span class="hljs-title function_">listenGoodMood</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>            A.<span class="hljs-title function_">receiveFlower</span>(flower)<br>        &#125;)<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">var</span> A = &#123;<br>    <span class="hljs-attr">receiveFlower</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">flower</span>) &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;收到花&#x27;</span>, flower)<br>    &#125;,<br>    <span class="hljs-attr">listenGoodMood</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params"> fn </span>) &#123;<br>        <span class="hljs-built_in">setTimeout</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>            <span class="hljs-title function_">fn</span>()<br>        &#125;,<span class="hljs-number">1000</span>)<br>    &#125;<br>&#125;<br><br>xiaoming.<span class="hljs-title function_">sendFlower</span>(B)<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="保护代理和虚拟代理"><a href="#保护代理和虚拟代理" class="headerlink" title="保护代理和虚拟代理"></a>保护代理和虚拟代理</h3><p>保护代理：代理B可以帮助A过滤掉一些请求，不符合要求的请求在代理B处被拒绝掉,如上文的例子。</p>
+<p>虚拟代理：把操作交给代理B去执行，代理B决定何时去执行操作。虚拟操作把一些开销很大的对象延迟到真正需要的时候再创建。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> B = &#123;<br>    <span class="hljs-attr">receiveFlower</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">flower</span>) &#123;<br>        A.<span class="hljs-title function_">listenGoodMood</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>            <span class="hljs-keyword">var</span> flower = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Flower</span>()<br>            A.<span class="hljs-title function_">receiveFlower</span>(flower)<br>        &#125;)<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="缓存代理"><a href="#缓存代理" class="headerlink" title="缓存代理"></a>缓存代理</h3><p>缓存代理可以为一些开销大的运算结果提供暂时的存储，在下次运算时，如果传递进来的参数跟之前一致，则可以直接返回前面存储的运算结果。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> mult = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123; <br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>( <span class="hljs-string">&#x27;开始计算乘积&#x27;</span> ); <br>    <span class="hljs-keyword">var</span> a = <span class="hljs-number">1</span>; <br>    <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>, l = <span class="hljs-variable language_">arguments</span>.<span class="hljs-property">length</span>; i &lt; l; i++ )&#123; <br>        a = a * <span class="hljs-variable language_">arguments</span>[i]; <br>    &#125; <br>    <span class="hljs-keyword">return</span> a; <br>&#125;; <br><span class="hljs-title function_">mult</span>( <span class="hljs-number">2</span>, <span class="hljs-number">3</span> ); <span class="hljs-comment">// 输出：6 </span><br><span class="hljs-title function_">mult</span>( <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span> ); <span class="hljs-comment">// 输出：24 </span><br><span class="hljs-keyword">var</span> proxyMult = (<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123; <br>    <span class="hljs-keyword">var</span> cache = &#123;&#125;; <br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123; <br>        <span class="hljs-keyword">var</span> args = <span class="hljs-title class_">Array</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">join</span>.<span class="hljs-title function_">call</span>( <span class="hljs-variable language_">arguments</span>, <span class="hljs-string">&#x27;,&#x27;</span> ); <br>        <span class="hljs-keyword">if</span> ( args <span class="hljs-keyword">in</span> cache )&#123; <br>            <span class="hljs-keyword">return</span> cache[ args ]; <br>        &#125; <br>        <span class="hljs-keyword">return</span> cache[ args ] = mult.<span class="hljs-title function_">apply</span>( <span class="hljs-variable language_">this</span>, <span class="hljs-variable language_">arguments</span> ); <br>    &#125; <br>&#125;)(); <br><span class="hljs-title function_">proxyMult</span>( <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span> ); <span class="hljs-comment">// 输出：24 </span><br><span class="hljs-title function_">proxyMult</span>( <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span> ); <span class="hljs-comment">// 输出：24</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="高阶函数动态创建代理"><a href="#高阶函数动态创建代理" class="headerlink" title="高阶函数动态创建代理"></a>高阶函数动态创建代理</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">/**************** 计算乘积 *****************/</span> <br><span class="hljs-keyword">var</span> mult = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123; <br>    <span class="hljs-keyword">var</span> a = <span class="hljs-number">1</span>; <br>    <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>, l = <span class="hljs-variable language_">arguments</span>.<span class="hljs-property">length</span>; i &lt; l; i++ )&#123; <br>        a = a * <span class="hljs-variable language_">arguments</span>[i]; <br>    &#125; <br>    <span class="hljs-keyword">return</span> a; <br>&#125;; <br><span class="hljs-comment">/**************** 计算加和 *****************/</span> <br><span class="hljs-keyword">var</span> plus = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123; <br>    <span class="hljs-keyword">var</span> a = <span class="hljs-number">0</span>; <br>    <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>, l = <span class="hljs-variable language_">arguments</span>.<span class="hljs-property">length</span>; i &lt; l; i++ )&#123; <br>        a = a + <span class="hljs-variable language_">arguments</span>[i]; <br>    &#125; <br>    <span class="hljs-keyword">return</span> a; <br>&#125;; <br><span class="hljs-comment">/**************** 创建缓存代理的工厂 *****************/</span> <br><span class="hljs-keyword">var</span> createProxyFactory = <span class="hljs-keyword">function</span>(<span class="hljs-params"> fn </span>)&#123; <br>    <span class="hljs-keyword">var</span> cache = &#123;&#125;; <br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123; <br>        <span class="hljs-keyword">var</span> args = <span class="hljs-title class_">Array</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">join</span>.<span class="hljs-title function_">call</span>( <span class="hljs-variable language_">arguments</span>, <span class="hljs-string">&#x27;,&#x27;</span> ); <br>        <span class="hljs-keyword">if</span> ( args <span class="hljs-keyword">in</span> cache )&#123; <br>            <span class="hljs-keyword">return</span> cache[ args ]; <br>        &#125; <br>        <span class="hljs-keyword">return</span> cache[ args ] = fn.<span class="hljs-title function_">apply</span>( <span class="hljs-variable language_">this</span>, <span class="hljs-variable language_">arguments</span> ); <br>    &#125; <br>&#125;; <br><span class="hljs-keyword">var</span> proxyMult = <span class="hljs-title function_">createProxyFactory</span>( mult ), <br>proxyPlus = <span class="hljs-title function_">createProxyFactory</span>( plus ); <br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>( <span class="hljs-title function_">proxyMult</span>( <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span> ) ); <span class="hljs-comment">// 输出：24 </span><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>( <span class="hljs-title function_">proxyMult</span>( <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span> ) ); <span class="hljs-comment">// 输出：24 </span><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>( <span class="hljs-title function_">proxyPlus</span>( <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span> ) ); <span class="hljs-comment">// 输出：10 </span><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>( <span class="hljs-title function_">proxyPlus</span>( <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span> ) ); <span class="hljs-comment">// 输出：10</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="迭代器模式"><a href="#迭代器模式" class="headerlink" title="迭代器模式"></a>迭代器模式</h2><blockquote>
+<p>提供一种方法顺序访问一个聚合对象中的各元素，而又不需要暴露该对象的内部表示。</p>
+</blockquote>
+<p>迭代器模式可以把迭代的过程从业务逻辑中分离出来，在使用迭代器模式之后，即使不关心对象的内部构造，也可以按顺序访问其中的每个元素。简单来说就是统一“集合”型数据结构的遍历接口，实现可循环遍历获取集合中各数据项（不关心数据项的数据结构）。</p>
+<h3 id="实现自己的迭代器"><a href="#实现自己的迭代器" class="headerlink" title="实现自己的迭代器"></a>实现自己的迭代器</h3><p>接受两个参数：被循环数组、循环每一步后触发的回调</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> each = <span class="hljs-keyword">function</span>(<span class="hljs-params">ary, callback</span>) &#123;<br>    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>,l = ary.<span class="hljs-property">length</span>;i&lt; l;i++) &#123;<br>        callback.<span class="hljs-title function_">call</span>(ary[i] , i , ary[i])<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">var</span> arr = [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>]<br><span class="hljs-title function_">each</span>(<span class="hljs-params">arr , <span class="hljs-keyword">function</span>(i , n)</span>) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>([i , n])<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="内部迭代器和外部迭代器"><a href="#内部迭代器和外部迭代器" class="headerlink" title="内部迭代器和外部迭代器"></a>内部迭代器和外部迭代器</h3><ol>
+<li>内部迭代器</li>
+</ol>
+<p>我们刚刚编写的 each 函数属于内部迭代器，each函数的内部已经定义好了迭代规则，它完全接手整个迭代过程，外部只需要一次初始调用。内部迭代器在调用的时候非常方便，外界不用关心迭代器内部的实现，跟迭代器的交互也仅仅是一次初始调用，但这也刚好是内部迭代器的缺点。由于内部迭代器的迭代规则已经被提前规定，上面的each函数就无法同时迭代2个数组了。比如现在有个需求，要判断 2 个数组里元素的值是否完全相等， 如果不改写each函数本身的代码，我们能够入手的地方似乎只剩下each的回调函数了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> compare = <span class="hljs-keyword">function</span>(<span class="hljs-params"> ary1, ary2 </span>)&#123; <br>    <span class="hljs-keyword">if</span> ( ary1.<span class="hljs-property">length</span> !== ary2.<span class="hljs-property">length</span> )&#123; <br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span> ( <span class="hljs-string">&#x27;ary1 和 ary2 不相等&#x27;</span> ); <br>    &#125; <br>    <span class="hljs-title function_">each</span>( ary1, <span class="hljs-keyword">function</span>(<span class="hljs-params"> i, n </span>)&#123; <br>        <span class="hljs-keyword">if</span> ( n !== ary2[ i ] )&#123; <br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span> ( <span class="hljs-string">&#x27;ary1 和 ary2 不相等&#x27;</span> ); <br>        &#125; <br>    &#125;); <br>    alert ( <span class="hljs-string">&#x27;ary1 和 ary2 相等&#x27;</span> ); <br>&#125;; <br><span class="hljs-title function_">compare</span>( [ <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span> ], [ <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">4</span> ] ); <span class="hljs-comment">// throw new Error ( &#x27;ary1 和 ary2 不相等&#x27; );</span><br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>外部迭代器</li>
+</ol>
+<p>外部迭代器必须显式地请求迭代下一个元素。<br>外部迭代器增加了一些调用的复杂度，但相对也增强了迭代器的灵活性，我们可以手工控制迭代的过程或者顺序。外部迭代器虽然调用方式复杂，但适用面更广，更能满足多变的需求。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> <span class="hljs-title class_">Iterator</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"> obj </span>)&#123; <br>    <span class="hljs-keyword">var</span> current = <span class="hljs-number">0</span>; <br>    <span class="hljs-keyword">var</span> next = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123; <br>        current += <span class="hljs-number">1</span>; <br>    &#125;; <br>    <span class="hljs-keyword">var</span> isDone = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123; <br>        <span class="hljs-keyword">return</span> current &gt;= obj.<span class="hljs-property">length</span>; <br>    &#125;; <br>    <span class="hljs-keyword">var</span> getCurrItem = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123; <br>        <span class="hljs-keyword">return</span> obj[ current ]; <br>    &#125;; <br>    <span class="hljs-keyword">return</span> &#123; <br>        <span class="hljs-attr">next</span>: next, <br>        <span class="hljs-attr">isDone</span>: isDone, <br>        <span class="hljs-attr">getCurrItem</span>: getCurrItem <br>    &#125; <br>&#125;;<br><br><span class="hljs-comment">// 改写compare函数</span><br><br><span class="hljs-keyword">var</span> compare = <span class="hljs-keyword">function</span>(<span class="hljs-params"> iterator1, iterator2 </span>)&#123; <br>    <span class="hljs-keyword">while</span>( !iterator1.<span class="hljs-title function_">isDone</span>() &amp;&amp; !iterator2.<span class="hljs-title function_">isDone</span>() )&#123; <br>        <span class="hljs-keyword">if</span> ( iterator1.<span class="hljs-title function_">getCurrItem</span>() !== iterator2.<span class="hljs-title function_">getCurrItem</span>() )&#123; <br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span> ( <span class="hljs-string">&#x27;iterator1 和 iterator2 不相等&#x27;</span> ); <br>        &#125; <br>        iterator1.<span class="hljs-title function_">next</span>(); <br>        iterator2.<span class="hljs-title function_">next</span>(); <br>    &#125; <br>    alert ( <span class="hljs-string">&#x27;iterator1 和 iterator2 相等&#x27;</span> ); <br>&#125;<br><br><span class="hljs-keyword">var</span> iterator1 = <span class="hljs-title class_">Iterator</span>( [ <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span> ] ); <br><span class="hljs-keyword">var</span> iterator2 = <span class="hljs-title class_">Iterator</span>( [ <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span> ] ); <br><span class="hljs-title function_">compare</span>( iterator1, iterator2 ); <span class="hljs-comment">// 输出：iterator1 和 iterator2 相等</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="迭代类数组对象和字面量对象"><a href="#迭代类数组对象和字面量对象" class="headerlink" title="迭代类数组对象和字面量对象"></a>迭代类数组对象和字面量对象</h3><p>迭代器模式不仅可以迭代数组，还可以迭代一些类数组的对象。比如arguments、{“0”:’a’,”1”:’b’}等。通过上面的代码可以观察到，无论是内部迭代器还是外部迭代器，只要被迭代的聚合对象拥有 length 属性而且可以用下标访问，那它就可以被迭代。在 JavaScript 中，for in 语句可以用来迭代普通字面量对象的属性。</p>
+<h3 id="倒序迭代器"><a href="#倒序迭代器" class="headerlink" title="倒序迭代器"></a>倒序迭代器</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> reverseEach = <span class="hljs-keyword">function</span>(<span class="hljs-params">ary , callback</span>) &#123;<br>    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> l = ary.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>;l &gt;= <span class="hljs-number">0</span>; l--) &#123;<br>        <span class="hljs-title function_">callback</span>(l,ary[l])<br>    &#125;<br>&#125;<br><br><span class="hljs-title function_">reverseEach</span>([<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">2</span>] , <span class="hljs-keyword">function</span>(<span class="hljs-params">i, n</span>) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(n)  <br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<h3 id="中止迭代器"><a href="#中止迭代器" class="headerlink" title="中止迭代器"></a>中止迭代器</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> each = <span class="hljs-keyword">function</span>(<span class="hljs-params"> ary, callback </span>)&#123; <br>    <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>, l = ary.<span class="hljs-property">length</span>; i &lt; l; i++ )&#123; <br>        <span class="hljs-keyword">if</span> ( <span class="hljs-title function_">callback</span>( i, ary[ i ] ) === <span class="hljs-literal">false</span> )&#123; <span class="hljs-comment">// callback 的执行结果返回 false，提前终止迭代</span><br>            <span class="hljs-keyword">break</span>; <br>        &#125; <br>    &#125; <br>&#125;; <br><span class="hljs-title function_">each</span>( [ <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span> ], <span class="hljs-keyword">function</span>(<span class="hljs-params"> i, n </span>)&#123; <br>    <span class="hljs-keyword">if</span> ( n &gt; <span class="hljs-number">3</span> )&#123; <span class="hljs-comment">// n 大于 3 的时候终止循环</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>; <br>    &#125; <br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>( n ); <span class="hljs-comment">// 分别输出：1, 2, 3 </span><br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<h2 id="发布-订阅模式"><a href="#发布-订阅模式" class="headerlink" title="发布-订阅模式"></a>发布-订阅模式</h2><blockquote>
+<p>它定义对象间的一种一对多的依赖关系，当一个对象的状态发生改变时，所有依赖于它的对象都将得到通知。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs js"><br><span class="hljs-comment">/* 通用发布订阅 */</span><br><span class="hljs-comment">// 时间上解耦、对象之间解耦，对应的会消耗时间和内存</span><br><span class="hljs-keyword">var</span> <span class="hljs-title class_">Event</span> = (<span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">var</span> clientList = &#123;&#125;,<br>        listen, trigger, remove<br>    listen = <span class="hljs-keyword">function</span> (<span class="hljs-params">key, fn</span>) &#123;<br>        <span class="hljs-keyword">if</span> (!clientList[key]) &#123;<br>            clientList[key] = []<br>        &#125;<br>        clientList[key].<span class="hljs-title function_">push</span>(fn)<br>    &#125;<br>    trigger = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">var</span> key = <span class="hljs-title class_">Array</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">shift</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">arguments</span>)<br>        <span class="hljs-keyword">var</span> fns = clientList[key]<br>        <span class="hljs-keyword">if</span> (!fns || fns.<span class="hljs-property">length</span> === <span class="hljs-number">0</span>) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span><br>        &#125;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>, fn; fn = fns[i++];) &#123;<br>            fn.<span class="hljs-title function_">apply</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-variable language_">arguments</span>)<br>        &#125;<br>    &#125;<br>    remove = <span class="hljs-keyword">function</span> (<span class="hljs-params">key, fn</span>) &#123;<br>        <span class="hljs-keyword">var</span> fns = clientList[key]<br>        <span class="hljs-keyword">if</span> (!fns) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span><br>        &#125;<br>        <span class="hljs-keyword">if</span> (!fn) &#123;<br>            fns &amp;&amp; (fns.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>)<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = fns.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) &#123;<br>                <span class="hljs-keyword">var</span> _fn = fns[i]<br>                <span class="hljs-keyword">if</span> (_fn === fn) &#123;<br>                    fns.<span class="hljs-title function_">splice</span>(i, <span class="hljs-number">1</span>)<br>                &#125;<br>            &#125;<br>        &#125;<br><br>    &#125;<br>    <span class="hljs-keyword">return</span> &#123;<br>        listen, trigger, remove<br>    &#125;<br>&#125;)()<br><br><span class="hljs-title class_">Event</span>.<span class="hljs-title function_">listen</span>(<span class="hljs-string">&#x27;square88&#x27;</span> , <span class="hljs-keyword">function</span>(<span class="hljs-params">price</span>) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;price:&#x27;</span> , price);<br>&#125;)<br><br><span class="hljs-title class_">Event</span>.<span class="hljs-title function_">trigger</span>(<span class="hljs-string">&#x27;square88&#x27;</span> , <span class="hljs-number">2000000</span>)<br></code></pre></td></tr></table></figure>
+
+<h3 id="发布-订阅模式的应用"><a href="#发布-订阅模式的应用" class="headerlink" title="发布-订阅模式的应用"></a>发布-订阅模式的应用</h3><p>书中讲的在这就不多说了，说点书里没有的。</p>
+<p>想要对发布-订阅模式有更加深入的学习，推荐自己动手实现一个vue，vue2的响应式就是通过该模式实现的，接下来我们看看这个特性是如何使用的。</p>
+<h4 id="vue响应式原理"><a href="#vue响应式原理" class="headerlink" title="vue响应式原理"></a>vue响应式原理</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> v = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Vue</span>(&#123;<br>    <span class="hljs-title function_">data</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> &#123;<br>            <span class="hljs-attr">a</span>:<span class="hljs-string">&#x27;a&#x27;</span><br>        &#125;<br>    &#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b327fc81be69401faddd887b6caef99c~tplv-k3u1fbpfcp-zoom-1.image" srcset="/img/loading.gif" lazyload alt="image"></p>
+<p>官网有一张关于响应式的图，我们来结合图片分析一下。</p>
+<h5 id="数据劫持"><a href="#数据劫持" class="headerlink" title="数据劫持"></a>数据劫持</h5><p>我们都知道，数据劫持的核心是<code>Object.defineProperty</code>将属性转化成对应的<code>getter\setter</code>（vue不支持ie8以下的原因）。在数据传递变更的时候，会进入Dep和Watcher中处理。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-title function_">walk</span>(<span class="hljs-params">obj</span>) &#123;<br>    <span class="hljs-keyword">const</span> keys = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(obj)<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; keys.<span class="hljs-property">length</span>; ++i) &#123;<br>        <span class="hljs-title function_">defineReactive</span>(obj, keys[i], obj[keys[i]])<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>劫持相关函数及订阅发布</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><code class="hljs js"><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Define a reactive property on an Object.</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">defineReactive</span>(<span class="hljs-params"></span><br><span class="hljs-params">  obj: <span class="hljs-built_in">Object</span>,</span><br><span class="hljs-params">  key: string,</span><br><span class="hljs-params">  val: any,</span><br><span class="hljs-params">  customSetter?: <span class="hljs-built_in">Function</span></span><br><span class="hljs-params"></span>) &#123;<br>  <span class="hljs-comment">/*在闭包中定义一个dep对象*/</span><br>  <span class="hljs-keyword">const</span> dep = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Dep</span>()<br><br>  <span class="hljs-keyword">const</span> property = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">getOwnPropertyDescriptor</span>(obj, key)<br>  <span class="hljs-keyword">if</span> (property &amp;&amp; property.<span class="hljs-property">configurable</span> === <span class="hljs-literal">false</span>) &#123;<br>    <span class="hljs-keyword">return</span><br>  &#125;<br><br>  <span class="hljs-comment">/*如果之前该对象已经预设了getter以及setter函数则将其取出来，新定义的getter/setter中会将其执行，保证不会覆盖之前已经定义的getter/setter。*/</span><br>  <span class="hljs-comment">// cater for pre-defined getter/setters</span><br>  <span class="hljs-keyword">const</span> getter = property &amp;&amp; property.<span class="hljs-property">get</span><br>  <span class="hljs-keyword">const</span> setter = property &amp;&amp; property.<span class="hljs-property">set</span><br><br>  <span class="hljs-comment">/*对象的子对象递归进行observe并返回子节点的Observer对象*/</span><br>  <span class="hljs-keyword">let</span> childOb = <span class="hljs-title function_">observe</span>(val)<br>  <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">defineProperty</span>(obj, key, &#123;<br>    <span class="hljs-attr">enumerable</span>: <span class="hljs-literal">true</span>,<br>    <span class="hljs-attr">configurable</span>: <span class="hljs-literal">true</span>,<br>    <span class="hljs-attr">get</span>: <span class="hljs-keyword">function</span> <span class="hljs-title function_">reactiveGetter</span>(<span class="hljs-params"></span>) &#123;<br>      <span class="hljs-comment">/*如果原本对象拥有getter方法则执行*/</span><br>      <span class="hljs-keyword">const</span> value = getter ? getter.<span class="hljs-title function_">call</span>(obj) : val<br>      <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Dep</span>.<span class="hljs-property">target</span>) &#123;<br>        <span class="hljs-comment">/*进行依赖收集*/</span><br>        dep.<span class="hljs-title function_">depend</span>()<br>        <span class="hljs-keyword">if</span> (childOb) &#123;<br>          <span class="hljs-comment">/*子对象进行依赖收集，其实就是将同一个watcher观察者实例放进了两个depend中，一个是正在本身闭包中的depend，另一个是子元素的depend*/</span><br>          childOb.<span class="hljs-property">dep</span>.<span class="hljs-title function_">depend</span>()<br>        &#125;<br>        <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(value)) &#123;<br>          <span class="hljs-comment">/*是数组则需要对每一个成员都进行依赖收集，如果数组的成员还是数组，则递归。*/</span><br>          <span class="hljs-title function_">dependArray</span>(value)<br>        &#125;<br>      &#125;<br>      <span class="hljs-keyword">return</span> value<br>    &#125;,<br>    <span class="hljs-attr">set</span>: <span class="hljs-keyword">function</span> <span class="hljs-title function_">reactiveSetter</span>(<span class="hljs-params">newVal</span>) &#123;<br>      <span class="hljs-comment">/*通过getter方法获取当前值，与新值进行比较，一致则不需要执行下面的操作*/</span><br>      <span class="hljs-keyword">const</span> value = getter ? getter.<span class="hljs-title function_">call</span>(obj) : val<br>      <span class="hljs-comment">/* eslint-disable no-self-compare */</span><br>      <span class="hljs-keyword">if</span> (newVal === value || (newVal !== newVal &amp;&amp; value !== value)) &#123;<br>        <span class="hljs-keyword">return</span><br>      &#125;<br>      <span class="hljs-comment">/* eslint-enable no-self-compare */</span><br>      <span class="hljs-keyword">if</span> (process.<span class="hljs-property">env</span>.<span class="hljs-property">NODE_ENV</span> !== <span class="hljs-string">&#x27;production&#x27;</span> &amp;&amp; customSetter) &#123;<br>        <span class="hljs-title function_">customSetter</span>()<br>      &#125;<br>      <span class="hljs-keyword">if</span> (setter) &#123;<br>        <span class="hljs-comment">/*如果原本对象拥有setter方法则执行setter*/</span><br>        setter.<span class="hljs-title function_">call</span>(obj, newVal)<br>      &#125; <span class="hljs-keyword">else</span> &#123;<br>        val = newVal<br>      &#125;<br><br>      <span class="hljs-comment">/*新的值需要重新进行observe，保证数据响应式*/</span><br>      childOb = <span class="hljs-title function_">observe</span>(newVal)<br><br>      <span class="hljs-comment">/*dep对象通知所有的观察者*/</span><br>      dep.<span class="hljs-title function_">notify</span>()<br>    &#125;<br>  &#125;)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在初始化时对data内数据开始劫持监听，初始化时调用<code>observe</code>，返回的是<code>Observer</code>实例</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Attempt to create an observer instance for a value,</span><br><span class="hljs-comment"> * returns the new observer if successfully observed,</span><br><span class="hljs-comment"> * or the existing observer if the value already has one.</span><br><span class="hljs-comment"> */</span><br><span class="hljs-comment">/*</span><br><span class="hljs-comment"> 尝试创建一个Observer实例（__ob__），如果成功创建Observer实例则返回新的Observer实例，如果已有Observer实例则返回现有的Observer实例。</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">observe</span>(<span class="hljs-params">value: any, asRootData: ?boolean</span>): <span class="hljs-title class_">Observer</span> | <span class="hljs-keyword">void</span> &#123;<br>  <span class="hljs-comment">/*判断是否是一个对象*/</span><br>  <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isObject</span>(value)) &#123;<br>    <span class="hljs-keyword">return</span><br>  &#125;<br>  <span class="hljs-keyword">let</span> <span class="hljs-attr">ob</span>: <span class="hljs-title class_">Observer</span> | <span class="hljs-keyword">void</span><br><br>  <span class="hljs-comment">/*这里用__ob__这个属性来判断是否已经有Observer实例，如果没有Observer实例则会新建一个Observer实例并赋值给__ob__这个属性，如果已有Observer实例则直接返回该Observer实例*/</span><br>  <span class="hljs-keyword">if</span> (<span class="hljs-title function_">hasOwn</span>(value, <span class="hljs-string">&#x27;__ob__&#x27;</span>) &amp;&amp; value.<span class="hljs-property">__ob__</span> <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">Observer</span>) &#123;<br>    ob = value.<span class="hljs-property">__ob__</span><br>  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<br>    <span class="hljs-comment">/*这里的判断是为了确保value是单纯的对象，而不是函数或者是Regexp等情况。*/</span><br>    observerState.<span class="hljs-property">shouldConvert</span> &amp;&amp;<br>    !<span class="hljs-title function_">isServerRendering</span>() &amp;&amp;<br>    (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(value) || <span class="hljs-title function_">isPlainObject</span>(value)) &amp;&amp;<br>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">isExtensible</span>(value) &amp;&amp;<br>    !value.<span class="hljs-property">_isVue</span><br>  ) &#123;<br>    ob = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Observer</span>(value)<br>  &#125;<br>  <span class="hljs-keyword">if</span> (asRootData &amp;&amp; ob) &#123;<br>    <span class="hljs-comment">/*如果是根数据则计数，后面Observer中的observe的asRootData非true*/</span><br>    ob.<span class="hljs-property">vmCount</span>++<br>  &#125;<br>  <span class="hljs-keyword">return</span> ob<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="Dep与Watcher"><a href="#Dep与Watcher" class="headerlink" title="Dep与Watcher"></a>Dep与Watcher</h5><p>在数据劫持时，数据的获取和修改都会做出对应操作。操作目的就是为了通知“中转站”，它主要是对数据变更起通知作用及存放依赖这些数据的地方。</p>
+<h6 id="Dep"><a href="#Dep" class="headerlink" title="Dep"></a>Dep</h6><p>Dep用来收集依赖，通知对应的订阅者，让它执行自己的操作。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * A dep is an observable that can have multiple</span><br><span class="hljs-comment"> * directives subscribing to it.</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Dep</span> &#123;<br>  <span class="hljs-keyword">static</span> <span class="hljs-attr">target</span>: ?<span class="hljs-title class_">Watcher</span><br>  <span class="hljs-attr">id</span>: number<br>  <span class="hljs-attr">subs</span>: <span class="hljs-title class_">Array</span>&lt;<span class="hljs-title class_">Watcher</span>&gt;<br><br>  <span class="hljs-title function_">constructor</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">id</span> = uid++<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">subs</span> = []<br>  &#125;<br><br>  <span class="hljs-comment">/*添加一个观察者对象*/</span><br>  <span class="hljs-title function_">addSub</span>(<span class="hljs-params">sub: Watcher</span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">subs</span>.<span class="hljs-title function_">push</span>(sub)<br>  &#125;<br><br>  <span class="hljs-comment">/*移除一个观察者对象*/</span><br>  <span class="hljs-title function_">removeSub</span>(<span class="hljs-params">sub: Watcher</span>) &#123;<br>    <span class="hljs-title function_">remove</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">subs</span>, sub)<br>  &#125;<br><br>  <span class="hljs-comment">/*依赖收集，当存在Dep.target的时候添加观察者对象*/</span><br>  <span class="hljs-title function_">depend</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Dep</span>.<span class="hljs-property">target</span>) &#123;<br>      <span class="hljs-title class_">Dep</span>.<span class="hljs-property">target</span>.<span class="hljs-title function_">addDep</span>(<span class="hljs-variable language_">this</span>)<br>    &#125;<br>  &#125;<br><br>  <span class="hljs-comment">/*通知所有订阅者*/</span><br>  <span class="hljs-title function_">notify</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-comment">// stabilize the subscriber list first</span><br>    <span class="hljs-keyword">const</span> subs = <span class="hljs-variable language_">this</span>.<span class="hljs-property">subs</span>.<span class="hljs-title function_">slice</span>()<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, l = subs.<span class="hljs-property">length</span>; i &lt; l; i++) &#123;<br>      subs[i].<span class="hljs-title function_">update</span>()<br>    &#125;<br>  &#125;<br>&#125;<br><br><span class="hljs-comment">// the current target watcher being evaluated.</span><br><span class="hljs-comment">// this is globally unique because there could be only one</span><br><span class="hljs-comment">// watcher being evaluated at any time.</span><br><span class="hljs-title class_">Dep</span>.<span class="hljs-property">target</span> = <span class="hljs-literal">null</span><br><span class="hljs-comment">/*依赖收集完需要将Dep.target设为null，防止后面重复添加依赖。*/</span><br><span class="hljs-keyword">const</span> targetStack = []<br><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">pushTarget</span>(<span class="hljs-params">_target: Watcher</span>) &#123;<br>  <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Dep</span>.<span class="hljs-property">target</span>) targetStack.<span class="hljs-title function_">push</span>(<span class="hljs-title class_">Dep</span>.<span class="hljs-property">target</span>)<br>  <span class="hljs-comment">// 改变目标指向</span><br>  <span class="hljs-title class_">Dep</span>.<span class="hljs-property">target</span> = _target<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">popTarget</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-comment">// 删除当前目标，重算指向</span><br>  <span class="hljs-title class_">Dep</span>.<span class="hljs-property">target</span> = targetStack.<span class="hljs-title function_">pop</span>()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>上述代码主要进行了两个动作：</p>
+<ul>
+<li>定义subs数组，用来搜集订阅者Watcher。</li>
+<li>劫持数据变更时，通知Watcher进行update操作。</li>
+</ul>
+<h6 id="Watcher"><a href="#Watcher" class="headerlink" title="Watcher"></a>Watcher</h6><p>Watcher是订阅者，主要作用是订阅Dep，当Dep发出消息<code>notify</code>的时候，所有订阅了Dep的Watcher执行自己的update操作。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Watcher</span> &#123;<br>  <span class="hljs-attr">vm</span>: <span class="hljs-title class_">Component</span><br>  <span class="hljs-attr">expression</span>: string<br>  <span class="hljs-attr">cb</span>: <span class="hljs-title class_">Function</span><br>  <span class="hljs-attr">id</span>: number<br>  <span class="hljs-attr">deep</span>: boolean<br>  <span class="hljs-attr">user</span>: boolean<br>  <span class="hljs-attr">lazy</span>: boolean<br>  <span class="hljs-attr">sync</span>: boolean<br>  <span class="hljs-attr">dirty</span>: boolean<br>  <span class="hljs-attr">active</span>: boolean<br>  <span class="hljs-attr">deps</span>: <span class="hljs-title class_">Array</span>&lt;<span class="hljs-title class_">Dep</span>&gt;<br>  <span class="hljs-attr">newDeps</span>: <span class="hljs-title class_">Array</span>&lt;<span class="hljs-title class_">Dep</span>&gt;<br>  <span class="hljs-attr">depIds</span>: <span class="hljs-title class_">ISet</span><br>  <span class="hljs-attr">newDepIds</span>: <span class="hljs-title class_">ISet</span><br>  <span class="hljs-attr">getter</span>: <span class="hljs-title class_">Function</span><br>  <span class="hljs-attr">value</span>: any<br><br>  <span class="hljs-title function_">constructor</span>(<span class="hljs-params"></span><br><span class="hljs-params">    vm: Component,</span><br><span class="hljs-params">    expOrFn: string | <span class="hljs-built_in">Function</span>,</span><br><span class="hljs-params">    cb: <span class="hljs-built_in">Function</span>,</span><br><span class="hljs-params">    options?: <span class="hljs-built_in">Object</span></span><br><span class="hljs-params">  </span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">vm</span> = vm<br>    <span class="hljs-comment">/*_watchers存放订阅者实例*/</span><br>    vm.<span class="hljs-property">_watchers</span>.<span class="hljs-title function_">push</span>(<span class="hljs-variable language_">this</span>)<br>    <span class="hljs-comment">// options</span><br>    <span class="hljs-keyword">if</span> (options) &#123;<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">deep</span> = !!options.<span class="hljs-property">deep</span><br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">user</span> = !!options.<span class="hljs-property">user</span><br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">lazy</span> = !!options.<span class="hljs-property">lazy</span><br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">sync</span> = !!options.<span class="hljs-property">sync</span><br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">deep</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">user</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">lazy</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sync</span> = <span class="hljs-literal">false</span><br>    &#125;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">cb</span> = cb<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">id</span> = ++uid <span class="hljs-comment">// uid for batching</span><br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">active</span> = <span class="hljs-literal">true</span><br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirty</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">lazy</span> <span class="hljs-comment">// for lazy watchers</span><br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">deps</span> = []<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">newDeps</span> = []<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">depIds</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Set</span>()<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">newDepIds</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Set</span>()<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">expression</span> =<br>      process.<span class="hljs-property">env</span>.<span class="hljs-property">NODE_ENV</span> !== <span class="hljs-string">&#x27;production&#x27;</span> ? expOrFn.<span class="hljs-title function_">toString</span>() : <span class="hljs-string">&#x27;&#x27;</span><br>    <span class="hljs-comment">// parse expression for getter</span><br>    <span class="hljs-comment">/*把表达式expOrFn解析成getter*/</span><br>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> expOrFn === <span class="hljs-string">&#x27;function&#x27;</span>) &#123;<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">getter</span> = expOrFn<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">getter</span> = <span class="hljs-title function_">parsePath</span>(expOrFn)<br>      <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">getter</span>) &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">getter</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;&#125;<br>        process.<span class="hljs-property">env</span>.<span class="hljs-property">NODE_ENV</span> !== <span class="hljs-string">&#x27;production&#x27;</span> &amp;&amp;<br>          <span class="hljs-title function_">warn</span>(<br>            <span class="hljs-string">`Failed watching path: &quot;<span class="hljs-subst">$&#123;expOrFn&#125;</span>&quot; `</span> +<br>              <span class="hljs-string">&#x27;Watcher only accepts simple dot-delimited paths. &#x27;</span> +<br>              <span class="hljs-string">&#x27;For full control, use a function instead.&#x27;</span>,<br>            vm<br>          )<br>      &#125;<br>    &#125;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">lazy</span> ? <span class="hljs-literal">undefined</span> : <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">get</span>()<br>  &#125;<br><br>  <span class="hljs-comment">/**</span><br><span class="hljs-comment">   * Evaluate the getter, and re-collect dependencies.</span><br><span class="hljs-comment">   */</span><br>  <span class="hljs-comment">/*获得getter的值并且重新进行依赖收集*/</span><br>  <span class="hljs-title function_">get</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-comment">/*将自身watcher观察者实例设置给Dep.target，用以依赖收集。*/</span><br>    <span class="hljs-title function_">pushTarget</span>(<span class="hljs-variable language_">this</span>)<br>    <span class="hljs-keyword">let</span> value<br>    <span class="hljs-keyword">const</span> vm = <span class="hljs-variable language_">this</span>.<span class="hljs-property">vm</span><br><br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">    执行了getter操作，看似执行了渲染操作，其实是执行了依赖收集。</span><br><span class="hljs-comment">    在将Dep.target设置为自生观察者实例以后，执行getter操作。</span><br><span class="hljs-comment">    譬如说现在的的data中可能有a、b、c三个数据，getter渲染需要依赖a跟c，</span><br><span class="hljs-comment">    那么在执行getter的时候就会触发a跟c两个数据的getter函数，</span><br><span class="hljs-comment">    在getter函数中即可判断Dep.target是否存在然后完成依赖收集，</span><br><span class="hljs-comment">    将该观察者对象放入闭包中的Dep的subs中去。</span><br><span class="hljs-comment">    */</span><br>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">user</span>) &#123;<br>      <span class="hljs-keyword">try</span> &#123;<br>        value = <span class="hljs-variable language_">this</span>.<span class="hljs-property">getter</span>.<span class="hljs-title function_">call</span>(vm, vm)<br>      &#125; <span class="hljs-keyword">catch</span> (e) &#123;<br>        <span class="hljs-title function_">handleError</span>(e, vm, <span class="hljs-string">`getter for watcher &quot;<span class="hljs-subst">$&#123;<span class="hljs-variable language_">this</span>.expression&#125;</span>&quot;`</span>)<br>      &#125;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      value = <span class="hljs-variable language_">this</span>.<span class="hljs-property">getter</span>.<span class="hljs-title function_">call</span>(vm, vm)<br>    &#125;<br>    <span class="hljs-comment">// &quot;touch&quot; every property so they are all tracked as</span><br>    <span class="hljs-comment">// dependencies for deep watching</span><br>    <span class="hljs-comment">/*如果存在deep，则触发每个深层对象的依赖，追踪其变化*/</span><br>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">deep</span>) &#123;<br>      <span class="hljs-comment">/*递归每一个对象或者数组，触发它们的getter，使得对象或数组的每一个成员都被依赖收集，形成一个“深（deep）”依赖关系*/</span><br>      <span class="hljs-title function_">traverse</span>(value)<br>    &#125;<br><br>    <span class="hljs-comment">/*将观察者实例从target栈中取出并设置给Dep.target*/</span><br>    <span class="hljs-title function_">popTarget</span>()<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanupDeps</span>()<br>    <span class="hljs-keyword">return</span> value<br>  &#125;<br><br>  <span class="hljs-comment">/**</span><br><span class="hljs-comment">   * Add a dependency to this directive.</span><br><span class="hljs-comment">   */</span><br>  <span class="hljs-comment">/*添加一个依赖关系到Deps集合中*/</span><br>  <span class="hljs-title function_">addDep</span>(<span class="hljs-params">dep: Dep</span>) &#123;<br>    <span class="hljs-keyword">const</span> id = dep.<span class="hljs-property">id</span><br>    <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">newDepIds</span>.<span class="hljs-title function_">has</span>(id)) &#123;<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">newDepIds</span>.<span class="hljs-title function_">add</span>(id)<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">newDeps</span>.<span class="hljs-title function_">push</span>(dep)<br>      <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">depIds</span>.<span class="hljs-title function_">has</span>(id)) &#123;<br>        dep.<span class="hljs-title function_">addSub</span>(<span class="hljs-variable language_">this</span>)<br>      &#125;<br>    &#125;<br>  &#125;<br><br>  <span class="hljs-comment">/**</span><br><span class="hljs-comment">   * Clean up for dependency collection.</span><br><span class="hljs-comment">   */</span><br>  <span class="hljs-comment">/*清理依赖收集*/</span><br>  <span class="hljs-title function_">cleanupDeps</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-comment">/*移除所有观察者对象*/</span><br>    <span class="hljs-keyword">let</span> i = <span class="hljs-variable language_">this</span>.<span class="hljs-property">deps</span>.<span class="hljs-property">length</span><br>    <span class="hljs-keyword">while</span> (i--) &#123;<br>      <span class="hljs-keyword">const</span> dep = <span class="hljs-variable language_">this</span>.<span class="hljs-property">deps</span>[i]<br>      <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">newDepIds</span>.<span class="hljs-title function_">has</span>(dep.<span class="hljs-property">id</span>)) &#123;<br>        dep.<span class="hljs-title function_">removeSub</span>(<span class="hljs-variable language_">this</span>)<br>      &#125;<br>    &#125;<br>    <span class="hljs-keyword">let</span> tmp = <span class="hljs-variable language_">this</span>.<span class="hljs-property">depIds</span><br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">depIds</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">newDepIds</span><br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">newDepIds</span> = tmp<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">newDepIds</span>.<span class="hljs-title function_">clear</span>()<br>    tmp = <span class="hljs-variable language_">this</span>.<span class="hljs-property">deps</span><br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">deps</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">newDeps</span><br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">newDeps</span> = tmp<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">newDeps</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span><br>  &#125;<br><br>  <span class="hljs-comment">/**</span><br><span class="hljs-comment">   * Subscriber interface.</span><br><span class="hljs-comment">   * Will be called when a dependency changes.</span><br><span class="hljs-comment">   */</span><br>  <span class="hljs-comment">/*</span><br><span class="hljs-comment">  调度者接口，当依赖发生改变的时候进行回调。</span><br><span class="hljs-comment">  */</span><br>  <span class="hljs-title function_">update</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-comment">/* istanbul ignore else */</span><br>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">lazy</span>) &#123;<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirty</span> = <span class="hljs-literal">true</span><br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">sync</span>) &#123;<br>      <span class="hljs-comment">/*同步则执行run直接渲染视图*/</span><br>      <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">run</span>()<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      <span class="hljs-comment">/*异步推送到观察者队列中，由调度者调用。*/</span><br>      <span class="hljs-title function_">queueWatcher</span>(<span class="hljs-variable language_">this</span>)<br>    &#125;<br>  &#125;<br><br>  <span class="hljs-comment">/**</span><br><span class="hljs-comment">   * Scheduler job interface.</span><br><span class="hljs-comment">   * Will be called by the scheduler.</span><br><span class="hljs-comment">   */</span><br>  <span class="hljs-comment">/*</span><br><span class="hljs-comment">        调度者工作接口，将被调度者回调。</span><br><span class="hljs-comment">        */</span><br>  <span class="hljs-title function_">run</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">active</span>) &#123;<br>      <span class="hljs-keyword">const</span> value = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">get</span>()<br>      <span class="hljs-keyword">if</span> (<br>        value !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span> ||<br>        <span class="hljs-comment">// Deep watchers and watchers on Object/Arrays should fire even</span><br>        <span class="hljs-comment">// when the value is the same, because the value may</span><br>        <span class="hljs-comment">// have mutated.</span><br>        <span class="hljs-comment">/*</span><br><span class="hljs-comment">          即便值相同，拥有Deep属性的观察者以及在对象／数组上的观察者应该被触发更新，因为它们的值可能发生改变。</span><br><span class="hljs-comment">        */</span><br>        <span class="hljs-title function_">isObject</span>(value) ||<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">deep</span><br>      ) &#123;<br>        <span class="hljs-comment">// set new value</span><br>        <span class="hljs-keyword">const</span> oldValue = <span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span><br>        <span class="hljs-comment">/*设置新的值*/</span><br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span> = value<br><br>        <span class="hljs-comment">/*触发回调渲染视图*/</span><br>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">user</span>) &#123;<br>          <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">cb</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">vm</span>, value, oldValue)<br>          &#125; <span class="hljs-keyword">catch</span> (e) &#123;<br>            <span class="hljs-title function_">handleError</span>(e, <span class="hljs-variable language_">this</span>.<span class="hljs-property">vm</span>, <span class="hljs-string">`callback for watcher &quot;<span class="hljs-subst">$&#123;<span class="hljs-variable language_">this</span>.expression&#125;</span>&quot;`</span>)<br>          &#125;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>          <span class="hljs-variable language_">this</span>.<span class="hljs-property">cb</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">vm</span>, value, oldValue)<br>        &#125;<br>      &#125;<br>    &#125;<br>  &#125;<br><br>  <span class="hljs-comment">/**</span><br><span class="hljs-comment">   * Evaluate the value of the watcher.</span><br><span class="hljs-comment">   * This only gets called for lazy watchers.</span><br><span class="hljs-comment">   */</span><br>  <span class="hljs-comment">/*获取观察者的值*/</span><br>  <span class="hljs-title function_">evaluate</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">get</span>()<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirty</span> = <span class="hljs-literal">false</span><br>  &#125;<br><br>  <span class="hljs-comment">/**</span><br><span class="hljs-comment">   * Depend on all deps collected by this watcher.</span><br><span class="hljs-comment">   */</span><br>  <span class="hljs-comment">/*收集该watcher的所有deps依赖*/</span><br>  <span class="hljs-title function_">depend</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">let</span> i = <span class="hljs-variable language_">this</span>.<span class="hljs-property">deps</span>.<span class="hljs-property">length</span><br>    <span class="hljs-keyword">while</span> (i--) &#123;<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">deps</span>[i].<span class="hljs-title function_">depend</span>()<br>    &#125;<br>  &#125;<br><br>  <span class="hljs-comment">/**</span><br><span class="hljs-comment">   * Remove self from all dependencies&#x27; subscriber list.</span><br><span class="hljs-comment">   */</span><br>  <span class="hljs-comment">/*将自身从所有依赖收集订阅列表删除*/</span><br>  <span class="hljs-title function_">teardown</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">active</span>) &#123;<br>      <span class="hljs-comment">// remove self from vm&#x27;s watcher list</span><br>      <span class="hljs-comment">// this is a somewhat expensive operation so we skip it</span><br>      <span class="hljs-comment">// if the vm is being destroyed.</span><br>      <span class="hljs-comment">/*从vm实例的观察者列表中将自身移除，由于该操作比较耗费资源，所以如果vm实例正在被销毁则跳过该步骤。*/</span><br>      <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">vm</span>.<span class="hljs-property">_isBeingDestroyed</span>) &#123;<br>        <span class="hljs-title function_">remove</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">vm</span>.<span class="hljs-property">_watchers</span>, <span class="hljs-variable language_">this</span>)<br>      &#125;<br>      <span class="hljs-keyword">let</span> i = <span class="hljs-variable language_">this</span>.<span class="hljs-property">deps</span>.<span class="hljs-property">length</span><br>      <span class="hljs-keyword">while</span> (i--) &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">deps</span>[i].<span class="hljs-title function_">removeSub</span>(<span class="hljs-variable language_">this</span>)<br>      &#125;<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">active</span> = <span class="hljs-literal">false</span><br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="命令模式"><a href="#命令模式" class="headerlink" title="命令模式"></a>命令模式</h2><blockquote>
+<p>命令模式是最简单和优雅的模式之一，命令模式中的命令（command）指的是一个执行某些特定事情的指令。</p>
+</blockquote>
+<p>命令模式是一种松耦合的方式，使请求发送者和接收者消除彼此的耦合关系。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">/* </span><br><span class="hljs-comment">    本质是对命令封装，拆分发出命令的责任和执行命令的责任</span><br><span class="hljs-comment">    优点：降低对象耦合度，易扩展组合命令，调用同一方法实现不同功能</span><br><span class="hljs-comment">*/</span><br><br><span class="hljs-comment">// 命令</span><br><span class="hljs-keyword">var</span> <span class="hljs-title class_">CreateCommand</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">receiver</span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">receiver</span> = receiver<br>&#125;<br><span class="hljs-title class_">CreateCommand</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">execute</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">receiver</span>.<span class="hljs-title function_">action</span>()<br>&#125;<br><br><span class="hljs-comment">// 接收者</span><br><span class="hljs-keyword">var</span> <span class="hljs-title class_">TVOn</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123; &#125;<br><span class="hljs-title class_">TVOn</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">action</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;TV on now&#x27;</span>);<br>&#125;<br><br><span class="hljs-keyword">var</span> <span class="hljs-title class_">TVOff</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123; &#125;<br><span class="hljs-title class_">TVOff</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">action</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;TV off now&#x27;</span>);<br>&#125;<br><br><span class="hljs-comment">// 调用者</span><br><span class="hljs-keyword">var</span> <span class="hljs-title class_">Invoker</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">tvOnCommand, tvOffCommand</span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">tvOnCommand</span> = tvOnCommand<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">tvOffCommand</span> = tvOffCommand<br>&#125;<br><span class="hljs-title class_">Invoker</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">tvOn</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">tvOnCommand</span>.<span class="hljs-title function_">execute</span>()<br>&#125;<br><span class="hljs-title class_">Invoker</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">tvOff</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">tvOffCommand</span>.<span class="hljs-title function_">execute</span>()<br>&#125;<br><br><span class="hljs-keyword">var</span> tvOnCommand = <span class="hljs-keyword">new</span> <span class="hljs-title class_">CreateCommand</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">TVOn</span>())<br><span class="hljs-keyword">var</span> tvOffCommand = <span class="hljs-keyword">new</span> <span class="hljs-title class_">CreateCommand</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">TVOff</span>())<br><br><span class="hljs-keyword">var</span> myInvoker = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Invoker</span>(tvOnCommand, tvOffCommand)<br>myInvoker.<span class="hljs-title function_">tvOn</span>()<br>myInvoker.<span class="hljs-title function_">tvOff</span>()<br></code></pre></td></tr></table></figure>
+
+<h2 id="组合模式"><a href="#组合模式" class="headerlink" title="组合模式"></a>组合模式</h2><blockquote>
+<p>组合模式就是用小的子对象来构建更大的对象，而这些小的子对象本身也许是由更小的“孙对象”构成的。</p>
+</blockquote>
+<h3 id="组合模式用途"><a href="#组合模式用途" class="headerlink" title="组合模式用途"></a>组合模式用途</h3><p>组合模式将对象组合成树型结构，以表示“部分-整体”的层级结构。组合模式的另一个好处是通过对象的多态性表现，使得用户对单个对象和组合对象的使用具有一致性。</p>
+<p>以宏命令为例，请求从树最顶端的对象往下传递，如果当前处理请求的对象是叶对象（普通子命令），叶对象自身会对请求作出相应的处理；如果当前处理请求的对象是组合对象（宏命令），组合对象则会遍历它属下的子节点，将请求继续传递给这些子节点。</p>
+<p>请求从上至下传递直到尽头，用户只需要关心最顶层的组合对象，请求该对象请求便会向下传递。</p>
+<p>角色：<br>（1）子对象<br>（2）组合对象<br>（3）抽象类：主要定义了参与组合的对象的公共接口，也可以直接在组合对象中定义</p>
+<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><p>github上原有<a target="_blank" rel="noopener" href="https://github.com/sohamkamani/javascript-design-patterns-for-humans#-bridge">例子</a></p>
+<p>场景：组织内有各种员工，员工有不同姓名、工资，可进行添加操作。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 场景 以员工为例。这里我们有不同的员工类型</span><br><span class="hljs-comment">// 开发者</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Developer</span> &#123;<br>    <span class="hljs-title function_">constructor</span>(<span class="hljs-params">name, salary</span>) &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = name<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">salary</span> = salary<br>    &#125;<br>    <span class="hljs-title function_">getName</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span><br>    &#125;<br>    <span class="hljs-title function_">setSalary</span>(<span class="hljs-params">salary</span>) &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">salary</span> = salary<br>    &#125;<br>    <span class="hljs-title function_">getSalary</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">salary</span><br>    &#125;<br>    <span class="hljs-title function_">getRoles</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">roles</span><br>    &#125;<br>    <span class="hljs-title function_">develop</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-comment">/* */</span><br>    &#125;<br>&#125;<br><span class="hljs-comment">// 设计师</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Designer</span> &#123;<br>    <span class="hljs-title function_">constructor</span>(<span class="hljs-params">name, salary</span>) &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = name<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">salary</span> = salary<br>    &#125;<br>    <span class="hljs-title function_">getName</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span><br>    &#125;<br>    <span class="hljs-title function_">setSalary</span>(<span class="hljs-params">salary</span>) &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">salary</span> = salary<br>    &#125;<br>    <span class="hljs-title function_">getSalary</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">salary</span><br>    &#125;<br>    <span class="hljs-title function_">getRoles</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">roles</span><br>    &#125;<br>    <span class="hljs-title function_">design</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-comment">/* */</span><br>    &#125;<br>&#125;<br><span class="hljs-comment">// 一个由几种不同类型的员工组成的组织</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Organization</span> &#123;<br>    <span class="hljs-title function_">constructor</span>(<span class="hljs-params"></span>)&#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">employees</span> = []<br>    &#125;<br>    <span class="hljs-comment">// 追加元素</span><br>    <span class="hljs-title function_">addEmployee</span>(<span class="hljs-params">employee</span>) &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">employees</span>.<span class="hljs-title function_">push</span>(employee)<br>    &#125;<br>    <span class="hljs-comment">//  叶对象都有一样的getSalary方法。在根对象执行的时候，可以使用leaf.execute的模式来调用对象的方法。</span><br>    <span class="hljs-title function_">getNetSalaries</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">let</span> netSalary = <span class="hljs-number">0</span><br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">employees</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">employee</span> =&gt;</span> &#123;<br>            netSalary += employee.<span class="hljs-title function_">getSalary</span>()<br>        &#125;)<br>        <span class="hljs-keyword">return</span> netSalary<br>    &#125;<br>&#125;<br><span class="hljs-comment">// 调用</span><br><span class="hljs-comment">// Prepare the employees</span><br><span class="hljs-keyword">const</span> john = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Developer</span>(<span class="hljs-string">&#x27;John Doe&#x27;</span>, <span class="hljs-number">12000</span>)<br><span class="hljs-keyword">const</span> jane = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Designer</span>(<span class="hljs-string">&#x27;Jane&#x27;</span>, <span class="hljs-number">10000</span>)<br><span class="hljs-comment">// Add them to organization 优势：无论多少员工类型 对整个组合对象只调用一次</span><br><span class="hljs-keyword">const</span> organization = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Organization</span>()<br>organization.<span class="hljs-title function_">addEmployee</span>(john)<br>organization.<span class="hljs-title function_">addEmployee</span>(jane)<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;Net salaries: &quot;</span> , organization.<span class="hljs-title function_">getNetSalaries</span>()) <span class="hljs-comment">// Net Salaries: 22000</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="需要注意的地方"><a href="#需要注意的地方" class="headerlink" title="需要注意的地方"></a>需要注意的地方</h3><ul>
+<li>组合模式不是父子关系</li>
+<li>对叶对象操作的一致性</li>
+<li>双向映射关系</li>
+<li>用职责链模式提高组合模式性能</li>
+</ul>
+<h3 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h3><ul>
+<li>含有某种层级结构的对象集合(具体结构在开发过程中无法确定)</li>
+<li>希望对这些对象或者其中的某些对象执行某种操作</li>
+</ul>
+<p>缺点：因为组合对象的任何操作都会对所有的子对象调用同样的操作，所以当组合的结构很大时会有性能问题。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" class="category-chain-item">读书笔记</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/JavaScript/">#JavaScript</a>
+      
+        <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">#读书笔记</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>w字总结《JavaScript设计模式与开发实践》（设计模式）（上）</div>
+      <div>https://moewang0321.github.io/2021/11/17/w字总结《JavaScript设计模式与开发实践》（设计模式）（上）/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Moe Wang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年11月17日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/11/19/w%E5%AD%97%E6%80%BB%E7%BB%93%E3%80%8AJavaScript%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%BC%80%E5%8F%91%E5%AE%9E%E8%B7%B5%E3%80%8B%EF%BC%88%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%EF%BC%89%EF%BC%88%E4%B8%8B%EF%BC%89/" title="w字总结《JavaScript设计模式与开发实践》（设计模式）（下）">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">w字总结《JavaScript设计模式与开发实践》（设计模式）（下）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/11/16/w%E5%AD%97%E6%80%BB%E7%BB%93%E3%80%8AJavaScript%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%BC%80%E5%8F%91%E5%AE%9E%E8%B7%B5%E3%80%8B%EF%BC%88%E5%9F%BA%E7%A1%80%E7%AF%87%EF%BC%89/" title="w字总结《JavaScript设计模式与开发实践》（基础篇）">
+                        <span class="hidden-mobile">w字总结《JavaScript设计模式与开发实践》（基础篇）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+    <div id="giscus" class="giscus"></div>
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#giscus', function() {
+        var options = {"repo":"moewang0321/moewang0321.github.io","repo-id":"MDEwOlJlcG9zaXRvcnkyMDEyNDI0NTY=","category":"Show and tell","category-id":"DIC_kwDOC_63WM4CUMsH","theme-light":"light_protanopia","theme-dark":"dark_dimmed","mapping":"pathname","reactions-enabled":1,"emit-metadata":1,"input-position":"top","loading":"lazy","lang":"zh-CN"};
+        var attributes = {};
+        for (let option in options) {
+          if (!option.startsWith('theme-')) {
+            var key = option.startsWith('data-') ? option : 'data-' + option;
+            attributes[key] = options[option];
+          }
+        }
+        var light = 'light_protanopia';
+        var dark = 'dark_dimmed';
+        window.GiscusThemeLight = light;
+        window.GiscusThemeDark = dark;
+        attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
+        for (let attribute in attributes) {
+          var value = attributes[attribute];
+          if (value === undefined || value === null || value === '') {
+            delete attributes[attribute];
+          }
+        }
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('crossorigin', 'anonymous');
+        for (let attribute in attributes) {
+          s.setAttribute(attribute, attributes[attribute]);
+        }
+        var ss = document.getElementsByTagName('script');
+        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+        e.parentNode.insertBefore(s, e.nextSibling);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
