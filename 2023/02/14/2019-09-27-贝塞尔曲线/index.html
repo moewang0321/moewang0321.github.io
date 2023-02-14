@@ -1,0 +1,682 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Moe Wang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="没听课的我要写自定义三阶贝塞尔曲线……瞎写了一个点，突然有了点思路，然后写了好一阵，写完了决定md一下思路，嗯，也用不到，老师说放到github上点点star，我想想还是算了，太菜  进入正题自定义三阶贝塞尔曲线首先是 需要用canvas去画的，并且你每拖动一个点，都要重绘一次。所以一开始我直接用bezierCurveTo画了一个三阶曲线，妄想去让他变弯……事实证明不行。 所以参考了一下一个自定义">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自定义三阶贝塞尔曲线">
+<meta property="og:url" content="https://moewang0321.github.io/2023/02/14/2019-09-27-%E8%B4%9D%E5%A1%9E%E5%B0%94%E6%9B%B2%E7%BA%BF/index.html">
+<meta property="og:site_name" content="moe_大杂烩">
+<meta property="og:description" content="没听课的我要写自定义三阶贝塞尔曲线……瞎写了一个点，突然有了点思路，然后写了好一阵，写完了决定md一下思路，嗯，也用不到，老师说放到github上点点star，我想想还是算了，太菜  进入正题自定义三阶贝塞尔曲线首先是 需要用canvas去画的，并且你每拖动一个点，都要重绘一次。所以一开始我直接用bezierCurveTo画了一个三阶曲线，妄想去让他变弯……事实证明不行。 所以参考了一下一个自定义">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2019/12/02/gMIE9VXieWw3ASj.png">
+<meta property="article:published_time" content="2023-02-14T07:45:48.194Z">
+<meta property="article:modified_time" content="2023-02-13T01:35:46.648Z">
+<meta property="article:author" content="Moe Wang">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="canvas">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://i.loli.net/2019/12/02/gMIE9VXieWw3ASj.png">
+  
+  
+  
+  <title>自定义三阶贝塞尔曲线 - moe_大杂烩</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"moewang0321.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>moe_大杂烩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="自定义三阶贝塞尔曲线"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-02-14 15:45" pubdate>
+          2023年2月14日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          25 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">自定义三阶贝塞尔曲线</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>没听课的我要写自定义三阶贝塞尔曲线……瞎写了一个点，突然有了点思路，然后写了好一阵，写完了决定md一下思路，嗯，也用不到，老师说放到github上点点star，我想想还是算了，太菜</p>
+<p><img src="https://i.loli.net/2019/12/02/gMIE9VXieWw3ASj.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="进入正题"><a href="#进入正题" class="headerlink" title="进入正题"></a>进入正题</h4><p>自定义三阶贝塞尔曲线首先是 需要用<code>canvas</code>去画的，并且你每拖动一个点，都要重绘一次。所以一开始我直接用<code>bezierCurveTo</code>画了一个三阶曲线，妄想去让他变弯……事实证明不行。</p>
+<p>所以参考了一下一个自定义贝塞尔曲线动画的网站，他会给顶点和关键点做成一个可拖拽的圆，然后通过改变圆的位置改变贝塞尔曲线的关键点，搜噶！</p>
+<p>首先肯定要有个canvas，并且在js中获取它。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript">&lt;canvas id=<span class="hljs-string">&quot;canvas&quot;</span> width=<span class="hljs-string">&quot;800&quot;</span> height=<span class="hljs-string">&quot;500&quot;</span>&gt;&lt;/canvas&gt;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> canvas = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&#x27;canvas&#x27;</span>);<br><span class="hljs-keyword">var</span> context = canvas.<span class="hljs-title function_">getContext</span>(<span class="hljs-string">&#x27;2d&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+<p>因为要拖动四个点来改变三阶贝塞尔曲线的值，所以我把所有的点放到一个point对象里,然后在初始化的函数<code>init()</code>中定义</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">//初始化点</span><br>        <span class="hljs-keyword">function</span> <span class="hljs-title function_">init</span>(<span class="hljs-params">quadratic</span>) &#123;<br>            <span class="hljs-comment">//两端顶点</span><br>            point = &#123;<br>                <span class="hljs-attr">p1</span>: &#123;<br>                    <span class="hljs-attr">x</span>: <span class="hljs-number">100</span>,<br>                    <span class="hljs-attr">y</span>: <span class="hljs-number">250</span><br>                &#125;,<br>                <span class="hljs-attr">p2</span>: &#123;<br>                    <span class="hljs-attr">x</span>: <span class="hljs-number">400</span>,<br>                    <span class="hljs-attr">y</span>: <span class="hljs-number">250</span><br>                &#125;<br>            &#125;<br>            point.<span class="hljs-property">cp1</span> = &#123;<br>                    <span class="hljs-attr">x</span>: <span class="hljs-number">150</span>,<br>                    <span class="hljs-attr">y</span>: <span class="hljs-number">100</span><br>                &#125;,<br>                point.<span class="hljs-property">cp2</span> = &#123;<br>                    <span class="hljs-attr">x</span>: <span class="hljs-number">350</span>,<br>                    <span class="hljs-attr">y</span>: <span class="hljs-number">100</span><br>                &#125;,<br><br><br>                <span class="hljs-comment">//默认样式</span><br><br>                style = &#123;<br>                <span class="hljs-attr">line</span>: &#123;<br>                    <span class="hljs-attr">width</span>: <span class="hljs-number">6</span>,<br>                    <span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;red&#x27;</span><br>                &#125;,<br><br>                <span class="hljs-attr">cpline</span>: &#123;<br>                    <span class="hljs-attr">width</span>: <span class="hljs-number">2</span>,<br>                    <span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#777&#x27;</span><br>                &#125;,<br>                <span class="hljs-attr">point</span>: &#123;<br>                    <span class="hljs-attr">radius</span>: <span class="hljs-number">10</span>,<br>                    <span class="hljs-attr">width</span>: <span class="hljs-number">2</span>,<br>                    <span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;rgb(55, 255, 55)&#x27;</span>,<br>                    <span class="hljs-attr">fill</span>: <span class="hljs-string">&#x27;rgba(102, 217, 255 , 0.7)&#x27;</span>,<br>                    <span class="hljs-attr">arc1</span>: <span class="hljs-number">0</span>,<br>                    <span class="hljs-attr">arc2</span>: <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span> * <span class="hljs-number">2</span><br>                &#125;<br>            &#125;<br><br>            canvas.<span class="hljs-property">onmousedown</span> = dragStart;<br>            canvas.<span class="hljs-property">onmousemove</span> = dragging;<br>            canvas.<span class="hljs-property">onmouseup</span> = dragEnd;<br>            <span class="hljs-title class_">DrawCanvas</span>();<br>        &#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>然后要画出曲线、左边点以及右边点的连线（为了好看），要注意因为每次都是重绘所以要把画布清空</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">DrawCanvas</span>(<span class="hljs-params"></span>) &#123;<br>            context.<span class="hljs-title function_">clearRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, canvas.<span class="hljs-property">width</span>, canvas.<span class="hljs-property">height</span>);<br><br>            context.<span class="hljs-property">lineWidth</span> = style.<span class="hljs-property">cpline</span>.<span class="hljs-property">width</span>;<br>            context.<span class="hljs-property">strokeStyle</span> = style.<span class="hljs-property">cpline</span>.<span class="hljs-property">color</span>;<br>            context.<span class="hljs-title function_">beginPath</span>();<br>            context.<span class="hljs-title function_">moveTo</span>(point.<span class="hljs-property">p1</span>.<span class="hljs-property">x</span>, point.<span class="hljs-property">p1</span>.<span class="hljs-property">y</span>);<br>            context.<span class="hljs-title function_">lineTo</span>(point.<span class="hljs-property">cp1</span>.<span class="hljs-property">x</span>, point.<span class="hljs-property">cp1</span>.<span class="hljs-property">y</span>);<br>            context.<span class="hljs-title function_">moveTo</span>(point.<span class="hljs-property">p2</span>.<span class="hljs-property">x</span>, point.<span class="hljs-property">p2</span>.<span class="hljs-property">y</span>);<br>            context.<span class="hljs-title function_">lineTo</span>(point.<span class="hljs-property">cp2</span>.<span class="hljs-property">x</span>, point.<span class="hljs-property">cp2</span>.<span class="hljs-property">y</span>);<br>            context.<span class="hljs-title function_">stroke</span>();<br><br>            context.<span class="hljs-property">lineWidth</span> = style.<span class="hljs-property">line</span>.<span class="hljs-property">width</span>;<br>            context.<span class="hljs-property">strokeStyle</span> = style.<span class="hljs-property">line</span>.<span class="hljs-property">color</span>;<br>            context.<span class="hljs-title function_">beginPath</span>();<br>            context.<span class="hljs-title function_">moveTo</span>(point.<span class="hljs-property">p1</span>.<span class="hljs-property">x</span>, point.<span class="hljs-property">p1</span>.<span class="hljs-property">y</span>);<br>            context.<span class="hljs-title function_">bezierCurveTo</span>(point.<span class="hljs-property">cp1</span>.<span class="hljs-property">x</span>, point.<span class="hljs-property">cp1</span>.<span class="hljs-property">y</span>, point.<span class="hljs-property">cp2</span>.<span class="hljs-property">x</span>, point.<span class="hljs-property">cp2</span>.<span class="hljs-property">y</span>, point.<span class="hljs-property">p2</span>.<span class="hljs-property">x</span>, point.<span class="hljs-property">p2</span>.<span class="hljs-property">y</span>);<br>            context.<span class="hljs-title function_">stroke</span>();<br><br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> p <span class="hljs-keyword">in</span> point) &#123;<br>                context.<span class="hljs-property">lineWidth</span> = style.<span class="hljs-property">point</span>.<span class="hljs-property">width</span>;<br>                context.<span class="hljs-property">strokeStyle</span> = style.<span class="hljs-property">point</span>.<span class="hljs-property">color</span>;<br>                context.<span class="hljs-property">fillStyle</span> = style.<span class="hljs-property">point</span>.<span class="hljs-property">fill</span>;<br>                context.<span class="hljs-title function_">beginPath</span>();<br><br>                context.<span class="hljs-title function_">arc</span>(point[p].<span class="hljs-property">x</span>, point[p].<span class="hljs-property">y</span>, style.<span class="hljs-property">point</span>.<span class="hljs-property">radius</span>, style.<span class="hljs-property">point</span>.<span class="hljs-property">arc1</span>, style.<span class="hljs-property">point</span>.<span class="hljs-property">arc2</span>)<br>                context.<span class="hljs-title function_">fill</span>();<br>                context.<span class="hljs-title function_">stroke</span>();<br><br>            &#125;<br>        &#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>画也画完了，我构思的时候卡住的门槛就来了……怎么判断鼠标是不是点在了那四个圆里呢，想啥呢百度就完事了，然后发现了一个什么判断是不是在当前路径的东西，嗯？？？什么玩意不会用，所以就另辟蹊径，判断鼠标点击位置在不在圆里，高中数学？初中数学？点到圆心的距离小于半径，嗯我真聪明</p>
+<p>想好了就开始写吧</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">dragStart</span>(<span class="hljs-params">e</span>) &#123;<br>            e = <span class="hljs-title class_">MousePos</span>(e);<br>            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(e);<br>            <span class="hljs-keyword">var</span> dx,<br>                dy;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> p <span class="hljs-keyword">in</span> point) &#123;<br>                dx = point[p].<span class="hljs-property">x</span> - e.<span class="hljs-property">x</span>;<br>                dy = point[p].<span class="hljs-property">y</span> - e.<span class="hljs-property">y</span>;<br>                <span class="hljs-keyword">if</span> ((dx * dx) + (dy * dy) &lt; style.<span class="hljs-property">point</span>.<span class="hljs-property">radius</span> * style.<span class="hljs-property">point</span>.<span class="hljs-property">radius</span>) &#123;<br>                    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-number">1</span>);<br>                    drag = p;<br>                    dPoint = e;<br>                    <span class="hljs-keyword">return</span>;<br>                &#125;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">//拖拽</span><br>        <span class="hljs-keyword">function</span> <span class="hljs-title function_">dragging</span>(<span class="hljs-params">e</span>) &#123;<br>            <span class="hljs-keyword">if</span> (drag) &#123;<br>                e = <span class="hljs-title class_">MousePos</span>(e);<br>                point[drag].<span class="hljs-property">x</span> += e.<span class="hljs-property">x</span> - dPoint.<span class="hljs-property">x</span>;<br>                point[drag].<span class="hljs-property">y</span> += e.<span class="hljs-property">y</span> - dPoint.<span class="hljs-property">y</span>;<br>                dPoint = e;<br>                <span class="hljs-title class_">DrawCanvas</span>();<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">//结束</span><br>        <span class="hljs-keyword">function</span> <span class="hljs-title function_">dragEnd</span>(<span class="hljs-params">e</span>) &#123;<br>            drag = <span class="hljs-literal">null</span>;<br>            <span class="hljs-title class_">DrawCanvas</span>();<br>        &#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>ps:把鼠标相对于画布的位置封装了一下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">//获取当前鼠标相对于画布的坐标</span><br>        <span class="hljs-keyword">function</span> <span class="hljs-title function_">MousePos</span>(<span class="hljs-params">e</span>) &#123;<br>            e = e ? e : <span class="hljs-variable language_">window</span>.<span class="hljs-property">event</span>;<br>            <span class="hljs-keyword">return</span> &#123;<br>                <span class="hljs-attr">x</span>: e.<span class="hljs-property">pageX</span> - canvas.<span class="hljs-property">offsetLeft</span>,<br>                <span class="hljs-attr">y</span>: e.<span class="hljs-property">pageY</span> - canvas.<span class="hljs-property">offsetTop</span><br><br>            &#125;<br>        &#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>然后一个自定义贝塞尔曲线就完成了，其实还好，就是有点……没听课！</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/study/" class="category-chain-item">study</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/JavaScript/">#JavaScript</a>
+      
+        <a href="/tags/canvas/">#canvas</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>自定义三阶贝塞尔曲线</div>
+      <div>https://moewang0321.github.io/2023/02/14/2019-09-27-贝塞尔曲线/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Moe Wang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年2月14日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/02/14/2019-10-30-%E6%97%A5%E5%B8%B8%E7%BB%93/" title="视频一面总结">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">视频一面总结</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/02/14/2019-09-23-HTML5/" title="HTML5">
+                        <span class="hidden-mobile">HTML5</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

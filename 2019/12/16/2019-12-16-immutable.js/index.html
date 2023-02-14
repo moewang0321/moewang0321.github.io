@@ -1,0 +1,744 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Moe Wang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="什么是Immutable Data？扔一段官方文档，我也看不明白（过了个假六级）  Immutable data encourages pure functions (data-in, data-out) and lends itself to much simpler application development and enabling techniques from functiona">
+<meta property="og:type" content="article">
+<meta property="og:title" content="immutable.js">
+<meta property="og:url" content="https://moewang0321.github.io/2019/12/16/2019-12-16-immutable.js/index.html">
+<meta property="og:site_name" content="moe_大杂烩">
+<meta property="og:description" content="什么是Immutable Data？扔一段官方文档，我也看不明白（过了个假六级）  Immutable data encourages pure functions (data-in, data-out) and lends itself to much simpler application development and enabling techniques from functiona">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2165169-cebb05bca02f1772?imageMogr2/auto-orient/strip|imageView2/2/w/613/format/webp">
+<meta property="article:published_time" content="2019-12-16T05:22:21.000Z">
+<meta property="article:modified_time" content="2023-02-14T07:49:36.981Z">
+<meta property="article:author" content="Moe Wang">
+<meta property="article:tag" content="React">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/2165169-cebb05bca02f1772?imageMogr2/auto-orient/strip|imageView2/2/w/613/format/webp">
+  
+  
+  
+  <title>immutable.js - moe_大杂烩</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"moewang0321.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>moe_大杂烩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="immutable.js"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-12-16 13:22" pubdate>
+          2019年12月16日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          35 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">immutable.js</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <img src="https://upload-images.jianshu.io/upload_images/2165169-cebb05bca02f1772?imageMogr2/auto-orient/strip|imageView2/2/w/613/format/webp" srcset="/img/loading.gif" lazyload style="zoom:80%;" />
+
+<h2 id="什么是Immutable-Data？"><a href="#什么是Immutable-Data？" class="headerlink" title="什么是Immutable Data？"></a>什么是Immutable Data？</h2><p>扔一段官方文档，我也看不明白（过了个假六级）</p>
+<blockquote>
+<p>Immutable data encourages pure functions (data-in, data-out) and lends itself to much simpler application development and enabling techniques from functional programming such as lazy evaluation.</p>
+</blockquote>
+<p>实现原理：<strong>Persistent Data Structure （持久化数据结构）</strong></p>
+<p>也就是用旧数据创建新数据的时候要保证旧数据同时可用且不变，而且为了避免深拷贝把所有节点复制一遍带来的性能损耗，Immutable使用了<code>Structural Sharing</code>（结构共享），就是说如果对象数中一个节点发生变化，只修改这个节点和受它影响的父节点，其他节点共享，如图</p>
+<h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><h3 id="1-降低Mutable带来的复杂度"><a href="#1-降低Mutable带来的复杂度" class="headerlink" title="1.降低Mutable带来的复杂度"></a>1.降低Mutable带来的复杂度</h3><p>引用赋值虽然可以节省内存，但是当工程变的庞大，可变状态会成为噩梦，通常是理由深拷贝来避免，但是过度消耗内存</p>
+<h3 id="2-节省内存空间"><a href="#2-节省内存空间" class="headerlink" title="2.节省内存空间"></a>2.节省内存空间</h3><p>因为是结构共享，所以Immutable使用这种方式会尽量复用内存</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs dart"><span class="hljs-keyword">import</span> &#123; <span class="hljs-built_in">Map</span> &#125; from <span class="hljs-string">&#x27;immutable&#x27;</span>;<br>let a = <span class="hljs-built_in">Map</span>(&#123;<br>  select: <span class="hljs-string">&#x27;users&#x27;</span>,<br>  filter: <span class="hljs-built_in">Map</span>(&#123; name: <span class="hljs-string">&#x27;Cam&#x27;</span> &#125;)<br>&#125;)<br>let b = a.<span class="hljs-keyword">set</span>(<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;people&#x27;</span>);<br><br>a === b; <span class="hljs-comment">// false</span><br>a.<span class="hljs-keyword">get</span>(<span class="hljs-string">&#x27;filter&#x27;</span>) === b.<span class="hljs-keyword">get</span>(<span class="hljs-string">&#x27;filter&#x27;</span>); <span class="hljs-comment">// true</span><br></code></pre></td></tr></table></figure>
+
+<p>这里只有<code>select</code>变化了，所以<code>filter</code>节点是共享的</p>
+<h3 id="Undo-Redo-Copy-Paste"><a href="#Undo-Redo-Copy-Paste" class="headerlink" title="Undo/Redo , Copy/Paste"></a>Undo/Redo , Copy/Paste</h3><p>每次数据都不一样，所以可以把数据放到数组里存储，想拿哪次得到的数据都可以（话虽如此，我却没用过）</p>
+<h3 id="函数式编程"><a href="#函数式编程" class="headerlink" title="函数式编程"></a>函数式编程</h3><hr>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>不说了自己看吧</p>
+<h2 id="Immutable-js的数据类型"><a href="#Immutable-js的数据类型" class="headerlink" title="Immutable.js的数据类型"></a>Immutable.js的数据类型</h2><blockquote>
+<ul>
+<li><p>List：有序序列集，类似Array</p>
+</li>
+<li><p>Map：无序序列集，类似Object</p>
+</li>
+<li><p>Seq：这表示一系列值，但不能由具体的数据结构支持。</p>
+</li>
+</ul>
+<ul>
+<li>等……（以后再添加）</li>
+</ul>
+</blockquote>
+<h2 id="Immutable-js-常用API"><a href="#Immutable-js-常用API" class="headerlink" title="Immutable.js 常用API"></a>Immutable.js 常用API</h2><ul>
+<li><p><code>fromJS()</code></p>
+<ul>
+<li>作用：把一个JS数据转换成Immutable类型数据</li>
+<li>用法：<code>fromJS(value , converter)</code></li>
+<li>参数：value是要转变的数据，converter[可选]是要做的操作，默认会把数组转成LIst，对象转成Map</li>
+</ul>
+</li>
+<li><p><code>toJS()</code></p>
+<ul>
+<li>作用：把Immutable类型数据转换成JS类型数据</li>
+<li>用法：<code>value.toJS()</code></li>
+</ul>
+</li>
+<li><p><code>is()</code></p>
+<ul>
+<li>作用：对两个对象进行比较</li>
+<li>用法：<code>is(map1 , map2)</code></li>
+<li>简介：和JS中的对象比较不同，JS中比较两个对象是比较地址，而Immutable中比较的是对象的hashCode和valueOf，只要两者hashCode相等，值就相同，避免深度遍历，提高性能</li>
+</ul>
+</li>
+<li><p><code>List()</code>和<code>Map()</code></p>
+<ul>
+<li><p>作用：创建一个新的List/Map对象</p>
+</li>
+<li><p>用法</p>
+</li>
+<li><p>```dart<br>//List<br>Immutable.List(); // 空List<br>Immutable.List([1, 2]);</p>
+<p>//Map<br>Immutable.Map(); // 空Map<br>Immutable.Map({ a: ‘1’, b: ‘2’ });</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><br>- `get<span class="hljs-literal">()</span>`、`get<span class="hljs-constructor">In()</span>`<br><br>  - 获取数据结构中的数据<br><br>  - ```dart<br>    <span class="hljs-comment">//获取List索引的元素</span><br>    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ImmutableData</span>.</span></span>get(<span class="hljs-number">0</span>);<br>    <br>    <span class="hljs-comment">// 获取Map对应key的value</span><br>    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ImmutableData</span>.</span></span>get(<span class="hljs-character">&#x27;a&#x27;</span>);<br>    <br>    <span class="hljs-comment">// 获取嵌套数组中的数据</span><br>    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ImmutableData</span>.</span></span>get<span class="hljs-constructor">In([1, 2])</span>;<br>    <br>    <span class="hljs-comment">// 获取嵌套map的数据</span><br>    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ImmutableData</span>.</span></span>get<span class="hljs-constructor">In([&#x27;<span class="hljs-params">a</span>&#x27;, &#x27;<span class="hljs-params">b</span>&#x27;])</span>;<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><code>has()</code>、<code>hasIn()</code></p>
+<ul>
+<li><p>判断是否存在某个key</p>
+</li>
+<li><p>```dart<br>Immutable.fromJS([1,2,3,{a:4,b:5}]).has(‘0’); //true<br>Immutable.fromJS([1,2,3,{a:4,b:5}]).has(‘0’); //true<br>Immutable.fromJS([1,2,3,{a:4,b:5}]).hasIn([3,’b’]) //true</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs haxe"><br>- 设置`<span class="hljs-keyword">set</span>()`、`setIn()`<br><br>  - <span class="hljs-keyword">set</span>  =&gt;  设置第一层key ， index的值<br><br>  - setIn =&gt;  设置深层结构中属性的值<br><br>  - ```dart<br>    const originalList = List([ <span class="hljs-number">0</span> ]);<br>    <span class="hljs-comment">// List [ 0 ]</span><br>    originalList.<span class="hljs-keyword">set</span>(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>);<br>    <span class="hljs-comment">// List [ 0, 1 ]</span><br>    originalList.<span class="hljs-keyword">set</span>(<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;overwritten&#x27;</span>);<br>    <span class="hljs-comment">// List [ &quot;overwritten&quot; ]</span><br>    originalList.<span class="hljs-keyword">set</span>(<span class="hljs-number">2</span>, <span class="hljs-number">2</span>);<br>    <span class="hljs-comment">// List [ 0, undefined, 2 ]</span><br>    <br>    List().<span class="hljs-keyword">set</span>(<span class="hljs-number">50000</span>, <span class="hljs-string">&#x27;value&#x27;</span>).size;<br>    <span class="hljs-comment">// 50001</span><br>    <br>    const originalMap = Map()<br>    const <span class="hljs-keyword">new</span><span class="hljs-type">erMap</span> = originalMap.<span class="hljs-keyword">set</span>(<span class="hljs-string">&#x27;key&#x27;</span>, <span class="hljs-string">&#x27;value&#x27;</span>)<br>    const <span class="hljs-keyword">new</span><span class="hljs-type">estMap</span> = <span class="hljs-keyword">new</span><span class="hljs-type">erMap</span>.<span class="hljs-keyword">set</span>(<span class="hljs-string">&#x27;key&#x27;</span>, <span class="hljs-string">&#x27;newer value&#x27;</span>)<br>    <br>    originalMap<br>    <span class="hljs-comment">// Map &#123;&#125;</span><br>    <span class="hljs-keyword">new</span><span class="hljs-type">erMap</span><br>    <span class="hljs-comment">// Map &#123; &quot;key&quot;: &quot;value&quot; &#125;</span><br>    <span class="hljs-keyword">new</span><span class="hljs-type">estMap</span><br>    <span class="hljs-comment">// Map &#123; &quot;key&quot;: &quot;newer value&quot; &#125;</span><br></code></pre></td></tr></table></figure></li>
+<li><p><strong>跟js中不同，List中不存在空位，[,,,],List中若没有值，则为undefined。</strong></p>
+</li>
+<li><p><code>setIn()</code></p>
+</li>
+<li><p>```dart<br>const originalMap = Map({<br>  subObject: Map({</p>
+<pre><code class="hljs">subKey: &#39;subvalue&#39;,
+subSubObject: Map(&#123;
+  subSubKey: &#39;subSubValue&#39;
+&#125;)
+</code></pre>
+<p>  })<br>})</p>
+<p>const newMap = originalMap.setIn([‘subObject’, ‘subKey’], ‘ha ha!’)<br>// Map {<br>//   “subObject”: Map {<br>//     “subKey”: “ha ha!”,<br>//     “subSubObject”: Map { “subSubKey”: “subSubValue” }<br>//   }<br>// }</p>
+<p>const newerMap = originalMap.setIn(<br>  [‘subObject’, ‘subSubObject’, ‘subSubKey’],<br>  ‘ha ha ha!’<br>)<br>// Map {<br>//   “subObject”: Map {<br>//     “subKey”: “subvalue”,<br>//     “subSubObject”: Map { “subSubKey”: “ha ha ha!” }<br>//   }<br>// }</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs coffeescript">  <br>- `<span class="language-javascript"><span class="hljs-title function_">update</span>()</span>`<br><br>  - 更新数据<br><br>  - ```<span class="language-javascript">dart</span><br><span class="language-javascript">    <span class="hljs-comment">////List</span></span><br><span class="language-javascript">    <span class="hljs-keyword">const</span> list = <span class="hljs-title class_">List</span>([ <span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;b&#x27;</span>, <span class="hljs-string">&#x27;c&#x27;</span> ])</span><br><span class="language-javascript">    <span class="hljs-keyword">const</span> result = list.<span class="hljs-title function_">update</span>(<span class="hljs-number">2</span>, <span class="hljs-function"><span class="hljs-params">val</span> =&gt;</span> val.<span class="hljs-title function_">toUpperCase</span>())</span><br><span class="language-javascript">    </span><br><span class="language-javascript">    <span class="hljs-comment">///Map</span></span><br><span class="language-javascript">    <span class="hljs-keyword">const</span> aMap = <span class="hljs-title class_">Map</span>(&#123; <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;value&#x27;</span> &#125;)</span><br><span class="language-javascript">    <span class="hljs-keyword">const</span> newMap = aMap.<span class="hljs-title function_">update</span>(<span class="hljs-string">&#x27;key&#x27;</span>, <span class="hljs-function"><span class="hljs-params">value</span> =&gt;</span> value + value)</span><br><span class="language-javascript">        </span><br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h2 id="关于merge"><a href="#关于merge" class="headerlink" title="关于merge"></a>关于merge</h2><p>​    merge</p>
+<p>作用：浅合并，新数据与旧数据对比，旧数据中不存在的属性直接添加，就数据中已存在的属性用新数据中的覆盖</p>
+<h6 id="mergrWith"><a href="#mergrWith" class="headerlink" title="mergrWith"></a>mergrWith</h6><p>作用：自定义浅合并，可自行设置某些属性的值</p>
+<h6 id="mergeIn"><a href="#mergeIn" class="headerlink" title="mergeIn"></a>mergeIn</h6><p>作用：对深层数据进行浅合并</p>
+<h6 id="mergeDeep"><a href="#mergeDeep" class="headerlink" title="mergeDeep"></a>mergeDeep</h6><p>作用：深合并，新旧数据中同时存在的的属性为新旧数据合并之后的数据</p>
+<h6 id="mergeDeepIn"><a href="#mergeDeepIn" class="headerlink" title="mergeDeepIn"></a>mergeDeepIn</h6><p>作用：对深层数据进行深合并</p>
+<h6 id="mergrDeepWith"><a href="#mergrDeepWith" class="headerlink" title="mergrDeepWith"></a>mergrDeepWith</h6><p>作用：自定义深合并，可自行设置某些属性的值</p>
+<p>这里用一段示例彻底搞懂merge，此示例为Map结构，List与Map原理相同</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs dart"><span class="hljs-keyword">const</span> Map1 = Immutable.fromJS(&#123;a:<span class="hljs-number">111</span>,b:<span class="hljs-number">222</span>,c:&#123;d:<span class="hljs-number">333</span>,e:<span class="hljs-number">444</span>&#125;&#125;);<br><span class="hljs-keyword">const</span> Map2 = Immutable.fromJS(&#123;a:<span class="hljs-number">111</span>,b:<span class="hljs-number">222</span>,c:&#123;e:<span class="hljs-number">444</span>,f:<span class="hljs-number">555</span>&#125;&#125;);<br><br><span class="hljs-keyword">const</span> Map3 = Map1.merge(Map2);<br> <span class="hljs-comment">//Map &#123;a:111,b:222,c:&#123;e:444,f:555&#125;&#125;</span><br><span class="hljs-keyword">const</span> Map4 = Map1.mergeDeep(Map2);<br> <span class="hljs-comment">//Map &#123;a:111,b:222,c:&#123;d:333,e:444,f:555&#125;&#125;</span><br><span class="hljs-keyword">const</span> Map5 = Map1.mergeWith((oldData,newData,key)=&gt;&#123;<br>     <span class="hljs-keyword">if</span>(key === <span class="hljs-string">&#x27;a&#x27;</span>)&#123;<br>       <span class="hljs-keyword">return</span> <span class="hljs-number">666</span>;<br>     &#125;<span class="hljs-keyword">else</span>&#123;<br>       <span class="hljs-keyword">return</span> newData<br>     &#125;<br>   &#125;,Map2);<br> <span class="hljs-comment">//Map &#123;a:666,b:222,c:&#123;e:444,f:555&#125;&#125;</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<p>更多API见</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/study/" class="category-chain-item">study</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/React/">#React</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>immutable.js</div>
+      <div>https://moewang0321.github.io/2019/12/16/2019-12-16-immutable.js/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Moe Wang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年12月16日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/02/16/2020-02-16-yarn%E4%BB%A5%E5%8F%8Anpm%E6%B8%85%E7%90%86/" title="❗Yarn的cache 坑！">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">❗Yarn的cache 坑！</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/11/27/2019-11-27-React%E8%B8%A9%E5%9D%91%EF%BC%81/" title="React踩坑了">
+                        <span class="hidden-mobile">React踩坑了</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

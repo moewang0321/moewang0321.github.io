@@ -1,0 +1,700 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Moe Wang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="说在前面为了学习redux，仅仅实现了store,createStore,reducer等部分基本功能  现在开始忘掉一切首先用create-react-app新建一个项目，修改public&#x2F;index.html下的页面结构 1234&lt;body&gt;  &lt;div id&#x3D;&amp;#x27;title&amp;#x27;&gt;&lt;&#x2F;div&gt;  &lt;div id&#x3D;&amp;#x27;conten">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实现MyRedux（一）">
+<meta property="og:url" content="https://moewang0321.github.io/2023/02/14/2019-12-03-Redux%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
+<meta property="og:site_name" content="moe_大杂烩">
+<meta property="og:description" content="说在前面为了学习redux，仅仅实现了store,createStore,reducer等部分基本功能  现在开始忘掉一切首先用create-react-app新建一个项目，修改public&#x2F;index.html下的页面结构 1234&lt;body&gt;  &lt;div id&#x3D;&amp;#x27;title&amp;#x27;&gt;&lt;&#x2F;div&gt;  &lt;div id&#x3D;&amp;#x27;conten">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2019/12/03/fCxTNHJ1Sea9jZ2.png">
+<meta property="og:image" content="https://i.loli.net/2019/12/03/HgCwc7sunDxYeKr.png">
+<meta property="article:published_time" content="2023-02-14T07:45:48.205Z">
+<meta property="article:modified_time" content="2023-02-13T01:35:46.650Z">
+<meta property="article:author" content="Moe Wang">
+<meta property="article:tag" content="React">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://i.loli.net/2019/12/03/fCxTNHJ1Sea9jZ2.png">
+  
+  
+  
+  <title>实现MyRedux（一） - moe_大杂烩</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"moewang0321.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>moe_大杂烩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="实现MyRedux（一）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-02-14 15:45" pubdate>
+          2023年2月14日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          36 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">实现MyRedux（一）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="说在前面"><a href="#说在前面" class="headerlink" title="说在前面"></a>说在前面</h3><p>为了学习<code>redux</code>，仅仅实现了<code>store</code>,<code>createStore</code>,<code>reducer</code>等部分基本功能</p>
+<hr>
+<h3 id="现在开始忘掉一切"><a href="#现在开始忘掉一切" class="headerlink" title="现在开始忘掉一切"></a>现在开始忘掉一切</h3><p>首先用create-react-app新建一个项目，修改<code>public/index.html</code>下的页面结构</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&#x27;title&#x27;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&#x27;content&#x27;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>清空<code>src</code>文件夹，新建一个<code>index.js</code>，添加代码代表我们要应用的状态：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> appState = &#123;<br>  <span class="hljs-attr">title</span>: &#123;<br>    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Redux&#x27;</span>,<br>    <span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;red&#x27;</span>,<br>  &#125;,<br>  <span class="hljs-attr">content</span>: &#123;<br>    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;学习redux&#x27;</span>,<br>    <span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;blue&#x27;</span><br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>添加渲染函数，会把上面的状态数据渲染到页面上：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">renderApp</span> (appState) &#123;<br>  <span class="hljs-title function_">renderTitle</span>(appState.<span class="hljs-property">title</span>)<br>  <span class="hljs-title function_">renderContent</span>(appState.<span class="hljs-property">content</span>)<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">renderTitle</span> (title) &#123;<br>  <span class="hljs-keyword">const</span> titleDOM = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&#x27;title&#x27;</span>)<br>  titleDOM.<span class="hljs-property">innerHTML</span> = title.<span class="hljs-property">text</span><br>  titleDOM.<span class="hljs-property">style</span>.<span class="hljs-property">color</span> = title.<span class="hljs-property">color</span><br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">renderContent</span> (content) &#123;<br>  <span class="hljs-keyword">const</span> contentDOM = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&#x27;content&#x27;</span>)<br>  contentDOM.<span class="hljs-property">innerHTML</span> = content.<span class="hljs-property">text</span><br>  contentDOM.<span class="hljs-property">style</span>.<span class="hljs-property">color</span> = content.<span class="hljs-property">color</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>简单的渲染完成了，但是会有一个严重的问题，渲染数据使用的是共享的状态<code>appState</code>,<strong>任何人都能修改</strong>，如果我们在渲染之前做了其他函数操作，就无法智大东会对<code>appState</code>做了什么事情，也就是为什么要避免全局变量</p>
+<p>当我们的不同组件之间需要共享数据，就会产生矛盾：</p>
+<blockquote>
+<p>组件之间共享数据 ❗❗ 数据可能在组件内被任意修改</p>
+</blockquote>
+<p>如果我们学习一下React团队的做法，把操作变复杂</p>
+<blockquote>
+<p>​    组件之间可以共享、改动数据但是不能直接修改，必须执行我定义的某些函数</p>
+</blockquote>
+<p>定义一个<code>dispatch</code>函数 ， 负责数据修改</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">dispatch</span> (action) &#123;<br>  <span class="hljs-keyword">switch</span> (action.<span class="hljs-property">type</span>) &#123;<br>    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;UPDATE_TITLE_TEXT&#x27;</span>:<br>      appState.<span class="hljs-property">title</span>.<span class="hljs-property">text</span> = action.<span class="hljs-property">text</span><br>      <span class="hljs-keyword">break</span><br>    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;UPDATE_TITLE_COLOR&#x27;</span>:<br>      appState.<span class="hljs-property">title</span>.<span class="hljs-property">color</span> = action.<span class="hljs-property">color</span><br>      <span class="hljs-keyword">break</span><br>    <span class="hljs-attr">default</span>:<br>      <span class="hljs-keyword">break</span><br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这样我们对数据的操作必须 通过<code>dispatch</code>函数，接收一个参数<code>action</code>，它是一个普通对象，里面包含一个<code>type</code>字段来生命你想干什么，<code>dispatch</code>内的<code>switch</code>会识别这个字段，识别成功的会对<code>appState</code>进行修改</p>
+<p>上面的 <code>dispatch</code> 它只能识别两种操作，一种是 <code>UPDATE_TITLE_TEXT</code> 它会用 <code>action</code> 的 <code>text</code> 字段去更新 <code>appState.title.text</code>；一种是 <code>UPDATE_TITLE_COLOR</code>，它会用 <code>action</code> 的 <code>color</code> 字段去更新 <code>appState.title.color</code>。<code>action</code> 里面除了 <code>type</code> 字段是必须的以外，其他字段都是可以自定义的。</p>
+<p>如果想要修改<code>appState.title.text</code>，必须调用<code>dispatch</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-title function_">dispatch</span>(&#123; <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;UPDATE_TITLE_TEXT&#x27;</span>, <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;React.js&#x27;</span> &#125;) <span class="hljs-comment">// 修改标题文本</span><br><span class="hljs-title function_">dispatch</span>(&#123; <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;UPDATE_TITLE_COLOR&#x27;</span>, <span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;blue&#x27;</span> &#125;) <span class="hljs-comment">// 修改标题颜色</span><br></code></pre></td></tr></table></figure>
+
+<p>这样就不用的担心别的函数会修改appState，至少是直接修改</p>
+<p>原来：</p>
+<p><img src="https://i.loli.net/2019/12/03/fCxTNHJ1Sea9jZ2.png" srcset="/img/loading.gif" lazyload></p>
+<p>现在所有的数据想修改必须经过<code>dispatch</code>：</p>
+<p><img src="https://i.loli.net/2019/12/03/HgCwc7sunDxYeKr.png" srcset="/img/loading.gif" lazyload></p>
+<hr>
+<h3 id="抽离出store"><a href="#抽离出store" class="headerlink" title="抽离出store"></a>抽离出<code>store</code></h3><p>现在有了<code>appState</code>和<code>dispatch</code>,可以把他们集中到一个地方，起名叫做<code>store</code>,然后构建一个<code>createStore()</code>函数，用来生产这种<code>state</code>和<code>dispatch</code>的集合</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">createStore</span> (state, stateChanger) &#123;<br>  <span class="hljs-keyword">const</span> <span class="hljs-title function_">getState</span> = (<span class="hljs-params"></span>) =&gt; state<br>  <span class="hljs-keyword">const</span> <span class="hljs-title function_">dispatch</span> = (<span class="hljs-params">action</span>) =&gt; <span class="hljs-title function_">stateChanger</span>(state, action)<br>  <span class="hljs-keyword">return</span> &#123; getState, dispatch &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>createStore</code>接收两个参数，一个是表示状态的<code>state</code>，另一个是<code>stateChanger</code>，它用来描述应用程序状态会根据<code>action</code>发生什么变化，相当于<code>dispatch</code></p>
+<p><code>createStore</code>返回一个对象，包含两个方法，<code>getState</code>用于获取<code>state</code>的数据，<code>dispatch</code>用于修改数据，和以前一样</p>
+<p>现在我的代码可以优化成：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs javascript">et appState = &#123;<br>  <span class="hljs-attr">title</span>: &#123;<br>    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;React.js&#x27;</span>,<br>    <span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;red&#x27;</span>,<br>  &#125;,<br>  <span class="hljs-attr">content</span>: &#123;<br>    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;React.js 内容&#x27;</span>,<br>    <span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;blue&#x27;</span><br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">stateChanger</span> (state, action) &#123;<br>  <span class="hljs-keyword">switch</span> (action.<span class="hljs-property">type</span>) &#123;<br>    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;UPDATE_TITLE_TEXT&#x27;</span>:<br>      state.<span class="hljs-property">title</span>.<span class="hljs-property">text</span> = action.<span class="hljs-property">text</span><br>      <span class="hljs-keyword">break</span><br>    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;UPDATE_TITLE_COLOR&#x27;</span>:<br>      state.<span class="hljs-property">title</span>.<span class="hljs-property">color</span> = action.<span class="hljs-property">color</span><br>      <span class="hljs-keyword">break</span><br>    <span class="hljs-attr">default</span>:<br>      <span class="hljs-keyword">break</span><br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">const</span> store = <span class="hljs-title function_">createStore</span>(appState, stateChanger)<br><br><span class="hljs-title function_">renderApp</span>(store.<span class="hljs-title function_">getState</span>()) <span class="hljs-comment">// 首次渲染页面</span><br>store.<span class="hljs-title function_">dispatch</span>(&#123; <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;UPDATE_TITLE_TEXT&#x27;</span>, <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;React.js&#x27;</span> &#125;) <span class="hljs-comment">// 修改标题文本</span><br>store.<span class="hljs-title function_">dispatch</span>(&#123; <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;UPDATE_TITLE_COLOR&#x27;</span>, <span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;blue&#x27;</span> &#125;) <span class="hljs-comment">// 修改标题颜色</span><br><span class="hljs-title function_">renderApp</span>(store.<span class="hljs-title function_">getState</span>()) <span class="hljs-comment">// 把新的数据渲染到页面上</span><br></code></pre></td></tr></table></figure>
+
+<p>然后我们就有个棘手的问题，怎么监控数据的变化，上述代码中，如果我们不调用<code>renderApp</code>，那页面的内容是不会变化的，如果往<code>dispatch</code>中加入<code>renderApp</code>，那我们想通用<code>createStore</code>就不行了，想用一种通用的方式监听数据，需要用到观察者模式：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">createStore</span> (state, stateChanger) &#123;<br>  <span class="hljs-keyword">const</span> listeners = []<br>  <span class="hljs-keyword">const</span> <span class="hljs-title function_">subscribe</span> = (<span class="hljs-params">listener</span>) =&gt; listeners.<span class="hljs-title function_">push</span>(listener)<br>  <span class="hljs-keyword">const</span> <span class="hljs-title function_">getState</span> = (<span class="hljs-params"></span>) =&gt; state<br>  <span class="hljs-keyword">const</span> <span class="hljs-title function_">dispatch</span> = (<span class="hljs-params">action</span>) =&gt; &#123;<br>    <span class="hljs-title function_">stateChanger</span>(state, action)<br>    listeners.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">listener</span>) =&gt;</span> <span class="hljs-title function_">listener</span>())<br>  &#125;<br>  <span class="hljs-keyword">return</span> &#123; getState, dispatch, subscribe &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在方法中定义了一个数组，还有一个<code>subscribe</code>方法，可以通过这个方法传入一个监听函数，并<code>push</code>到数组中，修改了<code>dispatch</code>方法，当它被调用的时候，会遍历数组中的函数，一个个的调用，这就意味着我们可以通过<code>subscribe</code>传入数据变化的监听函数，每次<code>dispatch</code>的时候，监听函数都会被调用</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> store = <span class="hljs-title function_">createStore</span>(appState, stateChanger)<br>store.<span class="hljs-title function_">subscribe</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">renderApp</span>(store.<span class="hljs-title function_">getState</span>()))<br><br><span class="hljs-title function_">renderApp</span>(store.<span class="hljs-title function_">getState</span>()) <span class="hljs-comment">// 首次渲染页面</span><br>store.<span class="hljs-title function_">dispatch</span>(&#123; <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;UPDATE_TITLE_TEXT&#x27;</span>, <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;React.js&#x27;</span> &#125;) <span class="hljs-comment">// 修改标题文本</span><br>store.<span class="hljs-title function_">dispatch</span>(&#123; <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;UPDATE_TITLE_COLOR&#x27;</span>, <span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;blue&#x27;</span> &#125;) <span class="hljs-comment">// 修改标题颜色</span><br><span class="hljs-comment">// ...后面不管如何 store.dispatch，都不需要重新调用 renderApp</span><br></code></pre></td></tr></table></figure>
+
+<p>只需要<code>subscribe</code>一次，后面不管怎么<code>dispatch</code>，<code>renderApp</code>都会被重新调用，重新渲染页面，而且观察者模式下同一块数据也可以渲染其他页面。</p>
+<p><strong>阶段总结</strong></p>
+<p>现在有了通用的<code>createStore</code>，可以产生一种新定义的数据类型<code>store</code>，通过<code>getState</code>获取状态，<code>dispatch</code>修改状态，<code>subscribe</code>监听数据……</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/study/" class="category-chain-item">study</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/React/">#React</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>实现MyRedux（一）</div>
+      <div>https://moewang0321.github.io/2023/02/14/2019-12-03-Redux（一）/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Moe Wang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年2月14日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/02/14/2019-12-04-Redux%EF%BC%88%E4%BA%8C%EF%BC%89/" title="实现MyRedux（二）">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">实现MyRedux（二）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/02/14/2019-11-20-Vue%E9%83%A8%E5%88%86%E6%95%B4%E7%90%86/" title="Vue部分整理">
+                        <span class="hidden-mobile">Vue部分整理</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
