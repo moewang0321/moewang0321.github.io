@@ -1,0 +1,727 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Moe Wang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前言 前两天在资料中添加了自己的联系方式后，有些小伙伴加了我一起探讨关于Cesium效果及功能的实现，其中有不少人问到这个文本标记是如何实现的，一个个解答费时费力，索性写一篇文章把我实现的思路提供出来，并简单进行类封装，给大家抛砖引玉。 基本思路本质上其实就是提供一个笛卡尔坐标，将DOM元素渲染到cesium容器中进行呈现。并利用postRender实时地更新位置，保证其与笛卡尔坐标一致。思路其实">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【三维GIS可视化】酷炫自定义动态标记你确定不想学会？">
+<meta property="og:url" content="https://moewang0321.github.io/2021/05/28/%E3%80%90%E4%B8%89%E7%BB%B4GIS%E5%8F%AF%E8%A7%86%E5%8C%96%E3%80%91%E9%85%B7%E7%82%AB%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A8%E6%80%81%E6%A0%87%E8%AE%B0%E4%BD%A0%E7%A1%AE%E5%AE%9A%E4%B8%8D%E6%83%B3%E5%AD%A6%E4%BC%9A%EF%BC%9F/index.html">
+<meta property="og:site_name" content="moe_大杂烩">
+<meta property="og:description" content="前言 前两天在资料中添加了自己的联系方式后，有些小伙伴加了我一起探讨关于Cesium效果及功能的实现，其中有不少人问到这个文本标记是如何实现的，一个个解答费时费力，索性写一篇文章把我实现的思路提供出来，并简单进行类封装，给大家抛砖引玉。 基本思路本质上其实就是提供一个笛卡尔坐标，将DOM元素渲染到cesium容器中进行呈现。并利用postRender实时地更新位置，保证其与笛卡尔坐标一致。思路其实">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a118da518c034d4597b0a9f09d877db4~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c7ce4e5f7c40483bb1a51eb366e4dd81~tplv-k3u1fbpfcp-watermark.image">
+<meta property="article:published_time" content="2021-05-28T06:22:30.000Z">
+<meta property="article:modified_time" content="2023-02-14T08:22:58.618Z">
+<meta property="article:author" content="Moe Wang">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="GIS">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a118da518c034d4597b0a9f09d877db4~tplv-k3u1fbpfcp-watermark.image">
+  
+  
+  
+  <title>【三维GIS可视化】酷炫自定义动态标记你确定不想学会？ - moe_大杂烩</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"moewang0321.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>moe_大杂烩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="【三维GIS可视化】酷炫自定义动态标记你确定不想学会？"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-05-28 14:22" pubdate>
+          2021年5月28日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          70 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">【三维GIS可视化】酷炫自定义动态标记你确定不想学会？</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a118da518c034d4597b0a9f09d877db4~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="1.gif"></p>
+<p>前两天在资料中添加了自己的联系方式后，有些小伙伴加了我一起探讨关于Cesium效果及功能的实现，其中有不少人问到这个文本标记是如何实现的，一个个解答费时费力，索性写一篇文章把我实现的思路提供出来，并简单进行类封装，给大家抛砖引玉。</p>
+<h3 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h3><p>本质上其实就是提供一个笛卡尔坐标，将DOM元素渲染到cesium容器中进行呈现。并利用<code>postRender</code>实时地更新位置，保证其与笛卡尔坐标一致。思路其实很简单，接下来我们进行实现。</p>
+<h3 id="基本实现"><a href="#基本实现" class="headerlink" title="基本实现"></a>基本实现</h3><p>接下来的篇幅会一步一步完善标记点的方法，想直接看成品的小伙伴可以跳到方法实现的最后。</p>
+<h4 id="参数设定"><a href="#参数设定" class="headerlink" title="参数设定"></a>参数设定</h4><p>首先最基本的就是<code>position</code>坐标、<code>title</code>标记内容和<code>id</code>唯一标识，其次我们可以增加一些参数比如说<code>height</code>标记的高度，以及隐藏高度等，可以根据自己的需求添加。</p>
+<h4 id="方法实现"><a href="#方法实现" class="headerlink" title="方法实现"></a>方法实现</h4><p>同样的，首先我们需要生成一个球体做我们标记的容器。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">viewer = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">Viewer</span>(<span class="hljs-string">&quot;cesiumContainer&quot;</span>, &#123;&#125;);<br></code></pre></td></tr></table></figure>
+
+<p>然后我们可以构建基础的添加标记点的方法并设定我们想要配置的参数，这里我只设置了基本的参数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-title function_">addDynamicLabel</span>(<span class="hljs-params">&#123; position, title = <span class="hljs-string">&quot;文本标记&quot;</span>, id = <span class="hljs-string">&quot;0&quot;</span> &#125;</span>) &#123;<br>	<span class="hljs-comment">// ……Do SomeThing</span><br>&#125;,<br></code></pre></td></tr></table></figure>
+
+<p>我们需要动态创建一个div作为标记点，并对其设置样式和内容，并将其添加到球体所在的容器中</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-title function_">addDynamicLabel</span>(<span class="hljs-params">&#123; position, title = <span class="hljs-string">&quot;文本标记&quot;</span>, id = <span class="hljs-string">&quot;0&quot;</span> &#125;</span>) &#123;<br>	<span class="hljs-keyword">let</span> div = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;div&quot;</span>);<br>    div.<span class="hljs-property">id</span> = id;<br>    div.<span class="hljs-property">style</span>.<span class="hljs-property">position</span> = <span class="hljs-string">&quot;absolute&quot;</span>;<br>    div.<span class="hljs-property">style</span>.<span class="hljs-property">width</span> = <span class="hljs-string">&quot;100px&quot;</span>;<br>    div.<span class="hljs-property">style</span>.<span class="hljs-property">height</span> = <span class="hljs-string">&quot;30px&quot;</span>;<br>    <span class="hljs-keyword">let</span> divHTML = <span class="hljs-string">`</span><br><span class="hljs-string">		&lt;div style=&quot;width:100px;height:30px;background:rgba(255,122,0,0.4)&quot;&gt;<span class="hljs-subst">$&#123;title&#125;</span>&lt;/div&gt;</span><br><span class="hljs-string">    `</span>;<br>    div.<span class="hljs-property">innerHTML</span> = divHTML;<br>    viewer.<span class="hljs-property">cesiumWidget</span>.<span class="hljs-property">container</span>.<span class="hljs-title function_">appendChild</span>(div);<br>&#125;,	<br></code></pre></td></tr></table></figure>
+
+<p>现在我们已经把这个标记放到页面中了，虽然是绝对定位，但它并没有对应的<code>top</code>和<code>left</code>值，无法显示在我们想让它出现在的位置。接下来我们需要做的就是根据传入的坐标转换成屏幕的<code>x,y</code>作为标记的偏移量。Cesium提供了一个<code>Cesium.SceneTransforms.wgs84ToWindowCoordinates()</code>的方法供我们进行转换。</p>
+<blockquote>
+<p> Cesium.SceneTransforms.wgs84ToWindowCoordinates(scene, position, result) → Cartesian2</p>
+</blockquote>
+<blockquote>
+<p>将WGS84坐标中的位置转换为窗口坐标。 这通常用于将HTML元素与场景中的对象放置在相同的屏幕位置。</p>
+</blockquote>
+<blockquote>
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">类型</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>scene</code></td>
+<td align="left"><a target="_blank" rel="noopener" href="http://support.supermap.com.cn:8090/webgl/docs/Documentation/Scene.html">Scene</a></td>
+<td align="left">The scene.</td>
+</tr>
+<tr>
+<td align="left"><code>position</code></td>
+<td align="left"><a target="_blank" rel="noopener" href="http://support.supermap.com.cn:8090/webgl/docs/Documentation/Cartesian3.html">Cartesian3</a></td>
+<td align="left">WGS84（世界）坐标中的位置。</td>
+</tr>
+<tr>
+<td align="left"><code>result</code></td>
+<td align="left"><a target="_blank" rel="noopener" href="http://support.supermap.com.cn:8090/webgl/docs/Documentation/Cartesian2.html">Cartesian2</a></td>
+<td align="left"><code>optional</code> 返回转换为窗口坐标的输入位置的可选对象。</td>
+</tr>
+</tbody></table>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-title function_">addDynamicLabel</span>(<span class="hljs-params">&#123; position, title = <span class="hljs-string">&quot;文本标记&quot;</span>, id = <span class="hljs-string">&quot;0&quot;</span> &#125;</span>) &#123;<br>	<span class="hljs-keyword">let</span> div = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;div&quot;</span>);<br>    div.<span class="hljs-property">id</span> = id;<br>    div.<span class="hljs-property">style</span>.<span class="hljs-property">position</span> = <span class="hljs-string">&quot;absolute&quot;</span>;<br>    div.<span class="hljs-property">style</span>.<span class="hljs-property">width</span> = <span class="hljs-string">&quot;100px&quot;</span>;<br>    div.<span class="hljs-property">style</span>.<span class="hljs-property">height</span> = <span class="hljs-string">&quot;30px&quot;</span>;<br>    <span class="hljs-keyword">let</span> divHTML = <span class="hljs-string">`</span><br><span class="hljs-string">		&lt;div style=&quot;width:100px;height:30px;background:rgba(255,122,0,0.4)&quot;&gt;<span class="hljs-subst">$&#123;title&#125;</span>&lt;/div&gt;</span><br><span class="hljs-string">    `</span>;<br>    div.<span class="hljs-property">innerHTML</span> = divHTML;<br>    viewer.<span class="hljs-property">cesiumWidget</span>.<span class="hljs-property">container</span>.<span class="hljs-title function_">appendChild</span>(div);<br>    <br>    <span class="hljs-keyword">let</span> vmPosition = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartesian3</span>.<span class="hljs-title function_">fromDegrees</span>(<br>        position[<span class="hljs-number">0</span>],<br>        position[<span class="hljs-number">1</span>],<br>        <span class="hljs-number">500</span><br>    );<br>    <span class="hljs-keyword">const</span> canvasHeight = viewer.<span class="hljs-property">scene</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">height</span>;<br>    <span class="hljs-keyword">const</span> windowPosition = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">Cartesian2</span>();<br>    <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">SceneTransforms</span>.<span class="hljs-title function_">wgs84ToWindowCoordinates</span>(<br>        viewer.<span class="hljs-property">scene</span>,<br>        vmPosition,<br>        windowPosition<br>    );<br>    div.<span class="hljs-property">style</span>.<span class="hljs-property">bottom</span> = canvasHeight - windowPosition.<span class="hljs-property">y</span> + <span class="hljs-string">&quot;px&quot;</span>;<br>    <span class="hljs-keyword">const</span> elWidth = div.<span class="hljs-property">offsetWidth</span>;<br>    div.<span class="hljs-property">style</span>.<span class="hljs-property">left</span> = windowPosition.<span class="hljs-property">x</span> - elWidth / <span class="hljs-number">2</span> + <span class="hljs-string">&quot;px&quot;</span>;<br>&#125;,	<br></code></pre></td></tr></table></figure>
+
+<p>现在我们的标记点已经能够显示在正确的位置了，但是如果我们拖拽或放大缩小球体会发现，标记点它没动！这显然是不对的，标记点应该跟随球体的移动放缩而修改位置。这里简单说一下Cesium的渲染机制，在Cesium内部构建了一个定时器，用来不断的刷新并渲染页面，具体代码在<code>CesiumWidget.js</code>里，这里不赘述了……（其实是因为我没仔细的看过源码）。看了Cesium的机制后我们知道，想让标记跟随球体移动，就需要让标记也不断的刷新渲染。Cesium很贴心的为我们准备了<code>scene.postRender</code>，获取当前场景每帧渲染结束时的事件，监听该事件在每帧渲染结束时触发。我们只要对它进行事件监听就能够获取到每帧的事件。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-title function_">addDynamicLabel</span>(<span class="hljs-params">&#123; position, title = <span class="hljs-string">&quot;文本标记&quot;</span>, id = <span class="hljs-string">&quot;0&quot;</span> &#125;</span>) &#123;<br>    <span class="hljs-keyword">let</span> div = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;div&quot;</span>);<br>    div.<span class="hljs-property">id</span> = id;<br>    div.<span class="hljs-property">style</span>.<span class="hljs-property">position</span> = <span class="hljs-string">&quot;absolute&quot;</span>;<br>    div.<span class="hljs-property">style</span>.<span class="hljs-property">width</span> = <span class="hljs-string">&quot;100px&quot;</span>;<br>    div.<span class="hljs-property">style</span>.<span class="hljs-property">height</span> = <span class="hljs-string">&quot;30px&quot;</span>;<br>    <span class="hljs-keyword">let</span> divHTML = <span class="hljs-string">`</span><br><span class="hljs-string">&lt;div style=&quot;width:100px;height:30px;background:rgba(255,122,0,0.4)&quot;&gt;<span class="hljs-subst">$&#123;title&#125;</span>&lt;/div&gt;</span><br><span class="hljs-string">`</span>;<br>    div.<span class="hljs-property">innerHTML</span> = divHTML;<br>    viewer.<span class="hljs-property">cesiumWidget</span>.<span class="hljs-property">container</span>.<span class="hljs-title function_">appendChild</span>(div);<br>    <span class="hljs-keyword">let</span> vmPosition = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartesian3</span>.<span class="hljs-title function_">fromDegrees</span>(<br>        position[<span class="hljs-number">0</span>],<br>        position[<span class="hljs-number">1</span>],<br>        <span class="hljs-number">500</span><br>    );<br>    viewer.<span class="hljs-property">scene</span>.<span class="hljs-property">postRender</span>.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>        <span class="hljs-keyword">const</span> canvasHeight = viewer.<span class="hljs-property">scene</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">height</span>;<br>        <span class="hljs-keyword">const</span> windowPosition = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">Cartesian2</span>();<br>        <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">SceneTransforms</span>.<span class="hljs-title function_">wgs84ToWindowCoordinates</span>(<br>            viewer.<span class="hljs-property">scene</span>,<br>            vmPosition,<br>            windowPosition<br>        );<br>        div.<span class="hljs-property">style</span>.<span class="hljs-property">bottom</span> = canvasHeight - windowPosition.<span class="hljs-property">y</span> + <span class="hljs-string">&quot;px&quot;</span>;<br>        <span class="hljs-keyword">const</span> elWidth = div.<span class="hljs-property">offsetWidth</span>;<br>        div.<span class="hljs-property">style</span>.<span class="hljs-property">left</span> = windowPosition.<span class="hljs-property">x</span> - elWidth / <span class="hljs-number">2</span> + <span class="hljs-string">&quot;px&quot;</span>;<br>    &#125;, <span class="hljs-variable language_">this</span>);<br>&#125;,<br></code></pre></td></tr></table></figure>
+
+<p>方法构建完毕，我们只需要调用一下就可以看到我们的标记点已经出现在球体上了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">let</span> position = [<span class="hljs-number">121.54035</span>, <span class="hljs-number">38.92146</span>],<br>    title = <span class="hljs-string">&quot;moe的标记&quot;</span>,<br>    id = <span class="hljs-number">210204121</span>;<br><span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addDynamicLabel</span>(&#123; position, title, id &#125;);<br></code></pre></td></tr></table></figure>
+
+
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c7ce4e5f7c40483bb1a51eb366e4dd81~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="动画.gif"></p>
+<p>到这里其实基本的功能我们已经实现了，标记的样式我们可以自己变得酷炫，像我开头的动图那样。</p>
+<h4 id="封装类"><a href="#封装类" class="headerlink" title="封装类"></a>封装类</h4><p>在业务中可能很多地方都用到这个标记，最好的办法就是将它封装成一个插件文件即插即用。下面我们尝试把这个功能单独抽出来封装成类。这里我们使用<code>es6</code>的<code>class</code>进行封装。因为最开始我自己摸索封装的时候走了很多弯路，所以我想封装类这里也简单讲一下，以后大家做别的功能的时候也可以举一反三。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@descripion</span>:</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">Viewer</span>&#125; <span class="hljs-variable">viewer</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">Cartesian2</span>&#125; <span class="hljs-variable">position</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">String</span>&#125; <span class="hljs-variable">title</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">String</span>&#125; <span class="hljs-variable">id</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">boolean</span>&#125; isHighHidden 是否高度隐藏</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span> &#123;<span class="hljs-type">*</span>&#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DynamicLabel</span> &#123;<br>    <span class="hljs-title function_">constructor</span>(<span class="hljs-params">&#123;viewer , position , height , title , id , isHighHidden = <span class="hljs-literal">true</span>&#125;</span>) &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">viewer</span> = viewer;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">height</span> = height;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">isHighHidden</span> = isHighHidden;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">position</span> = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartesian3</span>.<span class="hljs-title function_">fromDegrees</span>(<br>          position[<span class="hljs-number">0</span>],<br>          position[<span class="hljs-number">1</span>],<br>          height<br>        );<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addLabel</span>();<br>    &#125;<br>    <span class="hljs-title function_">addLabel</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-comment">// ...</span><br>    &#125;<br>    <span class="hljs-title function_">addPostRender</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-comment">// ...</span><br>    &#125;<br>    <span class="hljs-title function_">postRender</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-comment">// ...</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>正常情况下这样我们就大功告成了，但我们加载DOM的方式显得太过粗鲁，而且不好维护，不能每次我们都通过<code>innerHTML</code>填充DOM元素或在字符串内去对内容及样式进行修改。这时候我们就可以使用<code>Vue.extend</code> + <code>$mount</code>构造器来创建一个”子类”了。这个方法也是我看过别人的开源代码后豁然开朗的，没想到还能这么用！长知识了。</p>
+<p>我们首先创建一个vue文件<code>label.vue</code>，并把我们的标记样式什么的都写进去：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><code class="hljs vue">&lt;template&gt;<br>  &lt;div :id=&quot;id&quot; class=&quot;divlabel-container&quot; v-if=&quot;show&quot; &gt;<br>    &lt;div class=&quot;animate-maker-border&quot;&gt;<br>      &lt;span class=&quot;animate-marker__text&quot;&gt;&#123;&#123; title &#125;&#125;&lt;/span&gt;<br>    &lt;/div&gt;<br>  &lt;/div&gt;<br>&lt;/template&gt;<br><br>&lt;script&gt;<br>export default &#123;<br>  name: &quot;DynamicLabel&quot;,<br>  data() &#123;<br>    return &#123;<br>      show: true,<br>    &#125;;<br>  &#125;,<br>  props: &#123;<br>    title: &#123;<br>      type: String,<br>      default: &quot;标题&quot;,<br>    &#125;,<br>    id:&#123;<br>        type:String,<br>        default:&#x27;001&#x27;<br>    &#125;<br>  &#125;,<br>&#125;;<br>&lt;/script&gt;<br><br><br>&lt;style lang=&quot;scss&quot;&gt;<br>.divlabel-container &#123;<br>  position: absolute;<br>  left: 0;<br>  bottom: 0;<br>  pointer-events: none;<br>  cursor: pointer;<br>&#125;<br>.animate-maker-border &#123;<br>  width: 150px;<br>  height: 30px;<br>  margin: 0;<br>  color: #f7ea00;<br>  box-shadow: inset 0 0 0 1px rgba(247, 234, 0, 0.56);<br>&#125;<br>.animate-marker__text &#123;<br>  color: #fff;<br>  font-size: 14px;<br>  display: flex;<br>  width: 100%;<br>  height: 100%;<br>  align-items: center;<br>  justify-content: center;<br>  font-weight: bolder;<br>  user-select: none;<br>  cursor: pointer;<br>  background: rgba(0, 173, 181, 0.32);<br>&#125;<br>&lt;/style&gt;<br></code></pre></td></tr></table></figure>
+
+<p>接下来改造我们封装的<code>DynamicLabel</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@descripion</span>:</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">Viewer</span>&#125; <span class="hljs-variable">viewer</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">Cartesian2</span>&#125; <span class="hljs-variable">position</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">String</span>&#125; <span class="hljs-variable">title</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">String</span>&#125; <span class="hljs-variable">id</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">boolean</span>&#125; isHighHidden 是否高度隐藏</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span> &#123;<span class="hljs-type">*</span>&#125;</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-keyword">import</span> <span class="hljs-title class_">Vue</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;vue&quot;</span>;<br><span class="hljs-keyword">import</span> <span class="hljs-title class_">Label</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./label.vue&quot;</span>;<br><span class="hljs-keyword">let</span> <span class="hljs-title class_">WindowVm</span> = <span class="hljs-title class_">Vue</span>.<span class="hljs-title function_">extend</span>(<span class="hljs-title class_">Label</span>);<br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DynamicLabel</span> &#123;<br>    <span class="hljs-title function_">constructor</span>(<span class="hljs-params">&#123;viewer , position , height , title , id , isHighHidden = <span class="hljs-literal">true</span>&#125;</span>) &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">viewer</span> = viewer;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">height</span> = height;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">isHighHidden</span> = isHighHidden;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">position</span> = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartesian3</span>.<span class="hljs-title function_">fromDegrees</span>(<br>          position[<span class="hljs-number">0</span>],<br>          position[<span class="hljs-number">1</span>],<br>          height<br>        );<br>        <br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">vmInstance</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">WindowVm</span>(&#123;<br>          <span class="hljs-attr">propsData</span>: &#123;<br>            title,<br>            id<br>          &#125;<br>        &#125;).$mount(); <span class="hljs-comment">//根据模板创建一个面板</span><br>        viewer.<span class="hljs-property">cesiumWidget</span>.<span class="hljs-property">container</span>.<span class="hljs-title function_">appendChild</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">vmInstance</span>.<span class="hljs-property">$el</span>); <span class="hljs-comment">//将字符串模板生成的内容添加到DOM上</span><br>    	<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addPostRender</span>();<br>    &#125;<br>    <br>  <span class="hljs-comment">//添加场景事件</span><br>  <span class="hljs-title function_">addPostRender</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">viewer</span>.<span class="hljs-property">scene</span>.<span class="hljs-property">postRender</span>.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">postRender</span>, <span class="hljs-variable language_">this</span>);<br>  &#125;<br><br>  <span class="hljs-comment">//场景渲染事件 实时更新窗口的位置 使其与笛卡尔坐标一致</span><br>  <span class="hljs-title function_">postRender</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">vmInstance</span>.<span class="hljs-property">$el</span> || !<span class="hljs-variable language_">this</span>.<span class="hljs-property">vmInstance</span>.<span class="hljs-property">$el</span>.<span class="hljs-property">style</span>) <span class="hljs-keyword">return</span>;<br>    <span class="hljs-keyword">const</span> canvasHeight = <span class="hljs-variable language_">this</span>.<span class="hljs-property">viewer</span>.<span class="hljs-property">scene</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">height</span>;<br>    <span class="hljs-keyword">const</span> windowPosition = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">Cartesian2</span>();<br>    <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">SceneTransforms</span>.<span class="hljs-title function_">wgs84ToWindowCoordinates</span>(<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">viewer</span>.<span class="hljs-property">scene</span>,<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">position</span>,<br>      windowPosition<br>    );<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">vmInstance</span>.<span class="hljs-property">$el</span>.<span class="hljs-property">style</span>.<span class="hljs-property">bottom</span> =<br>      canvasHeight - windowPosition.<span class="hljs-property">y</span> + <span class="hljs-variable language_">this</span>.<span class="hljs-property">height</span> + <span class="hljs-string">&quot;px&quot;</span>;<br>    <span class="hljs-keyword">const</span> elWidth = <span class="hljs-variable language_">this</span>.<span class="hljs-property">vmInstance</span>.<span class="hljs-property">$el</span>.<span class="hljs-property">offsetWidth</span>;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">vmInstance</span>.<span class="hljs-property">$el</span>.<span class="hljs-property">style</span>.<span class="hljs-property">left</span> = windowPosition.<span class="hljs-property">x</span> - elWidth / <span class="hljs-number">2</span> + <span class="hljs-string">&quot;px&quot;</span>;<br>    <span class="hljs-keyword">if</span> (<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">viewer</span>.<span class="hljs-property">camera</span>.<span class="hljs-property">positionCartographic</span>.<span class="hljs-property">height</span> &gt; <span class="hljs-number">4000</span> &amp;&amp;<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">isHighHidden</span><br>    ) &#123;<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">vmInstance</span>.<span class="hljs-property">$el</span>.<span class="hljs-property">style</span>.<span class="hljs-property">display</span> = <span class="hljs-string">&quot;none&quot;</span>;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">vmInstance</span>.<span class="hljs-property">$el</span>.<span class="hljs-property">style</span>.<span class="hljs-property">display</span> = <span class="hljs-string">&quot;block&quot;</span>;<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>大功告成，现在看这个类是不是十分的清爽，关于<code>Vue.extend</code>的相关原理及操作我这里不多说明，大家可以百度。我在场景渲染方法中通过<code>this.viewer.camera.positionCartographic.height</code>添加了一个判断当前相机高度来决定标签是否显示，让这个插件更灵活。</p>
+<p>最后我们只需要在我们的页面文件中引入并调用，就可以出现和之前方法实现中一样的效果啦~</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> <span class="hljs-title class_">DynamicLabel</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./plugins/DynamicLabel&#x27;</span><br><br><span class="hljs-title function_">addDynamicLabel</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">let</span> label = <span class="hljs-keyword">new</span> <span class="hljs-title class_">DynamicLabel</span>(&#123;<br>        viewer, <br>        <span class="hljs-attr">position</span>:[<span class="hljs-number">121.54035</span>, <span class="hljs-number">38.92146</span>] ,<br>        <span class="hljs-attr">height</span>:<span class="hljs-number">500</span>,<br>        <span class="hljs-attr">title</span>:<span class="hljs-string">&#x27;moe的标签&#x27;</span>,<br>        <span class="hljs-attr">id</span>:<span class="hljs-string">&#x27;210201025&#x27;</span> <br>    &#125;)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>这篇文章我们通过一个简单的文本标记提供了一个在Cesium场景中对指定功能进行实现以及封装成类的思路，其实很多的功能都可以像这样进行封装，比如自定义弹窗、雷达扫描效果、前一篇文章中的网格渲染，沿线飞行等。只要我们将基本的思路理清，其实都不难。或者可以像我一样，先用方法实现出功能，再一步一步得对其进行封装和暴露。觉得有帮助的兄弟可以点个👍关注一下专栏，Cesium和GIS相关的文章我都会收录进去。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/GIS/" class="category-chain-item">GIS</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/JavaScript/">#JavaScript</a>
+      
+        <a href="/tags/GIS/">#GIS</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>【三维GIS可视化】酷炫自定义动态标记你确定不想学会？</div>
+      <div>https://moewang0321.github.io/2021/05/28/【三维GIS可视化】酷炫自定义动态标记你确定不想学会？/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Moe Wang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年5月28日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/02/13/hello-world/" title="Hello World">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Hello World</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/05/23/%E3%80%90%E4%B8%89%E7%BB%B4GIS%E5%8F%AF%E8%A7%86%E5%8C%96%E3%80%91%E5%9F%BA%E4%BA%8EVue+Cesium+Supermap%E5%AE%9E%E7%8E%B0%E6%99%BA%E6%85%A7%E5%9F%8E%E5%B8%82%EF%BC%88%E5%9B%9B%EF%BC%89/" title="【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（四）">
+                        <span class="hidden-mobile">【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（四）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

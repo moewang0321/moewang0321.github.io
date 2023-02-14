@@ -1,0 +1,686 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Moe Wang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前三篇中我们已经能够实现加载地球、加载地图、加载点线面的效果。基本知识也相应介绍过，接下来的文章主要偏重的可能是某个功能的具体实现或某种样式的具体实现。欢迎大家评论区进行讨论。  前言  国家现在大力推行网格化管理，各地也基于网格化管理诞生了很多系统，现如今智慧城市或数字城市中，必不可少的功能就是网格展示及相关功能。今天我们就网格相关的样式和操作来复习一下关于面polygon的点击操作。同样的，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（四）">
+<meta property="og:url" content="https://moewang0321.github.io/2021/05/23/%E3%80%90%E4%B8%89%E7%BB%B4GIS%E5%8F%AF%E8%A7%86%E5%8C%96%E3%80%91%E5%9F%BA%E4%BA%8EVue+Cesium+Supermap%E5%AE%9E%E7%8E%B0%E6%99%BA%E6%85%A7%E5%9F%8E%E5%B8%82%EF%BC%88%E5%9B%9B%EF%BC%89/index.html">
+<meta property="og:site_name" content="moe_大杂烩">
+<meta property="og:description" content="前三篇中我们已经能够实现加载地球、加载地图、加载点线面的效果。基本知识也相应介绍过，接下来的文章主要偏重的可能是某个功能的具体实现或某种样式的具体实现。欢迎大家评论区进行讨论。  前言  国家现在大力推行网格化管理，各地也基于网格化管理诞生了很多系统，现如今智慧城市或数字城市中，必不可少的功能就是网格展示及相关功能。今天我们就网格相关的样式和操作来复习一下关于面polygon的点击操作。同样的，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/aade526c35914ce4b319be056980283b~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b4e9e1de45ba445880effd74e7769dab~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9c1500f8080d4aa3b4f7458f7a931c3c~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/75a5a24c5f554b798c3fb2c8f8eb2320~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c23f4fb6f1704739b9a1ddf1a1cb8eaf~tplv-k3u1fbpfcp-watermark.image">
+<meta property="article:published_time" content="2021-05-23T05:01:33.000Z">
+<meta property="article:modified_time" content="2023-02-14T08:22:06.834Z">
+<meta property="article:author" content="Moe Wang">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="GIS">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/aade526c35914ce4b319be056980283b~tplv-k3u1fbpfcp-watermark.image">
+  
+  
+  
+  <title>【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（四） - moe_大杂烩</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"moewang0321.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>moe_大杂烩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（四）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-05-23 13:01" pubdate>
+          2021年5月23日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          35 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（四）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <blockquote>
+<p>前三篇中我们已经能够实现加载地球、加载地图、加载点线面的效果。基本知识也相应介绍过，接下来的文章主要偏重的可能是某个功能的具体实现或某种样式的具体实现。欢迎大家评论区进行讨论。</p>
+</blockquote>
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>  国家现在大力推行网格化管理，各地也基于网格化管理诞生了很多系统，现如今智慧城市或数字城市中，必不可少的功能就是网格展示及相关功能。今天我们就网格相关的样式和操作来复习一下关于面<code>polygon</code>的点击操作。同样的，行政区划也可以利用这样的效果和操作进行下沉。</p>
+<p>  我们先来看一下效果，实现了面的渐变填充样式，鼠标悬浮效果、点击效果。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/aade526c35914ce4b319be056980283b~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="grid.gif"></p>
+<h3 id="思路及实现"><a href="#思路及实现" class="headerlink" title="思路及实现"></a>思路及实现</h3><p>我们想要实现面的点击、悬浮效果以及样式的修改。需要用到的基本上就是Cesium的<code>ScreenSpaceEventHandler</code>来监听鼠标的操作，而样式修改可能会对填充图片或者<code>material</code>进行处理。好了，既然想到了如何实现我们就开始动手吧！</p>
+<h4 id="获取数据"><a href="#获取数据" class="headerlink" title="获取数据"></a>获取数据</h4><p>网格实质上也是面，所以我们需要首先有网格的面数据，我们可以去 <a target="_blank" rel="noopener" href="http://datav.aliyun.com/tools/atlas/#&lat=30.332329214580188&lng=106.72278672066881&zoom=3.5">DataV.Geoatlas</a>地图中获取面的geojson数据。这里我们采用北京市的行政区划数据,地址我这里贴出来，想寻找其他数据的小伙伴可以自行寻找。</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs txt">https://geo.datav.aliyun.com/areas_v2/bound/110000_full.json<br></code></pre></td></tr></table></figure>
+
+<h4 id="加载geoJSON格式数据"><a href="#加载geoJSON格式数据" class="headerlink" title="加载geoJSON格式数据"></a>加载geoJSON格式数据</h4><p>利用Cesium的<code>GeoJsonDataSource</code>来加载geoJSON数据，注意：它返回的是一个promise对象，所以接收时需要使用<code>.then(cb)</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> promise=<span class="hljs-title class_">Cesium</span>.<span class="hljs-property">GeoJsonDataSource</span>.<span class="hljs-title function_">load</span>(<span class="hljs-string">&#x27;https://geo.datav.aliyun.com/areas_v2/bound/110000_full.json&#x27;</span>)<br>promise.<span class="hljs-title function_">then</span>(<span class="hljs-function">(<span class="hljs-params">datasource</span>) =&gt;</span> &#123;<br>    viewer.<span class="hljs-property">dataSources</span>.<span class="hljs-title function_">add</span>(datasource);<br>    <span class="hljs-keyword">var</span> entities = datasource.<span class="hljs-property">entities</span>.<span class="hljs-property">values</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; entities.<span class="hljs-property">length</span>; i++)&#123;<br>      <span class="hljs-keyword">var</span> entity = entities[i];<br>      entity.<span class="hljs-property">polygon</span>.<span class="hljs-property">material</span> = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Color</span>.<span class="hljs-property">RED</span>;<br>      entity.<span class="hljs-property">polygon</span>.<span class="hljs-property">extrudedHeight</span> = <span class="hljs-number">100</span><br>    &#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>在这里我们看到datasource就是我们通过url获取到的数据集，加载完毕后我们需要通过循环数据集中的实体集来对每一个实体进行样式的修改，这里我们暂时设置了它的颜色为红色，拉伸高度为100。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b4e9e1de45ba445880effd74e7769dab~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p>可以看到我们的带有高度的面已经渲染出来了，接下来我们可以思考一下如何变成我们最开始的效果图那样半透明渐变的呢？</p>
+<h4 id="polygon样式修改"><a href="#polygon样式修改" class="headerlink" title="polygon样式修改"></a><code>polygon</code>样式修改</h4><p>我们知道，<code>entity</code>是通过<code>matrial</code>材质进行样式的修改。透明度我们可以通过<code>Cesium.Color</code>自带的<code>withAlpha</code>进行修改，但我们想呈现出的效果是区域渐变加透明，我当时的第一想法是既然<code>material</code>可以加载图片，那我们能不能用一张区域渐变的图片对它进行填充呢？结论是可以的。我们只需要<code>           entity.polygon.material = require(&#39;./images/color.jpg&#39;);</code>就可以利用图片填充。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9c1500f8080d4aa3b4f7458f7a931c3c~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p>这时候你可能会说，这就好办了，把图片变成半透明的不就实现了吗。这有什么难的。对，但是我们思考一下，如果这时候客户说：不行，这个颜色不好看，给我多换几个我看看效果，你该怎么办？做好几张图片挨个替换吗，这未免也太麻烦了吧。所以我们需要一个能够指定颜色并快速生成图片的方式供我们使用。<code>canvas</code>这时候站出来了，利用<code>canvas</code>，我们可以使用代码来快生成指定样式的图片，这不比制图快多了。</p>
+<p><code>canvas</code>关于渐变、角度的知识在这就不介绍了，网上比比皆是，我们直接通过代码讲解。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-title function_">getColorRamp</span>(<span class="hljs-params">rampColor,centerColor</span>) &#123;<br>    <span class="hljs-keyword">var</span> ramp = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;canvas&quot;</span>);<br>    ramp.<span class="hljs-property">width</span> = <span class="hljs-number">50</span>;<br>    ramp.<span class="hljs-property">height</span> = <span class="hljs-number">50</span>;<br>    <span class="hljs-keyword">var</span> ctx = ramp.<span class="hljs-title function_">getContext</span>(<span class="hljs-string">&quot;2d&quot;</span>);<br><br>    <span class="hljs-keyword">var</span> grd = ctx.<span class="hljs-title function_">createRadialGradient</span>(<span class="hljs-number">25</span>, <span class="hljs-number">25</span>, <span class="hljs-number">0</span>, <span class="hljs-number">25</span>, <span class="hljs-number">25</span>, <span class="hljs-number">50</span>);<br>    grd.<span class="hljs-title function_">addColorStop</span>(<span class="hljs-number">0</span>, centerColor); <span class="hljs-comment">// &quot;rgba(255,255,255,0)&quot;</span><br>    grd.<span class="hljs-title function_">addColorStop</span>(<span class="hljs-number">1</span>, rampColor);<br><br>    ctx.<span class="hljs-property">fillStyle</span> = grd;<br>    ctx.<span class="hljs-title function_">fillRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">50</span>, <span class="hljs-number">50</span>);<br><br>    <span class="hljs-comment">// return ramp;</span><br><br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">ImageMaterialProperty</span>(&#123;<br>      <span class="hljs-attr">image</span>: ramp,<br>      <span class="hljs-attr">transparent</span>: <span class="hljs-literal">true</span><br>    &#125;);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>可以看到我们封装了一个函数，入参是渐变两端的颜色（当然如果你的需求中需要改变角度、方向等可以自定义参数），生成一个<code>50*50</code>的canvas画布，<code>createRadialGradient</code>创建一个渐变对象，规定渐变颜色和位置，绘制到画布上，最后返回一个Cesium的<code>ImageMaterialProperty</code>图片材质类，记得配置<code>transparent</code>为<code>true</code>。</p>
+<p>这样我们就可以自定义颜色来生成半透明渐变效果的材质了，看效果！</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/75a5a24c5f554b798c3fb2c8f8eb2320~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p>边缘的黄线是面的<code>outline</code>，我们可以将其设置为<code>null</code>以展示更好效果。</p>
+<h4 id="鼠标悬浮及点击事件"><a href="#鼠标悬浮及点击事件" class="headerlink" title="鼠标悬浮及点击事件"></a>鼠标悬浮及点击事件</h4><p>我们想实现的效果为点击高亮和鼠标移入时面外围有动效线的效果，其实很简单，也就是我们点击这个面的时候获取到这个面，改变这个面的材质，利用这个面的外围坐标集生成一个<code>polyline</code>，添加动态线的材质。现在我们来看看代码吧。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><code class="hljs js">handler = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">ScreenSpaceEventHandler</span>(viewer.<span class="hljs-property">scene</span>.<span class="hljs-property">canvas</span>);<br>handler.<span class="hljs-title function_">setInputAction</span>(<span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> &#123;<br>  <span class="hljs-keyword">var</span> pick = viewer.<span class="hljs-property">scene</span>.<span class="hljs-title function_">pick</span>(e.<span class="hljs-property">position</span>);<br>  <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Cesium</span>.<span class="hljs-title function_">defined</span>(pick) &amp;&amp; pick.<span class="hljs-property">id</span>) &#123;<br>    <span class="hljs-keyword">var</span> feature = pick.<span class="hljs-property">id</span>;<br>    viewer.<span class="hljs-property">entities</span>.<span class="hljs-title function_">removeById</span>(<span class="hljs-string">&quot;select_grid&quot;</span>);<br>    viewer.<span class="hljs-property">entities</span>.<span class="hljs-title function_">removeById</span>(<span class="hljs-string">`line_<span class="hljs-subst">$&#123;feature.id&#125;</span>`</span>);<br>    <span class="hljs-keyword">let</span> positions = feature.<span class="hljs-property">polygon</span>.<span class="hljs-property">hierarchy</span>.<span class="hljs-title function_">getValue</span>(<br>        <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">JulianDate</span>.<span class="hljs-title function_">now</span>()<br>    ).<span class="hljs-property">positions</span>;<br>    viewer.<span class="hljs-property">entities</span>.<span class="hljs-title function_">add</span>(&#123;<br>    <span class="hljs-attr">id</span>: <span class="hljs-string">&quot;select_grid&quot;</span>,<br>    <span class="hljs-attr">polygon</span>: &#123;<br>      <span class="hljs-attr">hierarchy</span>: positions,<br>      <span class="hljs-attr">material</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getColorRamp</span>(<br>        <span class="hljs-string">&quot;rgba(0, 255, 255,1)&quot;</span>,<br>        <span class="hljs-string">&quot;rgba(255,0,0,0.3)&quot;</span><br>      ),<br>      <span class="hljs-attr">height</span>: <span class="hljs-number">499</span>,<br>    &#125;,<br>    &#125;);<br>  &#125;<br>&#125;, <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">ScreenSpaceEventType</span>.<span class="hljs-property">LEFT_CLICK</span>);<br><br>handler.<span class="hljs-title function_">setInputAction</span>(<span class="hljs-function">(<span class="hljs-params">movement</span>) =&gt;</span> &#123;<br>    <span class="hljs-keyword">var</span> pickFeature =<br>      viewer.<span class="hljs-property">scene</span>.<span class="hljs-title function_">pick</span>(movement.<span class="hljs-property">endPosition</span>) &amp;&amp;<br>      viewer.<span class="hljs-property">scene</span>.<span class="hljs-title function_">pick</span>(movement.<span class="hljs-property">endPosition</span>).<span class="hljs-property">id</span>;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Cesium</span>.<span class="hljs-title function_">defined</span>(pickFeature) &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">preLineId</span> !== pickFeature.<span class="hljs-property">id</span>) &#123;<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">preLineId</span> &amp;&amp;viewer.<span class="hljs-property">entities</span>.<span class="hljs-title function_">removeById</span>(<span class="hljs-string">`line_<span class="hljs-subst">$&#123;<span class="hljs-variable language_">this</span>.preLineId&#125;</span>`</span>);<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">preLineId</span> = pickFeature.<span class="hljs-property">id</span>;<br>      viewer.<span class="hljs-property">entities</span>.<span class="hljs-title function_">add</span>(&#123;<br>        <span class="hljs-attr">id</span>: <span class="hljs-string">&quot;line_&quot;</span> + pickFeature.<span class="hljs-property">id</span>,<br>        <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;line_&quot;</span> + pickFeature.<span class="hljs-property">name</span>,<br>        <span class="hljs-attr">polyline</span>: &#123;<br>          <span class="hljs-attr">positions</span>: pickFeature.<span class="hljs-property">polygon</span>.<span class="hljs-property">hierarchy</span>.<span class="hljs-title function_">getValue</span>(<br>            <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">JulianDate</span>.<span class="hljs-title function_">now</span>()<br>          ).<span class="hljs-property">positions</span>,<br>          <span class="hljs-attr">width</span>: <span class="hljs-number">8</span>,<br>          <span class="hljs-attr">material</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">PolylineTrailMaterialProperty</span>(&#123;<br>            <span class="hljs-comment">// 尾迹线材质</span><br>            <span class="hljs-attr">color</span>: <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Color</span>.<span class="hljs-property">AQUA</span>,<br>            <span class="hljs-attr">trailLength</span>: <span class="hljs-number">0.9</span>,<br>            <span class="hljs-attr">period</span>: <span class="hljs-number">1</span>,<br>          &#125;),<br>        &#125;,<br>      &#125;);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">preLineId</span> &amp;&amp; viewer.<span class="hljs-property">entities</span>.<span class="hljs-title function_">removeById</span>(<span class="hljs-string">`line_<span class="hljs-subst">$&#123;<span class="hljs-variable language_">this</span>.preLineId&#125;</span>`</span>);<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">preLineId</span> = <span class="hljs-literal">null</span>;<br>    &#125;<br>&#125;, <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">ScreenSpaceEventType</span>.<span class="hljs-property">MOUSE_MOVE</span>);<br></code></pre></td></tr></table></figure>
+
+<p>效果：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c23f4fb6f1704739b9a1ddf1a1cb8eaf~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="6.gif"></p>
+<p>其实总结一下就是获取到当前鼠标位置下的<code>entity</code>，根据面的外围坐标集生成一个新的面和新的线，添加到球体上。就是先我们的效果了。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/GIS/" class="category-chain-item">GIS</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/JavaScript/">#JavaScript</a>
+      
+        <a href="/tags/GIS/">#GIS</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（四）</div>
+      <div>https://moewang0321.github.io/2021/05/23/【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（四）/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Moe Wang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年5月23日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/05/28/%E3%80%90%E4%B8%89%E7%BB%B4GIS%E5%8F%AF%E8%A7%86%E5%8C%96%E3%80%91%E9%85%B7%E7%82%AB%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A8%E6%80%81%E6%A0%87%E8%AE%B0%E4%BD%A0%E7%A1%AE%E5%AE%9A%E4%B8%8D%E6%83%B3%E5%AD%A6%E4%BC%9A%EF%BC%9F/" title="【三维GIS可视化】酷炫自定义动态标记你确定不想学会？">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">【三维GIS可视化】酷炫自定义动态标记你确定不想学会？</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/05/05/%E3%80%90%E4%B8%89%E7%BB%B4GIS%E5%8F%AF%E8%A7%86%E5%8C%96%E3%80%91%E5%9F%BA%E4%BA%8EVue+Cesium+Supermap%E5%AE%9E%E7%8E%B0%E6%99%BA%E6%85%A7%E5%9F%8E%E5%B8%82%EF%BC%88%E4%B8%89%EF%BC%89/" title="【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（三）">
+                        <span class="hidden-mobile">【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（三）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
