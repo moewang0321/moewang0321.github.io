@@ -1,0 +1,727 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Moe Wang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前言我们在前面的文章中介绍过Cesium的Property机制，了解了它的作用以及它的用法，这篇文章我们通过一个实际场景来深入学习和复习一下Property机制。 在智慧城市系统中，必不可少的就是轨迹回放或者让模型沿着指定路径行走，而Cesium提供的Property机制能够在很好的实现这样的场景的同时保证性能。下面简单来讲一下Property，更多的知识可以阅读Cesium的Property机制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cesium | 利用Property机制实现轨迹回放">
+<meta property="og:url" content="https://moewang0321.github.io/2021/06/10/Cesium%E5%88%A9%E7%94%A8Property%E6%9C%BA%E5%88%B6%E5%AE%9E%E7%8E%B0%E8%BD%A8%E8%BF%B9%E5%9B%9E%E6%94%BE/index.html">
+<meta property="og:site_name" content="moe_大杂烩">
+<meta property="og:description" content="前言我们在前面的文章中介绍过Cesium的Property机制，了解了它的作用以及它的用法，这篇文章我们通过一个实际场景来深入学习和复习一下Property机制。 在智慧城市系统中，必不可少的就是轨迹回放或者让模型沿着指定路径行走，而Cesium提供的Property机制能够在很好的实现这样的场景的同时保证性能。下面简单来讲一下Property，更多的知识可以阅读Cesium的Property机制">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f95ccb3b7f66409aabca65f4ea854d82~tplv-k3u1fbpfcp-watermark.image">
+<meta property="article:published_time" content="2021-06-10T08:10:55.000Z">
+<meta property="article:modified_time" content="2023-02-14T08:43:40.028Z">
+<meta property="article:author" content="Moe Wang">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="Cesium">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f95ccb3b7f66409aabca65f4ea854d82~tplv-k3u1fbpfcp-watermark.image">
+  
+  
+  
+  <title>Cesium | 利用Property机制实现轨迹回放 - moe_大杂烩</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"moewang0321.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>moe_大杂烩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Cesium | 利用Property机制实现轨迹回放"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-06-10 16:10" pubdate>
+          2021年6月10日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          42 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Cesium | 利用Property机制实现轨迹回放</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我们在前面的<a target="_blank" rel="noopener" href="https://juejin.cn/post/6970884378759004174">文章</a>中介绍过Cesium的Property机制，了解了它的作用以及它的用法，这篇文章我们通过一个实际场景来深入学习和复习一下Property机制。</p>
+<p>在智慧城市系统中，必不可少的就是轨迹回放或者让模型沿着指定路径行走，而Cesium提供的Property机制能够在很好的实现这样的场景的同时保证性能。下面简单来讲一下Property，更多的知识可以阅读<a target="_blank" rel="noopener" href="https://juejin.cn/post/6970884378759004174">Cesium的Property机制究竟有多香</a></p>
+<h2 id="property"><a href="#property" class="headerlink" title="property"></a>property</h2><p>简单来说，Property就是Cesium提供的一种机制，可以让指定的属性随时间自动变化并赋值，操作便捷的同时能够节省性能。在Cesium中Property可以与时间轴进行关联，并根据时间返回对应的属性，我们再通过返回的值去改变我i们想要修改的状态值。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>一样的，首先我们整理思路，想要实现轨迹回放，我们需要一组轨迹坐标串、一个定义好时间点状态的Property，以及一个用来在轨迹上行走的model（本文用billboard代替）。</p>
+<p>我们拿到了轨迹坐标串后，需要通过计算获得几个关键节点的距离、时间，生成完整的property作为我们实体的position属性。</p>
+<p>基本思路如上，接下来我们开始动手实现。思路只提供大致方向，在实现中可能会对某些方面进行部分修改。一般场景下我们得到的都是经纬度坐标，而操作时需要使用笛卡尔坐标。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">let</span> lnglatArr = [<br>    [<span class="hljs-number">121.527589</span>, <span class="hljs-number">38.957547</span>],<br>    [<span class="hljs-number">121.527825</span>, <span class="hljs-number">38.960166</span>],<br>    [<span class="hljs-number">121.536472</span>, <span class="hljs-number">38.959098</span>],<br>    [<span class="hljs-number">121.540442</span>, <span class="hljs-number">38.958464</span>],<br>    [<span class="hljs-number">121.543489</span>, <span class="hljs-number">38.958131</span>],<br>    [<span class="hljs-number">121.542888</span>, <span class="hljs-number">38.955861</span>],<br>    [<span class="hljs-number">121.542266</span>, <span class="hljs-number">38.953325</span>],<br>]<br><br><span class="hljs-keyword">let</span> positions = lnglatArr.<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">item</span>) =&gt;</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartesian3</span>.<span class="hljs-title function_">fromDegrees</span>(item[<span class="hljs-number">0</span>] , item[<span class="hljs-number">1</span>] , <span class="hljs-number">0.5</span>);<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>接下来我们需要获取回放中每段的时间以及总时间，这里我们需要通过速度和坐标点之间的距离算出所需时间（这是小学知识吧，t = l/s）。</p>
+<p>我们需要记录每个点位的时间，用来为property添加节点，这里我们将它写成一个方法方便调用。入参就是我们的坐标串与速度。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 计算每个点位时间和总时间</span><br><span class="hljs-title function_">getSiteTimes</span>(<span class="hljs-params">positions, speed</span>) &#123;<br>    <span class="hljs-keyword">let</span> timeSum = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">let</span> times = [];<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; positions.<span class="hljs-property">length</span>; i++) &#123;<br>        <span class="hljs-keyword">if</span> (i === <span class="hljs-number">0</span>) &#123;<br>            times.<span class="hljs-title function_">push</span>(<span class="hljs-number">0</span>);<br>            <span class="hljs-keyword">continue</span>;<br>        &#125;<br><br>        timeSum += <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">spaceDistance</span>([positions[i - <span class="hljs-number">1</span>], positions[i]]) / speed;<br>        times.<span class="hljs-title function_">push</span>(timeSum);<br>    &#125;<br>    <span class="hljs-keyword">return</span> &#123;<br>        timeSum,<br>        <span class="hljs-attr">siteTimes</span>: times,<br>    &#125;;<br>&#125;,<br></code></pre></td></tr></table></figure>
+
+<p>可以看到我们在循环内又定义了一个方法<code>spaceDisatance</code>，这个方法用来计算传入的两个点之间的距离。Cesium为我们提供了相关方法计算两点之间的距离。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 计算距离</span><br><span class="hljs-title function_">spaceDistance</span>(<span class="hljs-params">positions</span>) &#123;<br>    <span class="hljs-keyword">let</span> distance = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; positions.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>; i++) &#123;<br>        <span class="hljs-keyword">let</span> point1cartographic = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartographic</span>.<span class="hljs-title function_">fromCartesian</span>(<br>            positions[i]<br>        );<br>        <span class="hljs-keyword">let</span> point2cartographic = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartographic</span>.<span class="hljs-title function_">fromCartesian</span>(<br>            positions[i + <span class="hljs-number">1</span>]<br>        );<br>        <span class="hljs-comment">/**根据经纬度计算出距离**/</span><br>        <span class="hljs-keyword">let</span> geodesic = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">EllipsoidGeodesic</span>();<br>        geodesic.<span class="hljs-title function_">setEndPoints</span>(point1cartographic, point2cartographic);<br>        <span class="hljs-keyword">let</span> s = geodesic.<span class="hljs-property">surfaceDistance</span>;<br>        <span class="hljs-comment">//返回两点之间的距离 如果带高度的话</span><br>        s = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sqrt</span>(<br>            <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(s, <span class="hljs-number">2</span>) +<br>            <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(point2cartographic.<span class="hljs-property">height</span> - point1cartographic.<span class="hljs-property">height</span>, <span class="hljs-number">2</span>)<br>        );<br>        distance = distance + s;<br>    &#125;<br>    <span class="hljs-keyword">return</span> distance.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">2</span>);<br>&#125;,<br></code></pre></td></tr></table></figure>
+
+<p>现在我们拿到了总时间和每两个点之间的时间，现在可以开始构建property和时间轴了。首先我们需要定义开始时间结束时间并给到<code>viewer</code>的<code>clock</code>实例上代表时间段，接着构筑Property实例。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">let</span> timeObj = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getSiteTimes</span>(positions, speed);<br><span class="hljs-keyword">let</span> startTime = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">JulianDate</span>.<span class="hljs-title function_">fromDate</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>());<br><span class="hljs-keyword">let</span> stopTime = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">JulianDate</span>.<span class="hljs-title function_">addSeconds</span>(<br>    startTime,<br>    timeObj.<span class="hljs-property">timeSum</span>,<br>    <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">JulianDate</span>()<br>);<br><br>viewer.<span class="hljs-property">clock</span>.<span class="hljs-property">startTime</span> = startTime.<span class="hljs-title function_">clone</span>();<br>viewer.<span class="hljs-property">clock</span>.<span class="hljs-property">stopTime</span> = stopTime.<span class="hljs-title function_">clone</span>();<br>viewer.<span class="hljs-property">clock</span>.<span class="hljs-property">currentTime</span> = startTime.<span class="hljs-title function_">clone</span>();<br><br><span class="hljs-comment">// 生成property</span><br><span class="hljs-keyword">var</span> property = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">SampledPositionProperty</span>();<br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; positions.<span class="hljs-property">length</span>; i++) &#123;<br>    <span class="hljs-keyword">const</span> time = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">JulianDate</span>.<span class="hljs-title function_">addSeconds</span>(<br>        startTime,<br>        timeObj.<span class="hljs-property">siteTimes</span>[i],<br>        <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">JulianDate</span>()<br>    );<br>    property.<span class="hljs-title function_">addSample</span>(time, positions[i]);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>最后一步，我们添加一个Entity实体，做轨迹回放的物体，这里可以使用任何实体。添加到场景中后需要利用<code>viewer.trackedEntity</code>动态追踪实体。我们的轨迹回放就大功告成了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-variable language_">this</span>.<span class="hljs-property">animateEntity</span> = viewer.<span class="hljs-property">entities</span>.<span class="hljs-title function_">add</span>(&#123;<br>    <span class="hljs-comment">// 实体可用性，在指定时间内返回有效数据</span><br>    <span class="hljs-attr">availability</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">TimeIntervalCollection</span>([<br>        <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">TimeInterval</span>(&#123;<br>            <span class="hljs-attr">start</span>: startTime,<br>            <span class="hljs-attr">stop</span>: stopTime,<br>        &#125;),<br>    ]),<br>    <span class="hljs-comment">// 位置信息随时间变化property</span><br>    <span class="hljs-attr">position</span>: property,<br>    <span class="hljs-comment">// 实体方向</span><br>    <span class="hljs-attr">orientation</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">VelocityOrientationProperty</span>(property),<br>    <span class="hljs-attr">billboard</span>: &#123;<br>        <span class="hljs-attr">image</span>: <span class="hljs-string">&quot;./static/blueCamera.png&quot;</span>,<br>        <span class="hljs-attr">verticalOrigin</span>: <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">VerticalOrigin</span>.<span class="hljs-property">BOTTOM</span>,<br>    &#125;,<br>    <span class="hljs-comment">// 轨迹路径</span><br>    <span class="hljs-attr">path</span>: &#123;<br>        <span class="hljs-attr">resolution</span>: <span class="hljs-number">1</span>,<br>        <span class="hljs-attr">width</span>: <span class="hljs-number">10</span>,<br>        <span class="hljs-attr">material</span>: <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Color</span>.<span class="hljs-property">RED</span>,<br>    &#125;,<br>&#125;);<br><br>viewer.<span class="hljs-property">trackedEntity</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">animateEntity</span>;<br></code></pre></td></tr></table></figure>
+
+<p>效果如下：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f95ccb3b7f66409aabca65f4ea854d82~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="animate1.gif"></p>
+<h2 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h2><p>这里简单提一下利用Class进行封装吧，没有什么大的难点，就是把实现步骤拆分，选定参数进行暴露。这里简单书写一下代码结构。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TrackedAnimate</span> &#123;<br>    <span class="hljs-title function_">constructor</span>(<span class="hljs-params">viewer, cb</span>) &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">viewer</span> = viewer;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">cb</span> = cb;<br>    &#125;<br><br>    <span class="hljs-title function_">startRoam</span>(<span class="hljs-params">positions, speed</span>) &#123;<br>        <span class="hljs-keyword">let</span> newPositions = positions.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartesian3</span>.<span class="hljs-title function_">fromDegrees</span>(item[<span class="hljs-number">0</span>], item[<span class="hljs-number">1</span>], <span class="hljs-number">0.5</span>);<br>        &#125;);<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addRoamLine</span>(newPositions, speed);<br>    &#125;<br><br>    <span class="hljs-comment">//添加漫游路线</span><br>    <span class="hljs-title function_">addRoamLine</span>(<span class="hljs-params">positions, speed</span>) &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">endRoam</span>();<br><br>        <span class="hljs-keyword">let</span> timeObj = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getSiteTimes</span>(positions, speed);<br>        <span class="hljs-keyword">let</span> startTime = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">JulianDate</span>.<span class="hljs-title function_">fromDate</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>()); <br>        <span class="hljs-keyword">let</span> stopTime = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">JulianDate</span>.<span class="hljs-title function_">addSeconds</span>(<br>            startTime,<br>            timeObj.<span class="hljs-property">timeSum</span>,<br>            <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">JulianDate</span>()<br>        );<br><br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">viewer</span>.<span class="hljs-property">clock</span>.<span class="hljs-property">startTime</span> = startTime.<span class="hljs-title function_">clone</span>();<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">viewer</span>.<span class="hljs-property">clock</span>.<span class="hljs-property">stopTime</span> = stopTime.<span class="hljs-title function_">clone</span>();<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">viewer</span>.<span class="hljs-property">clock</span>.<span class="hljs-property">currentTime</span> = startTime.<span class="hljs-title function_">clone</span>();<br><br>        <span class="hljs-keyword">let</span> property = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getSampledPositionProperty</span>(<br>            positions,<br>            startTime,<br>            timeObj.<span class="hljs-property">siteTimes</span><br>        );<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addModel</span>(startTime, stopTime, property);<br><br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">viewer</span>.<span class="hljs-property">trackedEntity</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">animateEntity</span>;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">timoutId</span> = <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> &#123;<br>            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">endRoam</span>();<br>        &#125;, timeObj.<span class="hljs-property">timeSum</span> * <span class="hljs-number">1000</span>);<br>    &#125;<br><br>    <span class="hljs-title function_">addModel</span>(<span class="hljs-params">startTime, stopTime, property</span>) &#123;<br>        <span class="hljs-comment">//……</span><br>    &#125;<br><br>    <span class="hljs-title function_">endRoam</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-comment">//……</span><br>    &#125;<br><br>    <span class="hljs-title function_">getSampledPositionProperty</span>(<span class="hljs-params">positions, startTime, siteTimes</span>) &#123;<br>        <span class="hljs-comment">//……</span><br>    &#125;<br><br>    <span class="hljs-comment">//计算每个点位时间与总时间</span><br>    <span class="hljs-title function_">getSiteTimes</span>(<span class="hljs-params">positions, speed</span>) &#123;<br>        <span class="hljs-comment">//……</span><br>    &#125;<br><br>    <span class="hljs-comment">//计算距离</span><br>    <span class="hljs-title function_">spaceDistance</span>(<span class="hljs-params">positions</span>) &#123;<br>        <span class="hljs-comment">//……</span><br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>调用：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-variable language_">this</span>.<span class="hljs-property">trackEntity</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">TrackedAnimate</span>(viewer , <span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;moe_&#x27;</span>);<br>&#125;);<br><br><span class="hljs-variable language_">this</span>.<span class="hljs-property">trackEntity</span>.<span class="hljs-title function_">startRoam</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">movePositions</span>, <span class="hljs-number">25</span>);<br><span class="hljs-variable language_">this</span>.<span class="hljs-property">trackEntity</span>.<span class="hljs-title function_">endRoam</span>();<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>上述我们简单实现了轨迹回放的场景，可以看到在封装中我们还设置了回调函数的参数，后续可以进行很多扩展比如多视角回放，特定位置做特定功能等等，都可以进行扩展。Property的使用场景有很多，这只是其中一部分，感兴趣的可以深入研究共同探讨。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Cesium/" class="category-chain-item">Cesium</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/JavaScript/">#JavaScript</a>
+      
+        <a href="/tags/Cesium/">#Cesium</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Cesium | 利用Property机制实现轨迹回放</div>
+      <div>https://moewang0321.github.io/2021/06/10/Cesium利用Property机制实现轨迹回放/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Moe Wang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年6月10日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/06/11/Cesium%E6%B5%B7%E9%87%8F%E7%82%B9%E7%9A%84%E5%8A%A0%E8%BD%BD%E4%B8%8E%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" title="Cesium | 海量点的加载与性能优化">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Cesium | 海量点的加载与性能优化</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/06/09/Electron%E5%AE%9E%E7%8E%B0%E5%90%AF%E5%8A%A8Loading%E5%8A%A8%E7%94%BB%E6%95%88%E6%9E%9C/" title="Electron实现启动Loading动画效果">
+                        <span class="hidden-mobile">Electron实现启动Loading动画效果</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+    <div id="giscus" class="giscus"></div>
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#giscus', function() {
+        var options = {"repo":"moewang0321/moewang0321.github.io","repo-id":"MDEwOlJlcG9zaXRvcnkyMDEyNDI0NTY=","category":"Show and tell","category-id":"DIC_kwDOC_63WM4CUMsH","theme-light":"light_protanopia","theme-dark":"dark_dimmed","mapping":"pathname","reactions-enabled":1,"emit-metadata":1,"input-position":"top","loading":"lazy","lang":"zh-CN"};
+        var attributes = {};
+        for (let option in options) {
+          if (!option.startsWith('theme-')) {
+            var key = option.startsWith('data-') ? option : 'data-' + option;
+            attributes[key] = options[option];
+          }
+        }
+        var light = 'light_protanopia';
+        var dark = 'dark_dimmed';
+        window.GiscusThemeLight = light;
+        window.GiscusThemeDark = dark;
+        attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
+        for (let attribute in attributes) {
+          var value = attributes[attribute];
+          if (value === undefined || value === null || value === '') {
+            delete attributes[attribute];
+          }
+        }
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('crossorigin', 'anonymous');
+        for (let attribute in attributes) {
+          s.setAttribute(attribute, attributes[attribute]);
+        }
+        var ss = document.getElementsByTagName('script');
+        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+        e.parentNode.insertBefore(s, e.nextSibling);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

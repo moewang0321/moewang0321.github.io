@@ -1,0 +1,738 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Moe Wang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前言在Cesium中我们可能会遇到加载海量数据的情况，但当我们进行实现的时候会发现页面渲染会因为数据量过大而变得迟缓，十分影响用户体验。接下来我将先通过大数量的点进行性能检测，然后对其进行优化。  本文利用Turf进行海量随机点的生成  测试首先我们通过Turf生成万量级的点位信息 1234567891011121314let points &#x3D; turf.randomPoint(10000, &amp;#">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cesium | 海量点的加载与性能优化">
+<meta property="og:url" content="https://moewang0321.github.io/2021/06/11/Cesium%E6%B5%B7%E9%87%8F%E7%82%B9%E7%9A%84%E5%8A%A0%E8%BD%BD%E4%B8%8E%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/index.html">
+<meta property="og:site_name" content="moe_大杂烩">
+<meta property="og:description" content="前言在Cesium中我们可能会遇到加载海量数据的情况，但当我们进行实现的时候会发现页面渲染会因为数据量过大而变得迟缓，十分影响用户体验。接下来我将先通过大数量的点进行性能检测，然后对其进行优化。  本文利用Turf进行海量随机点的生成  测试首先我们通过Turf生成万量级的点位信息 1234567891011121314let points &#x3D; turf.randomPoint(10000, &amp;#">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3b71dc400ca24286b82189d24c873d01~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/aea2c3b87ecf4f48a2e2a7769bbd6ab1~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b7df04ec763f46f09d1c4f248edb32b0~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/869207da3f7c4edc98ee0130da25eff1~tplv-k3u1fbpfcp-watermark.image">
+<meta property="article:published_time" content="2021-06-11T05:22:41.000Z">
+<meta property="article:modified_time" content="2023-02-14T08:42:42.821Z">
+<meta property="article:author" content="Moe Wang">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="Cesium">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3b71dc400ca24286b82189d24c873d01~tplv-k3u1fbpfcp-watermark.image">
+  
+  
+  
+  <title>Cesium | 海量点的加载与性能优化 - moe_大杂烩</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"moewang0321.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>moe_大杂烩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Cesium | 海量点的加载与性能优化"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-06-11 13:22" pubdate>
+          2021年6月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          21 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Cesium | 海量点的加载与性能优化</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>在Cesium中我们可能会遇到加载海量数据的情况，但当我们进行实现的时候会发现页面渲染会因为数据量过大而变得迟缓，十分影响用户体验。接下来我将先通过大数量的点进行性能检测，然后对其进行优化。</p>
+<blockquote>
+<p>本文利用Turf进行海量随机点的生成</p>
+</blockquote>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>首先我们通过Turf生成万量级的点位信息</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">let</span> points = turf.<span class="hljs-title function_">randomPoint</span>(<span class="hljs-number">10000</span>, &#123; <span class="hljs-attr">bbox</span>: [<span class="hljs-number">40</span>, <span class="hljs-number">20</span>, <span class="hljs-number">255</span>, <span class="hljs-number">60</span>] &#125;);<br><span class="hljs-keyword">let</span> features = points.<span class="hljs-property">features</span>;<br><span class="hljs-keyword">let</span> feature, geom, coordinates, position;<br><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; features.<span class="hljs-property">length</span>; i++) &#123;<br>    feature = features[i];<br>    geom = feature.<span class="hljs-property">geometry</span>;<br>    coordinates = geom.<span class="hljs-property">coordinates</span>;<br>    position = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartesian3</span>.<span class="hljs-title function_">fromDegrees</span>(<br>        coordinates[<span class="hljs-number">0</span>],<br>        coordinates[<span class="hljs-number">1</span>],<br>        <span class="hljs-number">0</span><br>);<br><span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addEntities</span>(position);<br></code></pre></td></tr></table></figure>
+
+<p><code>addEntities</code>方法中进行我们的<code>billboard</code>添加</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js">viewer.<span class="hljs-property">entities</span>.<span class="hljs-title function_">add</span>(&#123;<br>    <span class="hljs-attr">position</span>: position,<br>    <span class="hljs-attr">billboard</span>: &#123;<br>        <span class="hljs-attr">image</span>: <span class="hljs-string">&quot;./static/blueCamera.png&quot;</span>,<br>        <span class="hljs-attr">verticalOrigin</span>: <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">VerticalOrigin</span>.<span class="hljs-property">BOTTOM</span>,<br>    &#125;,<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p>然后我们打开我们的项目……天啊真是肉眼可见的卡住了，接下来我们用performance来分析一下。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3b71dc400ca24286b82189d24c873d01~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="image-20210607164830355.png"></p>
+<p>我们点击左上角的刷新按钮，reload一下页面，等待分析报告的生成。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/aea2c3b87ecf4f48a2e2a7769bbd6ab1~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="image-20210609141301351.png"></p>
+<p>可以看到我们万级别的<code>billboard</code>在以<code>entity</code>为载体的情况下添加花费了近30s的时间非常之长。</p>
+<p>我们上述是通过加载本地图片资源，然后给Cesium生成对应的billboard去利用<code>entity</code>进行渲染，慢会不会是因为通过<code>entity</code>生成的原因？，如果我们用<code>primitive</code>呢，这里简单讲一下<code>primitve</code>和<code>entity</code>的区别，详细的描述后续会单独写一篇文章作述。</p>
+<h3 id="primitive和entity"><a href="#primitive和entity" class="headerlink" title="primitive和entity"></a><code>primitive</code>和<code>entity</code></h3><ul>
+<li><code>primitive</code>更多的是面向图形开发人员的底层API，暴露最小限度的抽象，更多使用图形学术语，具有更大的灵活性。</li>
+<li><code>entity</code>是更高级别的数据驱动API，它使用一致性设计的、高级别对象来管理一组相关性的可视化对象，其底层也是使用的<code>primitive</code>。</li>
+</ul>
+<p><code>primitive</code>利用<code>Geometry</code>和<code>Appearance</code>构建，其具有以下优势：</p>
+<ol>
+<li>性能：绘制大量Primitive时，可以将其合并为单个<code>Geometry</code>，减轻CPU负担，更好使用GPU。</li>
+<li>灵活：<code>Geometry</code>和<code>Appearance</code>解耦，两者可独立修改。</li>
+</ol>
+<p>同样的，使用<code>primitive</code>就意味着需要编写更多代码，以及对图形学深入的了解。</p>
+<h3 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h3><p>Cesium内部为我们提供了几个可渲染的集合像<code>PointPrimitiveCollection</code>、<code>BillboardCollection</code>等等，这里我们就可以用到<code>BillboardCollection</code>，官方API是这样讲关于它的性能的（自己根据理解翻译的可能有错，所以这里把原文也放上吧）：</p>
+<blockquote>
+<h5 id="Performance"><a href="#Performance" class="headerlink" title="Performance:"></a>Performance:</h5><p>For best performance, prefer a few collections, each with many billboards, to many collections with only a few billboards each. Organize collections so that billboards with the same update frequency are in the same collection, i.e., billboards that do not change should be in one collection; billboards that change every frame should be in another collection; and so on.</p>
+</blockquote>
+<p>为了获得最佳性能，最好使用更少的内部拥有更多billboard的集合，而不是每个集合里只有零星的billboard，而对于集合的组织上，让拥有同样更新频率（即不会变化）的billboard存在于一个集合中，而把每一帧都变化的billboard放到另一个集合当中。</p>
+<p>接下来我们使用<code>BillboardCollection</code>生成10000个点并利用控制台分析一下性能。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-variable language_">this</span>.<span class="hljs-property">billboards</span> = viewer.<span class="hljs-property">scene</span>.<span class="hljs-property">primitives</span>.<span class="hljs-title function_">add</span>(<br>    <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">BillboardCollection</span>()<br>);<br><span class="hljs-comment">// ...</span><br><br><span class="hljs-title function_">addPrimitive</span>(<span class="hljs-params">position</span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">billboards</span>.<span class="hljs-title function_">add</span>(&#123;<br>        <span class="hljs-attr">position</span>: position,<br>        <span class="hljs-attr">image</span>:  <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;./images/blueCamera.png&quot;</span>),<br>        <span class="hljs-attr">verticalOrigin</span>: <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">VerticalOrigin</span>.<span class="hljs-property">BOTTOM</span>,<br>    &#125;);<br>&#125;,<br><br></code></pre></td></tr></table></figure>
+
+
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b7df04ec763f46f09d1c4f248edb32b0~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="image-20210609162506922.png"></p>
+<p>可以看到生成速度提高了许多。</p>
+<p>既然这样那我们再测试一下十万量级的点的加载速度：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/869207da3f7c4edc98ee0130da25eff1~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="image-20210609162137395.png"><br>两者竟然不分上下，可见<code>primitive</code>有多么强大。</p>
+<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>后续其实我们可以进行更深层的优化，比如图片我们现在是从本地获取的，能不能将它存到数据库或者浏览器中快速取出节省时间等等。像我们如果做地级市的系统，那房屋、道路这些要素都是至少万以上量级，这些又该怎么优化，如何保证用户体验等等。<a target="_blank" rel="noopener" href="https://echarts.apache.org/examples/zh/editor.html?c=scatterGL-gps&gl=1">Echart</a>都可以实现千万级别量级的点展示，说明性能优化这里的水很深啊哈哈。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Cesium/" class="category-chain-item">Cesium</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/JavaScript/">#JavaScript</a>
+      
+        <a href="/tags/Cesium/">#Cesium</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Cesium | 海量点的加载与性能优化</div>
+      <div>https://moewang0321.github.io/2021/06/11/Cesium海量点的加载与性能优化/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Moe Wang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年6月11日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/02/13/hello-world/" title="Hello World">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Hello World</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/06/10/Cesium%E5%88%A9%E7%94%A8Property%E6%9C%BA%E5%88%B6%E5%AE%9E%E7%8E%B0%E8%BD%A8%E8%BF%B9%E5%9B%9E%E6%94%BE/" title="Cesium | 利用Property机制实现轨迹回放">
+                        <span class="hidden-mobile">Cesium | 利用Property机制实现轨迹回放</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+    <div id="giscus" class="giscus"></div>
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#giscus', function() {
+        var options = {"repo":"moewang0321/moewang0321.github.io","repo-id":"MDEwOlJlcG9zaXRvcnkyMDEyNDI0NTY=","category":"Show and tell","category-id":"DIC_kwDOC_63WM4CUMsH","theme-light":"light_protanopia","theme-dark":"dark_dimmed","mapping":"pathname","reactions-enabled":1,"emit-metadata":1,"input-position":"top","loading":"lazy","lang":"zh-CN"};
+        var attributes = {};
+        for (let option in options) {
+          if (!option.startsWith('theme-')) {
+            var key = option.startsWith('data-') ? option : 'data-' + option;
+            attributes[key] = options[option];
+          }
+        }
+        var light = 'light_protanopia';
+        var dark = 'dark_dimmed';
+        window.GiscusThemeLight = light;
+        window.GiscusThemeDark = dark;
+        attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
+        for (let attribute in attributes) {
+          var value = attributes[attribute];
+          if (value === undefined || value === null || value === '') {
+            delete attributes[attribute];
+          }
+        }
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('crossorigin', 'anonymous');
+        for (let attribute in attributes) {
+          s.setAttribute(attribute, attributes[attribute]);
+        }
+        var ss = document.getElementsByTagName('script');
+        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+        e.parentNode.insertBefore(s, e.nextSibling);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -23,22 +23,14 @@
 <meta property="og:site_name" content="moe_大杂烩">
 <meta property="og:description" content="上一篇文章中我们实现了最基本的项目搭建并生成了一个三维地球，这篇文章我们主要介绍一下地图中基本的几大要素、地图相对应坐标系知识的介绍及如何将这几大元素呈现在我们的地球上。同样的，如果文章中有错误的话欢迎评论区指出，定当虚心请教并及时修改！  前言接下来会有部分篇幅用来介绍地图元素以及坐标系及其转换相关知识，仅作了解。不想看的就直接跳到Viewer相关配置，直接进行实际操作。 地图元素 要素我们首">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ba13746420fa42f7bfff16a7528c1d24~tplv-k3u1fbpfcp-watermark.image">
-<meta property="og:image" content="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a49e3ec28ff04edd8a80c842fd58178e~tplv-k3u1fbpfcp-watermark.image">
-<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b626f08dc4824c58b1b7e1735f5f6e82~tplv-k3u1fbpfcp-watermark.image">
-<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2a38ef2fd24245698bdf3ff1dd0a2f6e~tplv-k3u1fbpfcp-watermark.image">
-<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2f9e213692d04770929c86349456dda9~tplv-k3u1fbpfcp-watermark.image">
-<meta property="og:image" content="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/18ddfe6f0c8048ffa51fa2a02538da09~tplv-k3u1fbpfcp-watermark.image">
-<meta property="og:image" content="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/86c80980222c4490b0ba10c92bb2961e~tplv-k3u1fbpfcp-watermark.image">
-<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b4dd71de89504a73a1846edf0bcc9e5f~tplv-k3u1fbpfcp-watermark.image">
-<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6a6f904d242e440c86d15c2c874d4cf8~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/949a196a072149f9bd16b5006e014ce8~tplv-k3u1fbpfcp-zoom-crop-mark:3024:3024:3024:1702.awebp">
 <meta property="article:published_time" content="2021-04-25T08:34:55.000Z">
-<meta property="article:modified_time" content="2023-02-14T08:18:51.860Z">
+<meta property="article:modified_time" content="2023-02-14T08:44:29.363Z">
 <meta property="article:author" content="Moe Wang">
 <meta property="article:tag" content="JavaScript">
-<meta property="article:tag" content="GIS">
+<meta property="article:tag" content="Cesium">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ba13746420fa42f7bfff16a7528c1d24~tplv-k3u1fbpfcp-watermark.image">
+<meta name="twitter:image" content="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/949a196a072149f9bd16b5006e014ce8~tplv-k3u1fbpfcp-zoom-crop-mark:3024:3024:3024:1702.awebp">
   
   
   
@@ -585,7 +577,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/GIS/" class="category-chain-item">GIS</a>
+  <a href="/categories/Cesium/" class="category-chain-item">Cesium</a>
   
   
 
@@ -602,7 +594,7 @@
       
         <a href="/tags/JavaScript/">#JavaScript</a>
       
-        <a href="/tags/GIS/">#GIS</a>
+        <a href="/tags/Cesium/">#Cesium</a>
       
     </div>
   

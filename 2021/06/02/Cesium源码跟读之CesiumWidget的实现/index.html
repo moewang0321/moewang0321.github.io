@@ -1,0 +1,761 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Moe Wang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前言没错，我也来读源码了，因为之前的文章中简单提到了一下Cesium的渲染机制，所以我索性一咬牙将这块的源码通读一遍，自己也能更深入的了解Cesium，这篇文章也就作为我的一个记录。准备工作只有一步：从GitHub上拉取一份Cesium最新的代码，找到Source\Widgets\CesiumWidget\CesiumWidget.js文件。  文章中代码仅为涉及到讲解部分的代码，未全部放出  用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cesium源码跟读之CesiumWidget的实现">
+<meta property="og:url" content="https://moewang0321.github.io/2021/06/02/Cesium%E6%BA%90%E7%A0%81%E8%B7%9F%E8%AF%BB%E4%B9%8BCesiumWidget%E7%9A%84%E5%AE%9E%E7%8E%B0/index.html">
+<meta property="og:site_name" content="moe_大杂烩">
+<meta property="og:description" content="前言没错，我也来读源码了，因为之前的文章中简单提到了一下Cesium的渲染机制，所以我索性一咬牙将这块的源码通读一遍，自己也能更深入的了解Cesium，这篇文章也就作为我的一个记录。准备工作只有一步：从GitHub上拉取一份Cesium最新的代码，找到Source\Widgets\CesiumWidget\CesiumWidget.js文件。  文章中代码仅为涉及到讲解部分的代码，未全部放出  用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6be7ebf0514d4f2b92013e23418e3c42~tplv-k3u1fbpfcp-watermark.image">
+<meta property="article:published_time" content="2021-06-02T01:11:01.000Z">
+<meta property="article:modified_time" content="2023-02-14T08:34:22.045Z">
+<meta property="article:author" content="Moe Wang">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="Cesium">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6be7ebf0514d4f2b92013e23418e3c42~tplv-k3u1fbpfcp-watermark.image">
+  
+  
+  
+  <title>Cesium源码跟读之CesiumWidget的实现 - moe_大杂烩</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"moewang0321.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>moe_大杂烩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Cesium源码跟读之CesiumWidget的实现"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-06-02 09:11" pubdate>
+          2021年6月2日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          49 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Cesium源码跟读之CesiumWidget的实现</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>没错，我也来读源码了，因为之前的文章中简单提到了一下Cesium的渲染机制，所以我索性一咬牙将这块的源码通读一遍，自己也能更深入的了解Cesium，这篇文章也就作为我的一个记录。准备工作只有一步：从GitHub上拉取一份Cesium最新的代码，找到<code>Source\Widgets\CesiumWidget\CesiumWidget.js</code>文件。</p>
+<blockquote>
+<p>文章中代码仅为涉及到讲解部分的代码，未全部放出</p>
+</blockquote>
+<h3 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h3><p>CesiumWidget的用法和Viewer的用法类似，都是通过一个id来生成容器。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> widget = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">CesiumWidget</span>(<span class="hljs-string">&#x27;id&#x27;</span>);<br><span class="hljs-keyword">const</span> viewer = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">Viewer</span>(<span class="hljs-string">&#x27;id&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+<p>两者的区别是，只要实例化了Viewer则必定会实例化一个CesiumWidget。Viewer除了可视区域外还囊括了各种控件，比如时间轴、时间拨盘、搜索框等。</p>
+<blockquote>
+<p>Cesium中使用WebGL进行绘图的是实例化的Scene模块。CesiumWidget更像一个桥梁，把构造时传递的DOM元素（或ID选择器）再内嵌了一个canvas元素，再将此canvas元素传递给Scene让其绘图。</p>
+</blockquote>
+<h3 id="内部方法"><a href="#内部方法" class="headerlink" title="内部方法"></a>内部方法</h3><ul>
+<li>[24行]<code>getDefaultSkyBoxUrl</code>：获取默认天空盒资源地址</li>
+<li>[30行]<code>startRenderLoop</code>：开启渲染循环，这也是我们上一篇中提到的Cesium的渲染机制。利用<code>requestAnimationFrame</code>来不停的刷新渲染页面。</li>
+<li>[71行]<code>configurePixelRatio</code>：配置像素比。</li>
+<li>[86行]<code>configureCanvasSize</code>：配置画布大小。</li>
+<li>[105行]<code>configureCameraFrustum</code>：配置相机视锥。</li>
+</ul>
+<h3 id="构造"><a href="#构造" class="headerlink" title="构造"></a>构造</h3><h4 id="DOM构造"><a href="#DOM构造" class="headerlink" title="DOM构造"></a>DOM构造</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">function</span> <span class="hljs-title function_">CesiumWidget</span>(<span class="hljs-params">container, options</span>) &#123;<br>    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">defined</span>(container)) &#123;<br>    	<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">DeveloperError</span>(<span class="hljs-string">&quot;container is required.&quot;</span>);<br>    &#125;<br>    <br>  	container = <span class="hljs-title function_">getElement</span>(container);<br>  	options = <span class="hljs-title function_">defaultValue</span>(options, defaultValue.<span class="hljs-property">EMPTY_OBJECT</span>);<br>    <span class="hljs-comment">//Configure the widget DOM elements</span><br>    <span class="hljs-keyword">var</span> element = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;div&quot;</span>);<br>    element.<span class="hljs-property">className</span> = <span class="hljs-string">&quot;cesium-widget&quot;</span>;<br>    container.<span class="hljs-title function_">appendChild</span>(element);<br>    <span class="hljs-keyword">var</span> canvas = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;canvas&quot;</span>);<br>    <br>    <span class="hljs-comment">// ……</span><br>    <br>  	element.<span class="hljs-title function_">appendChild</span>(canvas);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这部分代码完成了Viewer实例的DOM元素判断、本级DOM元素创建和下级DOM（<code>canvas</code>）的创建，以及传入的<code>options</code>是否为空。</p>
+<p>如此DOM的层级便生成完毕了，下方代码（227~263行）主要是像商标这种部分以及分辨率等设置、将CesiumWidget的私有变量赋值并调用<code>configureCanvasSize</code>来修改<code>canvas</code>的大小。</p>
+<h4 id="场景构造"><a href="#场景构造" class="headerlink" title="场景构造"></a>场景构造</h4><p>从265行开始我们会看到一个巨大的<code>try/catch</code>模块。这部分代码完成了<code>Scene</code>、<code>Globe</code>、<code>SkyBox</code>、<code>SkyAtmosphere</code>四个模块的实例化。</p>
+<p>这里我们会发现一个问题，在使用<code>CesiumWidget</code>的时候，明明有像<code>Camera</code>、<code>ImageryLayers</code>之类的API，是从哪来的呢。这里先卖个关子，我们先专注于<code>Scene</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> scene = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Scene</span>(&#123;<br>    <span class="hljs-attr">canvas</span>: canvas,<br>    <span class="hljs-attr">contextOptions</span>: options.<span class="hljs-property">contextOptions</span>,<br>    <span class="hljs-attr">creditContainer</span>: innerCreditContainer,<br>    <span class="hljs-attr">creditViewport</span>: creditViewport,<br>    <span class="hljs-attr">mapProjection</span>: options.<span class="hljs-property">mapProjection</span>,<br>    <span class="hljs-attr">orderIndependentTranslucency</span>: options.<span class="hljs-property">orderIndependentTranslucency</span>,<br>    <span class="hljs-attr">scene3DOnly</span>: <span class="hljs-title function_">defaultValue</span>(options.<span class="hljs-property">scene3DOnly</span>, <span class="hljs-literal">false</span>),<br>    <span class="hljs-attr">terrainExaggeration</span>: options.<span class="hljs-property">terrainExaggeration</span>,<br>    <span class="hljs-attr">shadows</span>: options.<span class="hljs-property">shadows</span>,<br>    <span class="hljs-attr">mapMode2D</span>: options.<span class="hljs-property">mapMode2D</span>,<br>    <span class="hljs-attr">requestRenderMode</span>: options.<span class="hljs-property">requestRenderMode</span>,<br>    <span class="hljs-attr">maximumRenderTimeChange</span>: options.<span class="hljs-property">maximumRenderTimeChange</span>,<br>&#125;);<br><span class="hljs-variable language_">this</span>.<span class="hljs-property">_scene</span> = scene;<br></code></pre></td></tr></table></figure>
+
+<p>实例化Scene对象，传递构造的参数（绝大部分来自于options）。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js">scene.<span class="hljs-property">camera</span>.<span class="hljs-property">constrainedAxis</span> = <span class="hljs-title class_">Cartesian3</span>.<span class="hljs-property">UNIT_Z</span>;<br><br><span class="hljs-title function_">configurePixelRatio</span>(<span class="hljs-variable language_">this</span>);<br><span class="hljs-title function_">configureCameraFrustum</span>(<span class="hljs-variable language_">this</span>);<br></code></pre></td></tr></table></figure>
+
+<p>指定<code>camera</code>的约束轴为Z轴，调用函数来配置像素比、相机视锥体。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> ellipsoid = <span class="hljs-title function_">defaultValue</span>(<br>    scene.<span class="hljs-property">mapProjection</span>.<span class="hljs-property">ellipsoid</span>,<br>    <span class="hljs-title class_">Ellipsoid</span>.<span class="hljs-property">WGS84</span><br>);<br><span class="hljs-keyword">var</span> globe = options.<span class="hljs-property">globe</span>;<br><span class="hljs-keyword">if</span> (!<span class="hljs-title function_">defined</span>(globe)) &#123;<br>    globe = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Globe</span>(ellipsoid);<br>&#125;<br><span class="hljs-keyword">if</span> (globe !== <span class="hljs-literal">false</span>) &#123;<br>    scene.<span class="hljs-property">globe</span> = globe;<br>    scene.<span class="hljs-property">globe</span>.<span class="hljs-property">shadows</span> = <span class="hljs-title function_">defaultValue</span>(<br>        options.<span class="hljs-property">terrainShadows</span>,<br>        <span class="hljs-title class_">ShadowMode</span>.<span class="hljs-property">RECEIVE_ONLY</span><br>    );<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>创建<code>ellipsoid</code>和<code>globe</code>并传递给<code>scene</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> skyBox = options.<span class="hljs-property">skyBox</span>;<br><span class="hljs-keyword">if</span> (!<span class="hljs-title function_">defined</span>(skyBox)) &#123;<br>    skyBox = <span class="hljs-keyword">new</span> <span class="hljs-title class_">SkyBox</span>(&#123;<br>        <span class="hljs-attr">sources</span>: &#123;<br>            <span class="hljs-attr">positiveX</span>: <span class="hljs-title function_">getDefaultSkyBoxUrl</span>(<span class="hljs-string">&quot;px&quot;</span>),<br>            <span class="hljs-attr">negativeX</span>: <span class="hljs-title function_">getDefaultSkyBoxUrl</span>(<span class="hljs-string">&quot;mx&quot;</span>),<br>            <span class="hljs-attr">positiveY</span>: <span class="hljs-title function_">getDefaultSkyBoxUrl</span>(<span class="hljs-string">&quot;py&quot;</span>),<br>            <span class="hljs-attr">negativeY</span>: <span class="hljs-title function_">getDefaultSkyBoxUrl</span>(<span class="hljs-string">&quot;my&quot;</span>),<br>            <span class="hljs-attr">positiveZ</span>: <span class="hljs-title function_">getDefaultSkyBoxUrl</span>(<span class="hljs-string">&quot;pz&quot;</span>),<br>            <span class="hljs-attr">negativeZ</span>: <span class="hljs-title function_">getDefaultSkyBoxUrl</span>(<span class="hljs-string">&quot;mz&quot;</span>),<br>        &#125;,<br>    &#125;);<br>&#125;<br><span class="hljs-keyword">if</span> (skyBox !== <span class="hljs-literal">false</span>) &#123;<br>    scene.<span class="hljs-property">skyBox</span> = skyBox;<br>    scene.<span class="hljs-property">sun</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Sun</span>();<br>    scene.<span class="hljs-property">moon</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Moon</span>();<br>&#125;<br><br><span class="hljs-comment">// Blue sky, and the glow around the Earth&#x27;s limb.</span><br><span class="hljs-keyword">var</span> skyAtmosphere = options.<span class="hljs-property">skyAtmosphere</span>;<br><span class="hljs-keyword">if</span> (!<span class="hljs-title function_">defined</span>(skyAtmosphere)) &#123;<br>    skyAtmosphere = <span class="hljs-keyword">new</span> <span class="hljs-title class_">SkyAtmosphere</span>(ellipsoid);<br>&#125;<br><span class="hljs-keyword">if</span> (skyAtmosphere !== <span class="hljs-literal">false</span>) &#123;<br>    scene.<span class="hljs-property">skyAtmosphere</span> = skyAtmosphere;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>创建天空盒、大气环境等环境因素。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">//Set the base imagery layer</span><br><span class="hljs-keyword">var</span> imageryProvider =<br>    options.<span class="hljs-property">globe</span> === <span class="hljs-literal">false</span> ? <span class="hljs-literal">false</span> : options.<span class="hljs-property">imageryProvider</span>;<br><span class="hljs-keyword">if</span> (!<span class="hljs-title function_">defined</span>(imageryProvider)) &#123;<br>    imageryProvider = <span class="hljs-title function_">createWorldImagery</span>();<br>&#125;<br><br><span class="hljs-keyword">if</span> (imageryProvider !== <span class="hljs-literal">false</span>) &#123;<br>    scene.<span class="hljs-property">imageryLayers</span>.<span class="hljs-title function_">addImageryProvider</span>(imageryProvider);<br>&#125;<br><br><span class="hljs-comment">//Set the terrain provider if one is provided.</span><br><span class="hljs-keyword">if</span> (<span class="hljs-title function_">defined</span>(options.<span class="hljs-property">terrainProvider</span>) &amp;&amp; options.<span class="hljs-property">globe</span> !== <span class="hljs-literal">false</span>) &#123;<br>    scene.<span class="hljs-property">terrainProvider</span> = options.<span class="hljs-property">terrainProvider</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>设置影像数据源，如果没有配置，则调用<code>createWorldImagery</code>模块创建世界影像并传递给<code>scene</code>，如果配置中有地形数据源，则将其传递给<code>scene</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-variable language_">this</span>.<span class="hljs-property">_screenSpaceEventHandler</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ScreenSpaceEventHandler</span>(canvas);<br></code></pre></td></tr></table></figure>
+
+<p>创建事件处理器，用于下方暴露在原型中。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">if</span> (<span class="hljs-title function_">defined</span>(options.<span class="hljs-property">sceneMode</span>)) &#123;    <span class="hljs-keyword">if</span> (options.<span class="hljs-property">sceneMode</span> === <span class="hljs-title class_">SceneMode</span>.<span class="hljs-property">SCENE2D</span>) &#123;        <span class="hljs-variable language_">this</span>.<span class="hljs-property">_scene</span>.<span class="hljs-title function_">morphTo2D</span>(<span class="hljs-number">0</span>);    &#125;    <span class="hljs-keyword">if</span> (options.<span class="hljs-property">sceneMode</span> === <span class="hljs-title class_">SceneMode</span>.<span class="hljs-property">COLUMBUS_VIEW</span>) &#123;        <span class="hljs-variable language_">this</span>.<span class="hljs-property">_scene</span>.<span class="hljs-title function_">morphToColumbusView</span>(<span class="hljs-number">0</span>);    &#125;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>判断<code>scene</code>的视图模式是二维、三维还是2.5的。</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> that = <span class="hljs-variable language_">this</span>;<span class="hljs-variable language_">this</span>.<span class="hljs-property">_onRenderError</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">scene, error</span>) &#123;    that.<span class="hljs-property">_useDefaultRenderLoop</span> = <span class="hljs-literal">false</span>;    that.<span class="hljs-property">_renderLoopRunning</span> = <span class="hljs-literal">false</span>;    <span class="hljs-keyword">if</span> (that.<span class="hljs-property">_showRenderLoopErrors</span>) &#123;        <span class="hljs-keyword">var</span> title =            <span class="hljs-string">&quot;An error occurred while rendering.  Rendering has stopped.&quot;</span>;        that.<span class="hljs-title function_">showErrorPanel</span>(title, <span class="hljs-literal">undefined</span>, error);    &#125;&#125;;scene.<span class="hljs-property">renderError</span>.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">_onRenderError</span>);<br></code></pre></td></tr></table></figure>
+
+<p>给<code>scene</code>绑定了渲染错误事件的处理函数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-variable language_">this</span>.<span class="hljs-property">_useDefaultRenderLoop</span> = <span class="hljs-literal">undefined</span>;<span class="hljs-variable language_">this</span>.<span class="hljs-property">useDefaultRenderLoop</span> = <span class="hljs-title function_">defaultValue</span>(    options.<span class="hljs-property">useDefaultRenderLoop</span>,    <span class="hljs-literal">true</span>);<span class="hljs-variable language_">this</span>.<span class="hljs-property">_targetFrameRate</span> = <span class="hljs-literal">undefined</span>;<span class="hljs-variable language_">this</span>.<span class="hljs-property">targetFrameRate</span> = options.<span class="hljs-property">targetFrameRate</span>;<br></code></pre></td></tr></table></figure>
+
+<p>确认是否使用默认循环机制，如果配置为false则需要手动调用<code>render()</code>方法，否则使用目标帧速率进行渲染。</p>
+<h4 id="原型定义"><a href="#原型定义" class="headerlink" title="原型定义"></a>原型定义</h4><p>我们在上边提过，<code>CesiumWidget</code>那么多的API都是从哪来的，代码读到这里我们就会发现，从390行向下，都是利用<code>Object.defineProperties()</code>在CesiumWidget的原型上添加属性以及方法。</p>
+<h5 id="属性定义"><a href="#属性定义" class="headerlink" title="属性定义"></a>属性定义</h5><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">defineProperties</span>(<span class="hljs-title class_">CesiumWidget</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>, &#123;    <span class="hljs-attr">container</span>: &#123;        <span class="hljs-attr">get</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">_container</span>;        &#125;,    &#125;,    <span class="hljs-attr">canvas</span>: &#123;        <span class="hljs-attr">get</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">_canvas</span>;        &#125;,    &#125;,    <span class="hljs-comment">// ……&#125;</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="方法定义"><a href="#方法定义" class="headerlink" title="方法定义"></a>方法定义</h5><ul>
+<li>[640行] <code>CesiumWidget.prototype.showErrorPanel</code>：向用户显示错误面板，其中包含标题和较长的错误消息，可以使用’确定’按钮将其关闭。该面板自动显示发生渲染循环错误时，如果showRenderLoopErrors不为false，则当小部件已构建。</li>
+<li>[740行]<code>CesiumWidget.prototype.isDestroyed</code>：返回<code>CesiumWidget</code>是否被销毁。</li>
+<li>[748行]<code>CesiumWidget.prototype.destroy</code>：销毁视图。</li>
+<li>[763行]<code>CesiumWidget.prototype.resize</code>：更新画布大小、相机纵横比和视口大小。这个函数默认会自动调用，除非<code>useDefaultRenderLoop</code>设置为<code>false</code>。</li>
+<li>[785行]<code>CesiumWidget.prototype.render</code>：渲染场景，同样的它也会自动调用，除非<code>useDefaultRenderLoop</code>设置为<code>false</code>。</li>
+</ul>
+<h4 id="导出"><a href="#导出" class="headerlink" title="导出"></a>导出</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">CesiumWidget</span>;<br></code></pre></td></tr></table></figure>
+
+<p>最后对整个模块进行导出。</p>
+<h3 id="结构图"><a href="#结构图" class="headerlink" title="结构图"></a>结构图</h3><p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6be7ebf0514d4f2b92013e23418e3c42~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="image-20210531155553870.png"></p>
+<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>我们只是针对这个文件中的私有函数以及构造函数进行阅读和分析，并未对其引用的模块比如<code>Scene</code>、<code>Globe</code>等进行阅读。感兴趣的小伙伴可以针对其中一个引入的模块进行更深入的阅读。如果是想在Cesium上深入研究的话我认为有些功能和实现的源码大概通读一下，了解一下实现原理是有必要的。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Cesium/" class="category-chain-item">Cesium</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/JavaScript/">#JavaScript</a>
+      
+        <a href="/tags/Cesium/">#Cesium</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Cesium源码跟读之CesiumWidget的实现</div>
+      <div>https://moewang0321.github.io/2021/06/02/Cesium源码跟读之CesiumWidget的实现/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Moe Wang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年6月2日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/06/03/%E3%80%90%E4%B8%89%E7%BB%B4GIS%E5%8F%AF%E8%A7%86%E5%8C%96%E3%80%91%E5%9F%BA%E4%BA%8EVue+Cesium+Supermap%E5%AE%9E%E7%8E%B0%E6%99%BA%E6%85%A7%E5%9F%8E%E5%B8%82%EF%BC%88%E4%BA%94%EF%BC%89/" title="【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（五）">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（五）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/06/01/Turf.js%E2%80%94%E8%AE%A9%E4%BD%A0%E5%9C%A8%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%8A%E5%AE%9E%E7%8E%B0%E5%9C%B0%E7%90%86%E5%88%86%E6%9E%90/" title="Turf.js—让你在浏览器上实现地理分析">
+                        <span class="hidden-mobile">Turf.js—让你在浏览器上实现地理分析</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+    <div id="giscus" class="giscus"></div>
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#giscus', function() {
+        var options = {"repo":"moewang0321/moewang0321.github.io","repo-id":"MDEwOlJlcG9zaXRvcnkyMDEyNDI0NTY=","category":"Show and tell","category-id":"DIC_kwDOC_63WM4CUMsH","theme-light":"light_protanopia","theme-dark":"dark_dimmed","mapping":"pathname","reactions-enabled":1,"emit-metadata":1,"input-position":"top","loading":"lazy","lang":"zh-CN"};
+        var attributes = {};
+        for (let option in options) {
+          if (!option.startsWith('theme-')) {
+            var key = option.startsWith('data-') ? option : 'data-' + option;
+            attributes[key] = options[option];
+          }
+        }
+        var light = 'light_protanopia';
+        var dark = 'dark_dimmed';
+        window.GiscusThemeLight = light;
+        window.GiscusThemeDark = dark;
+        attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
+        for (let attribute in attributes) {
+          var value = attributes[attribute];
+          if (value === undefined || value === null || value === '') {
+            delete attributes[attribute];
+          }
+        }
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('crossorigin', 'anonymous');
+        for (let attribute in attributes) {
+          s.setAttribute(attribute, attributes[attribute]);
+        }
+        var ss = document.getElementsByTagName('script');
+        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+        e.parentNode.insertBefore(s, e.nextSibling);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
