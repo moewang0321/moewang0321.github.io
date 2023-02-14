@@ -1,0 +1,715 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Moe Wang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1. 列表隔行换色简单的循环和JS获取元素样式（style）运用 1234567&lt;ul&gt;	&lt;li&gt;&lt;&#x2F;li&gt;	&lt;li&gt;&lt;&#x2F;li&gt;	&lt;li&gt;&lt;&#x2F;li&gt;	&lt;li&gt;&lt;&#x2F;li&gt;	&lt;li&gt;&lt;&#x2F;li&gt;&lt;&#x2F;ul&gt; 123456789var lis &#x3D; document.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Weekly Practice">
+<meta property="og:url" content="https://moewang0321.github.io/2019/08/08/2019-08-08-%E7%BB%83%E4%B9%A0/index.html">
+<meta property="og:site_name" content="moe_大杂烩">
+<meta property="og:description" content="1. 列表隔行换色简单的循环和JS获取元素样式（style）运用 1234567&lt;ul&gt;	&lt;li&gt;&lt;&#x2F;li&gt;	&lt;li&gt;&lt;&#x2F;li&gt;	&lt;li&gt;&lt;&#x2F;li&gt;	&lt;li&gt;&lt;&#x2F;li&gt;	&lt;li&gt;&lt;&#x2F;li&gt;&lt;&#x2F;ul&gt; 123456789var lis &#x3D; document.">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1565255508820&di=f075d7b5c32f4948e388d106509d89d4&imgtype=jpg&src=http://img3.imgtn.bdimg.com/it/u=1344723893,43652449&fm=214&gp=0.jpg">
+<meta property="article:published_time" content="2019-08-07T23:32:35.000Z">
+<meta property="article:modified_time" content="2023-02-14T08:03:23.044Z">
+<meta property="article:author" content="Moe Wang">
+<meta property="article:tag" content="JavaScript">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1565255508820&di=f075d7b5c32f4948e388d106509d89d4&imgtype=jpg&src=http://img3.imgtn.bdimg.com/it/u=1344723893,43652449&fm=214&gp=0.jpg">
+  
+  
+  
+  <title>Weekly Practice - moe_大杂烩</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"moewang0321.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>moe_大杂烩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Weekly Practice"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-08-08 07:32" pubdate>
+          2019年8月8日 早上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          10k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          84 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Weekly Practice</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="1-列表隔行换色"><a href="#1-列表隔行换色" class="headerlink" title="1. 列表隔行换色"></a>1. 列表隔行换色</h3><p>简单的循环和JS获取元素样式（style）运用</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> lis = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementsByTagName</span>(<span class="hljs-string">&#x27;li&#x27;</span>);<br><span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i=<span class="hljs-number">0</span>;i&lt;lis.<span class="hljs-property">length</span>;i++)&#123;<br>	<span class="hljs-keyword">if</span>( i%<span class="hljs-number">2</span> )&#123;   <span class="hljs-comment">//偶数行</span><br>		lis[i].<span class="hljs-property">style</span>.<span class="hljs-property">background</span> = <span class="hljs-string">&#x27;red&#x27;</span>;<br>	&#125;<br>	<span class="hljs-keyword">else</span>&#123;   <span class="hljs-comment">//奇数行</span><br>		lis[i].<span class="hljs-property">style</span>.<span class="hljs-property">background</span> = <span class="hljs-string">&#x27;blue&#x27;</span>;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>只要能判断奇偶行，别的就没啥难的了。</p>
+<hr>
+<h3 id="九九乘法表"><a href="#九九乘法表" class="headerlink" title="九九乘法表"></a>九九乘法表</h3><p>嵌套循环、修改DOM内容的结合训练，当然，也可以直接用<code>document.write()</code>打印在页面上</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;elem&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> elem = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&#x27;elem&#x27;</span>);<br><br><span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i=<span class="hljs-number">1</span>;i&lt;=<span class="hljs-number">9</span>;i++)&#123;<br>	<span class="hljs-keyword">for</span>( j=<span class="hljs-number">1</span>; j&lt;=i; j++ )&#123;<br>		elem.<span class="hljs-property">innerHTML</span> +=  i +<span class="hljs-string">&#x27;*&#x27;</span>+ j +<span class="hljs-string">&#x27;=&#x27;</span> + i*j + <span class="hljs-string">&#x27; &#x27;</span>;<br>	&#125;<br>	elem.<span class="hljs-property">innerHTML</span> += <span class="hljs-string">&#x27;&lt;br&gt;&#x27;</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>内循环中的<code>j &lt;= i</code>着实巧妙，让代码呈梯形打印，如果让变量<code>j</code>小于9的话，那么输出会打印两遍</p>
+<hr>
+<h3 id="V字排列"><a href="#V字排列" class="headerlink" title="V字排列"></a>V字排列</h3><p>就是对每一个div绝对定位，分别定义他们的<code>top</code>和<code>left</code>,从而呈V字排列</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> lis = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementsByTagName</span>(<span class="hljs-string">&#x27;li&#x27;</span>);<br><span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i=<span class="hljs-number">0</span>;i&lt;lis.<span class="hljs-property">length</span>;i++)&#123;<br>lis[i].<span class="hljs-property">style</span>.<span class="hljs-property">left</span> = i * <span class="hljs-number">50</span> + <span class="hljs-string">&#x27;px&#x27;</span>;<br><span class="hljs-keyword">if</span>( i &gt; <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(lis.<span class="hljs-property">length</span>/<span class="hljs-number">2</span>) )&#123;<br>	lis[i].<span class="hljs-property">style</span>.<span class="hljs-property">top</span> = (lis.<span class="hljs-property">length</span> - i - <span class="hljs-number">1</span>) * <span class="hljs-number">50</span> + <span class="hljs-string">&#x27;px&#x27;</span>;<br>&#125;<br><span class="hljs-keyword">else</span>&#123;<br>	lis[i].<span class="hljs-property">style</span>.<span class="hljs-property">top</span> = i * <span class="hljs-number">50</span> + <span class="hljs-string">&#x27;px&#x27;</span>;<br>&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>注意一下关于字符串拼接的时候引号和+号的使用技巧</strong></p>
+<hr>
+<h3 id="求第七位的斐波那契数列"><a href="#求第七位的斐波那契数列" class="headerlink" title="求第七位的斐波那契数列"></a>求第七位的斐波那契数列</h3><p>这里只使用循环来实现，递归方法后面会提到并实现</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> number = <span class="hljs-number">8</span>;<br><span class="hljs-keyword">var</span> result = <span class="hljs-number">0</span>; <br><span class="hljs-keyword">var</span> one = <span class="hljs-number">1</span>;<br><span class="hljs-keyword">var</span> two = <span class="hljs-number">1</span>;   <br><br><span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i=<span class="hljs-number">2</span>;i&lt;number;i++)&#123;<br>	result = one + two;<br>	one = two; <br>	two = result;<br>&#125;<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>( result );<br></code></pre></td></tr></table></figure>
+<p>因为前两项我们定义了为<code>one = 1</code>和<code>two = 1</code>，所以循环从2开始。</p>
+<hr>
+<h3 id="题目太长……"><a href="#题目太长……" class="headerlink" title="题目太长……"></a>题目太长……</h3><p>假设某人有 100,000  现金。 每经过一次路口需要进行一次交费。 交费规则为当他现金大于50,000  时每次需要交 5% ，如果现金小于等于 50,000  时每次交 5,000 。 请写一程序计算此人可以经过多少次这个路口？</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> all = <span class="hljs-number">100000</span>;<br><span class="hljs-keyword">var</span> count = <span class="hljs-number">0</span>;<br><br><span class="hljs-keyword">while</span>( all &gt;= <span class="hljs-number">5000</span> )&#123;<br>	<span class="hljs-keyword">if</span>( all &gt; <span class="hljs-number">50000</span> )&#123;<br>	  all -= all * <span class="hljs-number">0.05</span>;<br>	  count++;<br>	&#125;<br>	<span class="hljs-keyword">else</span>&#123;<br>		all -= <span class="hljs-number">5000</span>;<br>		count++;<br>	&#125;<br>&#125;<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>( count );   <span class="hljs-comment">//23</span><br></code></pre></td></tr></table></figure>
+<p>没啥好说的……挺经典的一道题，各种语言的版本都有</p>
+<hr>
+<h3 id="找出虽有三位数中的水仙花数"><a href="#找出虽有三位数中的水仙花数" class="headerlink" title="找出虽有三位数中的水仙花数"></a>找出虽有三位数中的水仙花数</h3><p>找出所有三位数中的水仙花数，即a³ + b³ + c³ = abc  ，例如 153就是一组水仙花数，1³ + 5³ + 3³ = 153</p>
+<p>首先需要分离这个三位数，假设三位数为123，可以看成 1 * 100 + 2 * 10  + 3,那就好办了，只需要如下操作，三位数就被分离出来了</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">//老师的办法</span><br><span class="hljs-keyword">var</span> ge = number%<span class="hljs-number">10</span>;<br><span class="hljs-keyword">var</span> shi = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(number%<span class="hljs-number">100</span>/<span class="hljs-number">10</span>);<br><span class="hljs-keyword">var</span> bai = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(number/<span class="hljs-number">100</span>);<br><span class="hljs-comment">//我的办法</span><br><span class="hljs-keyword">var</span> ge = i % <span class="hljs-number">10</span>;		<br><span class="hljs-keyword">var</span> shi = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>( i / <span class="hljs-number">10</span> % <span class="hljs-number">10</span>);<br><span class="hljs-keyword">var</span> bai = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>( i / <span class="hljs-number">100</span> % <span class="hljs-number">10</span>);<br><span class="hljs-comment">//大同小异，喜欢哪个用哪个</span><br></code></pre></td></tr></table></figure>
+
+<p>然后套到循环里，进行判断就好</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">for</span>( <span class="hljs-keyword">var</span> i = <span class="hljs-number">100</span>;i &lt; <span class="hljs-number">1000</span>; ++i )&#123;<br>   <span class="hljs-keyword">var</span> a = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>( i / <span class="hljs-number">100</span> % <span class="hljs-number">10</span>);<br>   <span class="hljs-keyword">var</span> b = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>( i / <span class="hljs-number">10</span> % <span class="hljs-number">10</span>);<br>   <span class="hljs-keyword">var</span> c = i % <span class="hljs-number">10</span>;<br>   <span class="hljs-keyword">if</span>( i == <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(a,<span class="hljs-number">3</span>) + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(b,<span class="hljs-number">3</span>) + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(c,<span class="hljs-number">3</span>) )&#123;<br>	   <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">write</span>( i + <span class="hljs-string">&#x27;&amp;nbsp;&#x27;</span>);<br>   &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="8月7日"><a href="#8月7日" class="headerlink" title="8月7日"></a>8月7日</h2><p>（此日答案均为摸鱼王自己做的，可能不够简单明了，等以后更新优化）</p>
+<h3 id="1-阶乘、四则运算计算器"><a href="#1-阶乘、四则运算计算器" class="headerlink" title="1.阶乘、四则运算计算器"></a>1.阶乘、四则运算计算器</h3><p>自己的解法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">//阶乘</span><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">jc</span>(<span class="hljs-params"> m </span>)&#123;<br>	<span class="hljs-keyword">var</span> result = <span class="hljs-number">1</span>;<br>	<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i = <span class="hljs-number">1</span>;i &lt;= m ; ++i)&#123;<br>		result *= i;<br>	&#125;<br>	<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>( result );<br>&#125;<br><span class="hljs-title function_">jc</span>(<span class="hljs-number">3</span>);<br></code></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">//四则运算计算器</span><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">calc</span>(<span class="hljs-params"> a, b, f</span>)&#123;<br>	<span class="hljs-keyword">var</span> result = <span class="hljs-number">0</span>;<br>	<span class="hljs-keyword">switch</span>(f)&#123;<br>		<span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;+&#x27;</span>:<br>			result = a + b;<br>			<span class="hljs-keyword">break</span>;<br>		<span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;-&#x27;</span>:<br>			result = a - b;<br>			<span class="hljs-keyword">break</span>;<br>		<span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;*&#x27;</span>:<br>			result = a * b;<br>			<span class="hljs-keyword">break</span>;<br>		<span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;/&#x27;</span>:<br>			result = a / b;<br>			<span class="hljs-keyword">break</span>;<br>	&#125;<br>	<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>( result );<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="2-实现反选全选功能"><a href="#2-实现反选全选功能" class="headerlink" title="2. 实现反选全选功能"></a>2. 实现反选全选功能</h3><p>自己无聊把全选、全不选、反选和联动全选都写出来了</p>
+<p>页面部分</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;checkbox&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;allChoose&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;allChoose&quot;</span>&gt;</span>全选<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;noChoose&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;全不选&quot;</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;otherChoose&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;反选&quot;</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;checkbox&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;choose&quot;</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;checkbox&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;choose&quot;</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;checkbox&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;choose&quot;</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;checkbox&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;choose&quot;</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>js部分</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> qx = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&#x27;allChoose&#x27;</span>);<br><span class="hljs-keyword">var</span> cbs = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementsByClassName</span>(<span class="hljs-string">&#x27;choose&#x27;</span>);<br><span class="hljs-keyword">var</span> qbx = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&#x27;noChoose&#x27;</span>);<br><span class="hljs-keyword">var</span> fx = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&#x27;otherChoose&#x27;</span>);<br><span class="hljs-comment">//全选</span><br>qx.<span class="hljs-property">onclick</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>	<span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">checked</span> == <span class="hljs-literal">true</span>) &#123;				<span class="hljs-comment">//用了一下this，比较方便</span><br>		<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i=<span class="hljs-number">0</span>;i&lt;cbs.<span class="hljs-property">length</span>;i++) &#123;<br>			cbs[i].<span class="hljs-property">checked</span> = <span class="hljs-literal">true</span>;<br>		&#125;<br>	&#125; <span class="hljs-keyword">else</span> &#123;<br>		<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i=<span class="hljs-number">0</span>;i&lt;cbs.<span class="hljs-property">length</span>;i++) &#123;<br>			cbs[i].<span class="hljs-property">checked</span> = <span class="hljs-literal">false</span>;<br>		&#125;<br>	&#125;<br>&#125;<br><span class="hljs-comment">//全不选</span><br>qbx.<span class="hljs-property">onclick</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123;<br>	<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; cbs.<span class="hljs-property">length</span>; ++i)&#123;<br>		cbs[i].<span class="hljs-property">checked</span> = <span class="hljs-literal">false</span>;<br>	&#125;<br>	qx.<span class="hljs-property">checked</span> = <span class="hljs-literal">false</span>;<br>&#125;<br><span class="hljs-comment">//反选</span><br>fx.<span class="hljs-property">onclick</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123;<br>	<span class="hljs-keyword">var</span> n = <span class="hljs-number">0</span>;<br>	<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; cbs.<span class="hljs-property">length</span>;++i)&#123;<br>		<span class="hljs-keyword">if</span>(!cbs[i].<span class="hljs-property">checked</span>)&#123;<br>			cbs[i].<span class="hljs-property">checked</span> = <span class="hljs-number">1</span>;<br>			n++<br>		&#125;<span class="hljs-keyword">else</span>&#123;<br>			cbs[i].<span class="hljs-property">checked</span> = <span class="hljs-number">0</span>;<br>			qx.<span class="hljs-property">checked</span> = <span class="hljs-literal">false</span>;<br>		&#125;<br>	&#125;<br>	<span class="hljs-keyword">if</span>(n == cbs.<span class="hljs-property">length</span>)&#123;<br>		qx.<span class="hljs-property">checked</span> = <span class="hljs-literal">true</span>;<br>	&#125;<br><br>&#125;<br><span class="hljs-comment">//联动全选</span><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i=<span class="hljs-number">0</span>;i&lt;cbs.<span class="hljs-property">length</span>;i++) &#123;					<br>	cbs[i].<span class="hljs-property">onclick</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)<br>	&#123;<br>		<span class="hljs-keyword">var</span> n = <span class="hljs-number">0</span>;           <br>		<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; cbs.<span class="hljs-property">length</span>; ++i) &#123;<br>			<span class="hljs-keyword">if</span> (cbs[i].<span class="hljs-property">checked</span> == <span class="hljs-literal">true</span>) &#123;<br>				n++;<br>			&#125;<br>		&#125;               <br>		<span class="hljs-keyword">if</span> (n == cbs.<span class="hljs-property">length</span>) &#123;<br>			qx.<span class="hljs-property">checked</span> = <span class="hljs-literal">true</span>;<br>		&#125; <span class="hljs-keyword">else</span> &#123;<br><br>			qx.<span class="hljs-property">checked</span> = <span class="hljs-literal">false</span>;<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>逻辑其实很简单，即全选时让<code>checkbox</code>的<code>checked</code>属性为真，全不选的时候为假，注意如果使用<code>checkbox</code>制作全选，那只要不是全选，它的状态都是假，只要所有<code>checkbox</code>的<code>checked</code>属性为真，那它就是真，联动全选就是判断一下你勾选的<code>checkbox</code>数量和获取时候的集合长度是否一致，一致则勾选全选，反之不勾选。</p>
+<hr>
+<h3 id="3-猜数字小游戏"><a href="#3-猜数字小游戏" class="headerlink" title="3. 猜数字小游戏"></a>3. 猜数字小游戏</h3><p>毕竟立志摸鱼，所以就直接使用<code>prompt()</code>内置函数写了一个，看看周围都是用<code>input</code>写的额，我好像是有点……emmmm</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs javascript"> <span class="hljs-keyword">var</span> a=<span class="hljs-built_in">parseInt</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>()*<span class="hljs-number">99</span>+<span class="hljs-number">1</span>);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(a);<br><span class="hljs-keyword">var</span> b;<br>outer : <span class="hljs-keyword">for</span>( i = <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">10</span>; ++i)&#123;<br>	b=<span class="hljs-title class_">Number</span>(<span class="hljs-title function_">prompt</span>(<span class="hljs-string">&quot;请输入一个数字&quot;</span>));<br>	<span class="hljs-comment">//点击确定返回输出值，点击取消返回null值</span><br>	<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>( <span class="hljs-title function_">prompt</span>() ); <br>	<span class="hljs-keyword">if</span>(b == <span class="hljs-string">&#x27;&#x27;</span>)&#123;<br>		<span class="hljs-title function_">alert</span>(<span class="hljs-string">&#x27;输入不能为空&#x27;</span>);<br>		b=<span class="hljs-title class_">Number</span>(<span class="hljs-title function_">prompt</span>(<span class="hljs-string">&quot;请重新输入一个数字&quot;</span>));<br>	&#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(b &gt; a)&#123;<br>			<span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;猜大了,猜了：&quot;</span>+ i +<span class="hljs-string">&quot;次&quot;</span>);<br>	&#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(b &lt; a)&#123;<br>			<span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;猜小了,猜了：&quot;</span>+ i +<span class="hljs-string">&quot;次&quot;</span>);<br>	&#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(b == a)&#123;<br>		<span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;恭喜猜中了,你一共猜了&quot;</span>+ i +<span class="hljs-string">&quot;次,中奖数字为：&quot;</span>+ a);<br>		<span class="hljs-keyword">break</span>;<br>	&#125;<br><br>&#125;<br><span class="hljs-keyword">if</span>(i&gt;<span class="hljs-number">10</span>)&#123;<br>	<span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;请重新开始游戏！&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>需要注意的是，经过<code>console.log()</code>证明这里的<code>prompt()</code>的确定取消按钮的返回值均为输入框的内容。</p>
+<h3 id="4-切换列表项-往返-列表随机背景颜色"><a href="#4-切换列表项-往返-列表随机背景颜色" class="headerlink" title="4. 切换列表项(往返) + 列表随机背景颜色"></a>4. 切换列表项(往返) + 列表随机背景颜色</h3><p>这里暂时提供自己的写法，我的想法是当<code>count == lis.length - 1</code>即切换到最后一个<code>li</code> 的时候，设置一个<code>flag</code>，并将它置一个新状态代表向上，并让<code>count--</code>，当向上状态下<code>count == 0</code>的时候再将<code>flag</code>置原状态即向下切换，实现的时候有些麻烦，还在寻求简便操作，至于随机颜色就很简单了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> btn = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementsByTagName</span>(<span class="hljs-string">&#x27;button&#x27;</span>)[<span class="hljs-number">0</span>];<br><span class="hljs-keyword">var</span> lis = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementsByTagName</span>(<span class="hljs-string">&#x27;li&#x27;</span>);<br><span class="hljs-keyword">var</span> count = <span class="hljs-number">0</span>;<br><span class="hljs-keyword">var</span> flag = <span class="hljs-number">1</span>;<br>btn.<span class="hljs-property">onclick</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123;<br>	<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>;i &lt; lis.<span class="hljs-property">length</span>;++i)&#123;<br>		lis[i].<span class="hljs-property">style</span>.<span class="hljs-property">background</span> = <span class="hljs-string">&#x27;&#x27;</span>;<br><br>	&#125;<br>	lis[count].<span class="hljs-property">style</span>.<span class="hljs-property">background</span> = <span class="hljs-string">&#x27;rgb(&#x27;</span>+ <span class="hljs-title function_">getRandom</span>() +<span class="hljs-string">&#x27;,&#x27;</span>+ <span class="hljs-title function_">getRandom</span>() + <span class="hljs-string">&#x27;,&#x27;</span> + <span class="hljs-title function_">getRandom</span>() + <span class="hljs-string">&#x27;)&#x27;</span>;<br>	<span class="hljs-keyword">if</span>(count &lt; lis.<span class="hljs-property">length</span> - <span class="hljs-number">1</span> &amp;&amp; flag == <span class="hljs-number">1</span>)&#123;	<span class="hljs-comment">//向下切换li</span><br>		count++;<br>	&#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(count == lis.<span class="hljs-property">length</span> -<span class="hljs-number">1</span> &amp;&amp; flag == <span class="hljs-number">1</span>)&#123;	<span class="hljs-comment">//切换到最后一个li，更改切换方向</span><br>		flag = <span class="hljs-number">0</span>;<br>		count--;<br>	&#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(flag == <span class="hljs-number">0</span> &amp;&amp; count &lt; lis.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>)&#123;	<span class="hljs-comment">//方向是向上的时候</span><br>		flag = <span class="hljs-number">0</span>;<br>		count--; <br>		<span class="hljs-keyword">if</span>(count == <span class="hljs-number">0</span>)&#123;	<span class="hljs-comment">//如果到了第一个li，变更flag的状态</span><br>			flag = <span class="hljs-number">1</span>;<br>		&#125;<br>	&#125;<br><br>&#125;<br><span class="hljs-comment">//随机颜色</span><br><span class="hljs-keyword">var</span> getRandom = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123;<br>	<span class="hljs-keyword">var</span> a = <span class="hljs-built_in">parseInt</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>()*<span class="hljs-number">255</span>);<br>	<span class="hljs-keyword">return</span> a;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="5-微信聊天"><a href="#5-微信聊天" class="headerlink" title="5. 微信聊天"></a>5. 微信聊天</h3><p>就是实现一个聊天框<br><img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1565255508820&di=f075d7b5c32f4948e388d106509d89d4&imgtype=jpg&src=http://img3.imgtn.bdimg.com/it/u=1344723893,43652449&fm=214&gp=0.jpg" srcset="/img/loading.gif" lazyload><br>头像可以点击，切换用户<br>难点不是很多，给每个用户即每个头像一个类，用以区分聊天者，图片用一个数组存起来，当<code>onclick</code>事件发生的时候，切换数组元素。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><code class="hljs css">*&#123;<span class="hljs-attribute">margin</span>:<span class="hljs-number">0</span>; <span class="hljs-attribute">padding</span>:<span class="hljs-number">0</span>&#125;<br><span class="hljs-selector-tag">li</span>&#123;<span class="hljs-attribute">list-style</span>: none;&#125;<br><span class="hljs-selector-class">.container</span>&#123; <br>	<span class="hljs-attribute">width</span>:<span class="hljs-number">256px</span>; <br>	<span class="hljs-attribute">height</span>:<span class="hljs-number">540px</span>; <br>	<span class="hljs-attribute">margin</span>:<span class="hljs-number">20px</span> auto <span class="hljs-number">0</span>; <br>	<span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">&#x27;../../iPhone.png&#x27;</span>);<br>	<span class="hljs-attribute">background-size</span>: cover; <br>	<span class="hljs-attribute">position</span>:relative;<br>&#125;<br><span class="hljs-selector-id">#name</span>&#123;<br>	<span class="hljs-attribute">width</span>:<span class="hljs-number">24px</span>; <br>	<span class="hljs-attribute">height</span>:<span class="hljs-number">28px</span>;<br>	<span class="hljs-attribute">border</span>:<span class="hljs-number">1px</span> solid darkgrey; <br>	<span class="hljs-attribute">border-radius</span>: <span class="hljs-number">8px</span>; <br>	<span class="hljs-attribute">padding</span>:<span class="hljs-number">1px</span>; <br>	<span class="hljs-attribute">cursor</span>:pointer;<br>	<span class="hljs-attribute">position</span>: absolute;<br>	<span class="hljs-attribute">left</span>: <span class="hljs-number">4px</span>;<br>	<span class="hljs-attribute">bottom</span>:<span class="hljs-number">0</span>;<br>&#125;<br><span class="hljs-selector-class">.main</span>&#123;<br>	<span class="hljs-attribute">bottom</span>:<span class="hljs-number">81px</span>; <br>	<span class="hljs-attribute">left</span>:<span class="hljs-number">22px</span>; <br>	<span class="hljs-attribute">border-top</span>:<span class="hljs-number">1px</span> solid darkgrey; <br>	<span class="hljs-attribute">position</span>:absolute;<br>	<span class="hljs-attribute">padding</span>:<span class="hljs-number">6px</span> <span class="hljs-number">4px</span> <span class="hljs-number">4px</span> <span class="hljs-number">7px</span>;<br>	<span class="hljs-attribute">width</span>: <span class="hljs-number">206px</span>;<br>&#125;<br><span class="hljs-selector-id">#import</span>&#123;<br>	<span class="hljs-attribute">border-radius</span>: <span class="hljs-number">4px</span>; <br>	<span class="hljs-attribute">height</span>:<span class="hljs-number">18px</span>; <br>	<span class="hljs-attribute">line-height</span>:<span class="hljs-number">18px</span>; <br>	<span class="hljs-attribute">border</span>: <span class="hljs-number">1px</span> solid <span class="hljs-number">#b8b8b8</span>; <br>	<span class="hljs-attribute">outline</span>:<span class="hljs-number">0</span>;<br>	<span class="hljs-attribute">padding</span>:<span class="hljs-number">5px</span> <span class="hljs-number">0</span>; <br>	<span class="hljs-attribute">bottom</span>:<span class="hljs-number">5px</span>; <br>	<span class="hljs-attribute">position</span>:relative; <br>	<span class="hljs-attribute">bottom</span>:-<span class="hljs-number">2px</span>;<br>	<span class="hljs-attribute">left</span>: <span class="hljs-number">30px</span>;<br>	<span class="hljs-attribute">width</span>: <span class="hljs-number">128px</span>;<br>&#125;<br><span class="hljs-selector-id">#enter</span>&#123;<br>	<span class="hljs-attribute">font</span>: <span class="hljs-number">18px</span> <span class="hljs-string">&#x27;Microsoft YaHei&#x27;</span>;<br>	<span class="hljs-attribute">bottom</span>: -<span class="hljs-number">5px</span>;<br>	<span class="hljs-attribute">left</span>: <span class="hljs-number">29px</span>;  <br>	<span class="hljs-attribute">position</span>: relative; <br>	<span class="hljs-attribute">cursor</span>:pointer;<br>	<span class="hljs-attribute">font-size</span>: <span class="hljs-number">20px</span>;<br>&#125;<br><span class="hljs-selector-class">.content</span>&#123;<br>	<span class="hljs-attribute">width</span>: <span class="hljs-number">206px</span>;<br>	<span class="hljs-attribute">height</span>: <span class="hljs-number">336px</span>;<br>	<span class="hljs-attribute">top</span>: <span class="hljs-number">84px</span>; <br>	<span class="hljs-attribute">position</span>: relative;<br>	<span class="hljs-attribute">overflow</span>: auto;<br>	<span class="hljs-attribute">padding</span>: <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">28px</span>;<br>&#125;<br><span class="hljs-selector-class">.content</span> <span class="hljs-selector-tag">li</span>&#123; <br>	<span class="hljs-attribute">line-height</span>:<span class="hljs-number">28px</span>;<br>	<span class="hljs-attribute">margin-bottom</span>: <span class="hljs-number">15px</span>;<br>	<span class="hljs-attribute">overflow</span>: hidden;<br>	<span class="hljs-attribute">position</span>: relative;<br>&#125;<br><span class="hljs-selector-id">#inHtml</span> <span class="hljs-selector-tag">img</span>&#123;<br>	<span class="hljs-attribute">width</span>:<span class="hljs-number">25px</span>; <br>	<span class="hljs-attribute">height</span>:<span class="hljs-number">25px</span>;<br>	<span class="hljs-attribute">position</span>: relative;<br>&#125;<br><span class="hljs-selector-class">.th</span>&#123;<br>	<span class="hljs-attribute">text-align</span>: right;<br>&#125;<br><span class="hljs-selector-class">.th</span> <span class="hljs-selector-tag">img</span>&#123;<br>	<span class="hljs-attribute">float</span><span class="hljs-selector-pseudo">:right</span>; <br>	<span class="hljs-attribute">margin-left</span>:<span class="hljs-number">15px</span>;<br>&#125;<br><span class="hljs-selector-class">.ds</span> <span class="hljs-selector-tag">img</span>&#123;    <br>	<span class="hljs-attribute">width</span>: <span class="hljs-number">25px</span>;<br>	<span class="hljs-attribute">height</span>: <span class="hljs-number">25px</span>;<br>	<span class="hljs-attribute">position</span>: relative;<br>	<span class="hljs-attribute">float</span>: left;<br>	<span class="hljs-attribute">margin-right</span>: <span class="hljs-number">15px</span>;<br>&#125;<br><span class="hljs-selector-class">.th</span> <span class="hljs-selector-tag">p</span>&#123;<br>	<span class="hljs-attribute">background</span>: forestgreen; <br>	<span class="hljs-attribute">text-align</span>: left;<br>	<span class="hljs-attribute">padding</span>: <span class="hljs-number">3px</span> <span class="hljs-number">5px</span>;<br>	<span class="hljs-attribute">border-radius</span>: <span class="hljs-number">4px</span>;<br>	<span class="hljs-attribute">color</span>: white; <br>	<span class="hljs-attribute">float</span><span class="hljs-selector-pseudo">:right</span>;<br>	<span class="hljs-attribute">max-width</span>: <span class="hljs-number">182px</span>;<br>	<span class="hljs-attribute">font</span>:<span class="hljs-number">14px</span> <span class="hljs-string">&#x27;Microsoft YaHei&#x27;</span>; <br>&#125;<br><span class="hljs-selector-class">.ds</span> <span class="hljs-selector-tag">p</span>&#123;<br>	<span class="hljs-attribute">background</span>: dimgrey;<br>	<span class="hljs-attribute">float</span>: left;<br>	<span class="hljs-attribute">text-align</span>: left;<br>	<span class="hljs-attribute">padding</span>: <span class="hljs-number">3px</span> <span class="hljs-number">4px</span>;<br>	<span class="hljs-attribute">border-radius</span>: <span class="hljs-number">4px</span>;<br>	<span class="hljs-attribute">color</span>: white;<br>	<span class="hljs-attribute">left</span>: <span class="hljs-number">32px</span>;<br>	<span class="hljs-attribute">max-width</span>: <span class="hljs-number">190px</span>; <br>	<span class="hljs-attribute">font</span>:<span class="hljs-number">14px</span> <span class="hljs-string">&#x27;Microsoft YaHei&#x27;</span>;<br>&#125;<br><span class="hljs-selector-class">.ds</span>&#123; <br>	<span class="hljs-attribute">text-align</span>: left;<br>&#125;<br><span class="hljs-selector-class">.sent1</span>&#123;<span class="hljs-attribute">width</span>:<span class="hljs-number">0</span>; <span class="hljs-attribute">height</span>:<span class="hljs-number">0</span>; <span class="hljs-attribute">border</span>:solid <span class="hljs-number">8px</span>; <span class="hljs-attribute">border-color</span>: white white white forestgreen; <span class="hljs-attribute">position</span>: absolute;<span class="hljs-attribute">right</span>: <span class="hljs-number">24px</span>;<span class="hljs-attribute">top</span>: <span class="hljs-number">4px</span>;&#125;<br><span class="hljs-selector-class">.sent2</span>&#123;<span class="hljs-attribute">width</span>:<span class="hljs-number">0</span>; <span class="hljs-attribute">height</span>:<span class="hljs-number">0</span>; <span class="hljs-attribute">border</span>:solid <span class="hljs-number">8px</span>; <span class="hljs-attribute">border-color</span>: white dimgrey white white ; <span class="hljs-attribute">position</span>: absolute;<span class="hljs-attribute">left</span>: <span class="hljs-number">24px</span>;<span class="hljs-attribute">top</span>: <span class="hljs-number">4px</span>;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>聊天框的三角可以用边框实现，具体不说了，百度一下</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;container&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;content&quot;</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">ul</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;inHtml&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;main&quot;</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&#x27;name&#x27;</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;../../qq1.gif&quot;</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&#x27;import&#x27;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;enter&quot;</span>&gt;</span>发送<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>不设置<code>li</code>，通过js动态生成<code>li</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">//给两个图片定义为一个数组</span><br><span class="hljs-keyword">var</span> arr = [<span class="hljs-string">&#x27;../../qq1.gif&#x27;</span>,<span class="hljs-string">&#x27;../../qq2.gif&#x27;</span>];<br><span class="hljs-comment">//得到名称的图标</span><br><span class="hljs-keyword">var</span> oName = $(<span class="hljs-string">&#x27;name&#x27;</span>);<br><span class="hljs-comment">//得到输入内容</span><br><span class="hljs-keyword">var</span> oGet = $(<span class="hljs-string">&#x27;import&#x27;</span>);<br><span class="hljs-comment">//显示输入内容</span><br><span class="hljs-keyword">var</span> oWrite = $(<span class="hljs-string">&#x27;inHtml&#x27;</span>);<br><span class="hljs-comment">//默认显示土豪</span><br><span class="hljs-keyword">var</span> onOff = <span class="hljs-literal">true</span>;<br>oName.<span class="hljs-property">onclick</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>	<span class="hljs-keyword">if</span>(onOff)&#123;<br>		oName.<span class="hljs-property">src</span> = arr[<span class="hljs-number">1</span>];<br>		onOff = <span class="hljs-literal">false</span>;<br>		oGet.<span class="hljs-title function_">focus</span>();<br>	&#125; <span class="hljs-keyword">else</span> &#123;<br>		oName.<span class="hljs-property">src</span> = arr[<span class="hljs-number">0</span>];<br>		onOff = <span class="hljs-literal">true</span>;<br>		oGet.<span class="hljs-title function_">focus</span>();<br>	&#125;<br>&#125;<br><span class="hljs-comment">//发送事件</span><br><span class="hljs-keyword">var</span> oSet = $(<span class="hljs-string">&#x27;enter&#x27;</span>);<br>oSet.<span class="hljs-property">onclick</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123;<br>	<span class="hljs-keyword">if</span>(onOff)&#123;<br>		oWrite.<span class="hljs-property">innerHTML</span> += <span class="hljs-string">&#x27;&lt;li class=&quot;th&quot;&gt;&#x27;</span> + <span class="hljs-string">&#x27;&lt;img src=&#x27;</span>+arr[<span class="hljs-number">0</span>] + <span class="hljs-string">&quot; /&gt;&lt;p&gt;&quot;</span> + oGet.<span class="hljs-property">value</span> + <span class="hljs-string">&#x27;&lt;span class=&quot;sent1&quot;&gt;&lt;/span&gt;&#x27;</span> +<span class="hljs-string">&quot;&lt;/p&gt;&lt;/li&gt;&quot;</span>;<br>	&#125; <span class="hljs-keyword">else</span>&#123;<br>		oWrite.<span class="hljs-property">innerHTML</span> += <span class="hljs-string">&#x27;&lt;li class=&quot;ds&quot;&gt;&#x27;</span> + <span class="hljs-string">&#x27;&lt;img src=&#x27;</span>+arr[<span class="hljs-number">1</span>] + <span class="hljs-string">&quot; /&gt;&lt;p&gt;&quot;</span> + oGet.<span class="hljs-property">value</span> + <span class="hljs-string">&#x27;&lt;span class=&quot;sent2&quot;&gt;&lt;/span&gt;&#x27;</span> + <span class="hljs-string">&quot;&lt;/p&gt;&lt;/li&gt;&quot;</span>;<br>	&#125;<br>	oGet.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;&#x27;</span>;<br>	oGet.<span class="hljs-title function_">focus</span>();<br>&#125;<br><br><br><span class="hljs-comment">//调用ID通配符</span><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">$</span>(<span class="hljs-params">id</span>)&#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(id);<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<hr>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/study/" class="category-chain-item">study</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/JavaScript/">#JavaScript</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Weekly Practice</div>
+      <div>https://moewang0321.github.io/2019/08/08/2019-08-08-练习/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Moe Wang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年8月8日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/08/08/2019-08-08-%E4%BD%9C%E7%94%A8%E5%9F%9F/" title="作用域和作用域链">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">作用域和作用域链</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/08/07/2019-08-07-JS%E5%87%BD%E6%95%B0%EF%BC%88%E4%B8%80%EF%BC%89/" title="JS函数">
+                        <span class="hidden-mobile">JS函数</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
