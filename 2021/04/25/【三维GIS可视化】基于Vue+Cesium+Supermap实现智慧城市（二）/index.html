@@ -1,0 +1,941 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Moe Wang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="上一篇文章中我们实现了最基本的项目搭建并生成了一个三维地球，这篇文章我们主要介绍一下地图中基本的几大要素、地图相对应坐标系知识的介绍及如何将这几大元素呈现在我们的地球上。同样的，如果文章中有错误的话欢迎评论区指出，定当虚心请教并及时修改！  前言接下来会有部分篇幅用来介绍地图元素以及坐标系及其转换相关知识，仅作了解。不想看的就直接跳到Viewer相关配置，直接进行实际操作。 地图元素 要素我们首">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（二）">
+<meta property="og:url" content="https://moewang0321.github.io/2021/04/25/%E3%80%90%E4%B8%89%E7%BB%B4GIS%E5%8F%AF%E8%A7%86%E5%8C%96%E3%80%91%E5%9F%BA%E4%BA%8EVue+Cesium+Supermap%E5%AE%9E%E7%8E%B0%E6%99%BA%E6%85%A7%E5%9F%8E%E5%B8%82%EF%BC%88%E4%BA%8C%EF%BC%89/index.html">
+<meta property="og:site_name" content="moe_大杂烩">
+<meta property="og:description" content="上一篇文章中我们实现了最基本的项目搭建并生成了一个三维地球，这篇文章我们主要介绍一下地图中基本的几大要素、地图相对应坐标系知识的介绍及如何将这几大元素呈现在我们的地球上。同样的，如果文章中有错误的话欢迎评论区指出，定当虚心请教并及时修改！  前言接下来会有部分篇幅用来介绍地图元素以及坐标系及其转换相关知识，仅作了解。不想看的就直接跳到Viewer相关配置，直接进行实际操作。 地图元素 要素我们首">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ba13746420fa42f7bfff16a7528c1d24~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a49e3ec28ff04edd8a80c842fd58178e~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b626f08dc4824c58b1b7e1735f5f6e82~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2a38ef2fd24245698bdf3ff1dd0a2f6e~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2f9e213692d04770929c86349456dda9~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/18ddfe6f0c8048ffa51fa2a02538da09~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/86c80980222c4490b0ba10c92bb2961e~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b4dd71de89504a73a1846edf0bcc9e5f~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6a6f904d242e440c86d15c2c874d4cf8~tplv-k3u1fbpfcp-watermark.image">
+<meta property="article:published_time" content="2021-04-25T08:34:55.000Z">
+<meta property="article:modified_time" content="2023-02-14T08:18:51.860Z">
+<meta property="article:author" content="Moe Wang">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="GIS">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ba13746420fa42f7bfff16a7528c1d24~tplv-k3u1fbpfcp-watermark.image">
+  
+  
+  
+  <title>【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（二） - moe_大杂烩</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"moewang0321.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>moe_大杂烩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（二）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-04-25 16:34" pubdate>
+          2021年4月25日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          77 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（二）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <blockquote>
+<p>上一篇文章中我们实现了最基本的项目搭建并生成了一个三维地球，这篇文章我们主要介绍一下地图中基本的几大要素、地图相对应坐标系知识的介绍及如何将这几大元素呈现在我们的地球上。同样的，如果文章中有错误的话欢迎评论区指出，定当虚心请教并及时修改！</p>
+</blockquote>
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>接下来会有部分篇幅用来介绍地图元素以及坐标系及其转换相关知识，仅作了解。不想看的就直接跳到Viewer相关配置，直接进行实际操作。</p>
+<h3 id="地图元素"><a href="#地图元素" class="headerlink" title="地图元素"></a>地图元素</h3><hr>
+<h4 id="要素"><a href="#要素" class="headerlink" title="要素"></a>要素</h4><p>我们首先来看看百度地图上大概都有哪些元素（这里我以路线查询作为例子）</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ba13746420fa42f7bfff16a7528c1d24~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p>首先,地图中最重要的，也是最基本的就是底图，底图负责将地理的基本信息展现在视区中，没有底图，堆多少要素都是无用的。接下来是路线的起点和终点，对应地图中的<strong>点要素Point</strong>，两点之间的路线对应地图中的<strong>线要素LineString</strong>。最后就是右下角的面数据了（是不是格格不入，因为是我自己画的哈哈哈），对应地图中的<strong>面要素Polygon</strong>。而我们的项目中，基本上的信息展示就是由点线面三类要素构成。</p>
+<h3 id="坐标系"><a href="#坐标系" class="headerlink" title="坐标系"></a>坐标系</h3><hr>
+<p>只要涉及到地图开发，无论如何关于坐标系的概念是逃不掉的，谁让地球它是个球呢🌏（如果向欧文说的地球是方的那就好了）。</p>
+<blockquote>
+<p>想象中的地球vs实际的地球<br><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a49e3ec28ff04edd8a80c842fd58178e~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="想象中的地球vs实际的地球"></p>
+</blockquote>
+<h4 id="常用坐标系"><a href="#常用坐标系" class="headerlink" title="常用坐标系"></a>常用坐标系</h4><p>这里就不列举国内常用的坐标系及转换方法，大家可以自行百度。关于投影坐标系统和地理坐标系统，可以阅读这两篇文章加以了解。我们主要介绍Cesium中的常用坐标系以及对应的转换方式。</p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6930539078488326152#heading-17">地理坐标系统</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6940684126282317861">投影坐标系统</a></p>
+<h4 id="Cesium中的坐标系"><a href="#Cesium中的坐标系" class="headerlink" title="Cesium中的坐标系"></a>Cesium中的坐标系</h4><p>Cesium中常用的坐标有两种：WGS84坐标和笛卡尔空间坐标，我们平时以经纬度来指向一个地点用的就是WGS84坐标，笛卡尔空间坐标则常用来做一些空间位置的变换，如平移、缩放等。二者关系如下图：</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b626f08dc4824c58b1b7e1735f5f6e82~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="124613_sr4k_1585572.png"></p>
+<p>WGS84坐标系中包括WGS84经纬度坐标系和WGS84弧度坐标系（<code>Cartographic</code>）。</p>
+<p>笛卡尔空间坐标系包括笛卡尔空间直角坐标系（<code>Cartesian3</code>）、平面坐标系（<code>Cartesian2</code>）和4D笛卡尔坐标系（<code>Cartesian4</code>）。</p>
+<h5 id="WGS84坐标系"><a href="#WGS84坐标系" class="headerlink" title="WGS84坐标系"></a>WGS84坐标系</h5><p>World Geodetic System 1984，是为GPS全球定位系统使用而建立的坐标系统，坐标原点为地球质心，其地心空间直角坐标系的Z轴指向BIH （国际时间服务机构）1984.O定义的协议地球极（CTP)方向，X轴指向BIH 1984.0的零子午面和CTP赤道的交点，Y轴与Z轴、X轴垂直构成右手坐标系。我们平常手机上的指南针显示的经纬度就是这个坐标系下当前的坐标，进度范围[-180，180],纬度范围[-90，90]。</p>
+<p>Cesium目前支持两种坐标系WGS84和WebMercator，但是在Cesium中没有实际的对象来描述WGS84坐标，都是以弧度的方式来进行运用的也就是Cartographic类：</p>
+<p>new Cesium.Cartographic(longitude, latitude, height)，这里的参数也叫longitude、latitude，就是经度和纬度，计算方法：弧度= π/180×经纬度角度。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2a38ef2fd24245698bdf3ff1dd0a2f6e~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<h5 id="笛卡尔空间直角坐标系（Cartesian3）"><a href="#笛卡尔空间直角坐标系（Cartesian3）" class="headerlink" title="笛卡尔空间直角坐标系（Cartesian3）"></a>笛卡尔空间直角坐标系（<code>Cartesian3</code>）</h5><p>笛卡尔空间坐标的原点就是椭球的中心，我们在计算机上进行绘图时，不方便使用经纬度直接进行绘图，一般会将坐标系转换为笛卡尔坐标系，使用计算机图形学中的知识进行绘图。这里的Cartesian3，有点类似于三维系统中的Point3D对象，new Cesium.Cartesian3(x, y, z)，里面三个分量x、y、z。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2f9e213692d04770929c86349456dda9~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<h5 id="平面坐标系（Cartesian2）"><a href="#平面坐标系（Cartesian2）" class="headerlink" title="平面坐标系（Cartesian2）"></a>平面坐标系（<code>Cartesian2</code>）</h5><p>平面坐标系也就是平面直角坐标系，是一个二维笛卡尔坐标系，与Cartesian3相比少了一个z的分量，new Cesium.Cartesian2(x, y)。Cartesian2经常用来描述屏幕坐标系，比如鼠标在电脑屏幕上的点击位置，返回的就是Cartesian2，返回了鼠标点击位置的xy像素点分量。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/18ddfe6f0c8048ffa51fa2a02538da09~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<h4 id="坐标系转换"><a href="#坐标系转换" class="headerlink" title="坐标系转换"></a>坐标系转换</h4><h5 id="经纬度和弧度的转换"><a href="#经纬度和弧度的转换" class="headerlink" title="经纬度和弧度的转换"></a>经纬度和弧度的转换</h5><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> radians=<span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Math</span>.<span class="hljs-property">toRadians</span>（degrees）;<span class="hljs-comment">//经纬度转弧度</span><br><span class="hljs-keyword">var</span> degrees=<span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Math</span>.<span class="hljs-property">toDegrees</span>（radians）;<span class="hljs-comment">//弧度转经纬度</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="WGS84经纬度坐标和WGS84弧度坐标系（Cartographic）的转换"><a href="#WGS84经纬度坐标和WGS84弧度坐标系（Cartographic）的转换" class="headerlink" title="WGS84经纬度坐标和WGS84弧度坐标系（Cartographic）的转换"></a>WGS84经纬度坐标和WGS84弧度坐标系（<code>Cartographic</code>）的转换</h5><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">//方法一：</span><br><span class="hljs-keyword">var</span> longitude = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Math</span>.<span class="hljs-title function_">toRadians</span>(longitude1); <span class="hljs-comment">//其中 longitude1为角度</span><br><span class="hljs-keyword">var</span> latitude= <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Math</span>.<span class="hljs-title function_">toRadians</span>(latitude1); <span class="hljs-comment">//其中 latitude1为角度</span><br><span class="hljs-keyword">var</span> cartographic = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">Cartographic</span>(longitude, latitude, height)；<br><br><span class="hljs-comment">//方法二：</span><br><span class="hljs-keyword">var</span> cartographic= <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartographic</span>.<span class="hljs-title function_">fromDegrees</span>(longitude, latitude, height);<span class="hljs-comment">//其中，longitude和latitude为角度</span><br><br><span class="hljs-comment">//方法三：</span><br><span class="hljs-keyword">var</span> cartographic= <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartographic</span>.<span class="hljs-title function_">fromRadians</span>(longitude, latitude, height);<span class="hljs-comment">//其中，longitude和latitude为弧度</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="WGS84坐标系和笛卡尔空间直角坐标系（Cartesian3）的转换"><a href="#WGS84坐标系和笛卡尔空间直角坐标系（Cartesian3）的转换" class="headerlink" title="WGS84坐标系和笛卡尔空间直角坐标系（Cartesian3）的转换"></a>WGS84坐标系和笛卡尔空间直角坐标系（<code>Cartesian3</code>）的转换</h5><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> position = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartesian3</span>.<span class="hljs-title function_">fromDegrees</span>(longitude, latitude, height)；<span class="hljs-comment">//其中，高度默认值为0，可以不用填写；longitude和latitude为角度</span><br><br><span class="hljs-keyword">var</span> positions = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartesian3</span>.<span class="hljs-title function_">fromDegreesArray</span>(coordinates);<span class="hljs-comment">//其中，coordinates格式为不带高度的数组。例如：[-115.0, 37.0, -107.0, 33.0]</span><br><br><span class="hljs-keyword">var</span> positions = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartesian3</span>.<span class="hljs-title function_">fromDegreesArrayHeights</span>(coordinates);<span class="hljs-comment">//coordinates格式为带有高度的数组。例如：[-115.0, 37.0, 100000.0, -107.0, 33.0, 150000.0]</span><br><br><span class="hljs-comment">//同理，通过弧度转换，用法相同，具体有Cesium.Cartesian3.fromRadians，Cesium.Cartesian3.fromRadiansArray，Cesium.Cartesian3.fromRadiansArrayHeights等方法</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="笛卡尔空间直角坐标系转换WGS84"><a href="#笛卡尔空间直角坐标系转换WGS84" class="headerlink" title="笛卡尔空间直角坐标系转换WGS84"></a>笛卡尔空间直角坐标系转换WGS84</h5><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> cartographic= <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartographic</span>.<span class="hljs-title function_">fromCartesian</span>(cartesian3)；<br></code></pre></td></tr></table></figure>
+
+<h5 id="平面坐标系（Cartesian2）和笛卡尔空间直角坐标系（Cartesian3）的转换"><a href="#平面坐标系（Cartesian2）和笛卡尔空间直角坐标系（Cartesian3）的转换" class="headerlink" title="平面坐标系（Cartesian2）和笛卡尔空间直角坐标系（Cartesian3）的转换"></a>平面坐标系（<code>Cartesian2</code>）和笛卡尔空间直角坐标系（<code>Cartesian3</code>）的转换</h5><p>平面坐标系转笛卡尔空间直角坐标系</p>
+<p>这里注意的是当前的点(Cartesian2)必须在三维球上，否则返回的是undefined；通过ScreenSpaceEventHandler回调会取到的坐标都是Cartesian2。</p>
+<p>屏幕坐标转场景坐标-获取倾斜摄影或模型点击处的坐标<br>这里的场景坐标是包含了地形、倾斜摄影表面、模型的坐标。</p>
+<p>通过viewer.scene.pickPosition(movement.position)获取，根据窗口坐标，从场景的深度缓冲区中拾取相应的位置，返回笛卡尔坐标。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> handler = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">ScreenSpaceEventHandler</span>(viewer.<span class="hljs-property">scene</span>.<span class="hljs-property">canvas</span>);<br>handler.<span class="hljs-title function_">setInputAction</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">movement</span>) &#123;<br>     <span class="hljs-keyword">var</span> position = viewer.<span class="hljs-property">scene</span>.<span class="hljs-title function_">pickPosition</span>(movement.<span class="hljs-property">position</span>);<br>     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(position);<br>&#125;, <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">ScreenSpaceEventType</span>.<span class="hljs-property">LEFT_CLICK</span>);<br></code></pre></td></tr></table></figure>
+<p>注：若屏幕坐标处没有倾斜摄影表面、模型时，获取的笛卡尔坐标不准，此时要开启地形深度检测（<code>viewer.scene.globe.depthTestAgainstTerrain = true</code>; //默认为false）。</p>
+<p>屏幕坐标转地表坐标-获取加载地形后对应的经纬度和高程<br>这里是地球表面的世界坐标，包含地形，不包括模型、倾斜摄影表面。</p>
+<p>通过<code>viewer.scene.globe.pick(ray, scene)</code>获取，其中<code>ray=viewer.camera.getPickRay(movement.position)</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> handler = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">ScreenSpaceEventHandler</span>(viewer.<span class="hljs-property">scene</span>.<span class="hljs-property">canvas</span>);<br>handler.<span class="hljs-title function_">setInputAction</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">movement</span>) &#123;<br>     <span class="hljs-keyword">var</span> ray = viewer.<span class="hljs-property">camera</span>.<span class="hljs-title function_">getPickRay</span>(movement.<span class="hljs-property">position</span>);<br>     <span class="hljs-keyword">var</span> position = viewer.<span class="hljs-property">scene</span>.<span class="hljs-property">globe</span>.<span class="hljs-title function_">pick</span>(ray, viewer.<span class="hljs-property">scene</span>);<br>     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(position);<br>&#125;, <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">ScreenSpaceEventType</span>.<span class="hljs-property">LEFT_CLICK</span>);<br></code></pre></td></tr></table></figure>
+
+<p>注：通过测试，此处得到的坐标通过转换成wgs84后，height的为该点的地形高程值。</p>
+<p>屏幕坐标转椭球面坐标-获取鼠标点的对应椭球面位置<br>这里的椭球面坐标是参考椭球的WGS84坐标(Ellipsoid.WGS84)，不包含地形、模型、倾斜摄影表面。</p>
+<p>通过 <code>viewer.scene.camera.pickEllipsoid(movement.position, ellipsoid)</code>获取，可以获取当前点击视线与椭球面相交处的坐标，其中ellipsoid是当前地球使用的椭球对象：<code>viewer.scene.globe.ellipsoid</code>，默认为Ellipsoid.WGS84。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> handler = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">ScreenSpaceEventHandler</span>(viewer.<span class="hljs-property">scene</span>.<span class="hljs-property">canvas</span>);<br>handler.<span class="hljs-title function_">setInputAction</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">movement</span>) &#123;<br>     <span class="hljs-keyword">var</span> position = viewer.<span class="hljs-property">scene</span>.<span class="hljs-property">camera</span>.<span class="hljs-title function_">pickEllipsoid</span>(movement.<span class="hljs-property">position</span>, viewer.<span class="hljs-property">scene</span>.<span class="hljs-property">globe</span>.<span class="hljs-property">ellipsoid</span>);<br>     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(position);<br>&#125;, <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">ScreenSpaceEventType</span>.<span class="hljs-property">LEFT_CLICK</span>);<br></code></pre></td></tr></table></figure>
+
+<p>注：通过测试，此处得到的坐标通过转换成wgs84后，height的为0(此值应该为地表坐标减去地形的高程)。</p>
+<h3 id="Viewer相关配置项"><a href="#Viewer相关配置项" class="headerlink" title="Viewer相关配置项"></a>Viewer相关配置项</h3><hr>
+<p>我们在第一篇文章中成功生成了三维球体，但是细心的朋友会发现我们<code>Viewer</code>的配置项是一个空对象，接下来我就将基本配置罗列出来，朋友们可根据需要自行添加到自己的<code>Viewer</code>配置中</p>
+<blockquote>
+<p>这里的配置对应的是超图二次封装过的Viewer,所以有些默认配置可能与原始Ceiusm默认配置不同，原始的配置项可参照<a target="_blank" rel="noopener" href="https://blog.csdn.net/shenwuyuexy/article/details/108262789">这篇博客</a></p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>默认</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>clock</td>
+<td><code>Clock</code></td>
+<td><code>new Clock()</code></td>
+<td>控制当前时间的时钟</td>
+</tr>
+<tr>
+<td>selectedImageryProviderViewModel</td>
+<td><code>ProviderViewModel</code></td>
+<td></td>
+<td>当前基础图像图层的视图模型，如若未提供，则使用第一个可用基础图层。此值仅在 options.baseLayerPicker 设置为true时有效。</td>
+</tr>
+<tr>
+<td>imageryProviderViewModels</td>
+<td>Array.<code>&lt;ProviderViewModel&gt;</code></td>
+<td><code>createDefaultImageryProviderViewModels()</code></td>
+<td>ProviderViewModels数组可从BaseLayerPicker中选择。此值仅在 options.baseLayerPicker 设置为true时有效。</td>
+</tr>
+<tr>
+<td>selectedTerrainProviderViewModel</td>
+<td><code>ProviderViewModel</code></td>
+<td></td>
+<td>当前基础地形图层的视图模型，如若未提供，则使用第一个可用基础图层。此值仅在 options.baseLayerPicker 设置为true时有效。</td>
+</tr>
+<tr>
+<td>terrainProviderViewModels</td>
+<td>Array.<code>&lt;ProviderViewModel&gt;</code></td>
+<td><code>createDefaultTerrainProviderViewModels()</code></td>
+<td>ProviderViewModels数组可从BaseLayerPicker中选择。此值仅在 options.baseLayerPicker 设置为true时有效。</td>
+</tr>
+<tr>
+<td>imageryProvider</td>
+<td><code>ImageryProvider</code></td>
+<td><code>new BingMapsImageryProvider()</code></td>
+<td>使用的影像提供者。此值仅在 options.baseLayerPicker 设置为 false 时有效。</td>
+</tr>
+<tr>
+<td>terrainProvider</td>
+<td><code>TerrainProvider</code></td>
+<td><code>new EllipsoidTerrainProvider()</code></td>
+<td>使用的地形提供者。</td>
+</tr>
+<tr>
+<td>skyBox</td>
+<td><code>SkyBox</code></td>
+<td></td>
+<td>用于渲染星辰的天空盒，未定义时，使用默认星辰效果。</td>
+</tr>
+<tr>
+<td>skyAtmosphere</td>
+<td><code>SkyAtmosphere</code></td>
+<td></td>
+<td>环绕地球边缘的蓝天和光晕效果，设置为false可将其关闭。</td>
+</tr>
+<tr>
+<td>useDefaultRenderLoop</td>
+<td><code>Boolean</code></td>
+<td><code>true</code></td>
+<td>如果此部件能够控制渲染循环，设置为true，反之设置为false。</td>
+</tr>
+<tr>
+<td>targetFrameRate</td>
+<td><code>Number</code></td>
+<td></td>
+<td>使用默认渲染循环时的目标帧速率。</td>
+</tr>
+<tr>
+<td>showRenderLoopErrors</td>
+<td><code>Boolean</code></td>
+<td><code>true</code></td>
+<td>如果设置为true，发生渲染循环错误时，将自动给用户显示一个包含错误信息的HTML面板。</td>
+</tr>
+<tr>
+<td>automaticallyTrackDataSourceClocks</td>
+<td><code>Boolean</code></td>
+<td><code>true</code></td>
+<td>如果设置为true，将自动跟踪新添加数据源的时钟设置，如果数据源的时钟变更，则更新。如需单独设置时钟，请将此项设置为false。</td>
+</tr>
+<tr>
+<td>contextOptions</td>
+<td><code>Object</code></td>
+<td></td>
+<td>Context and WebGL 创建属性与传递给Scene匹配的选项。增加硬件反走样功能，反走样系数msaalevel使用1到8的整数值，默认是1，值越大反走样效果越好（因为用到了WebGL2.0的特性，所以requestWebgl2参数设置为true。因为WebGL2.0还存在一下缺陷，所以需要先把OIT,FXAA,HDR关掉）</td>
+</tr>
+<tr>
+<td>mapProjection</td>
+<td><code>MapProjection</code></td>
+<td><code>new GeographicProjection()    </code></td>
+<td>在二维和Columbus视图模式下所使用的地图投影。</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>globe</td>
+<td><code>Globe</code></td>
+<td><code>new Globe(mapProjection.ellipsoid)    </code></td>
+<td>场景中的地球，如果此项设置为false，将不添加球体对象。</td>
+</tr>
+<tr>
+<td>orderIndependentTranslucency</td>
+<td><code>Boolean</code></td>
+<td><code>true</code></td>
+<td>如果此项设置为true，并且使用设备支持，将使用与顺序无关的半透明。</td>
+</tr>
+<tr>
+<td>creditContainer</td>
+<td><code>Element</code> \ <code>String</code></td>
+<td></td>
+<td>指定包含CreditDisplay信息的DOM元素或ID。如若未指定，credit信息将添加到部件底部。</td>
+</tr>
+<tr>
+<td>dataSources</td>
+<td><code>DataSourceCollection</code></td>
+<td><code>new DataSourceCollection()</code></td>
+<td>指定由viewer部件可视化的数据源集合。如果提供此参数，实例由调用者拥有，并且viewer被销毁时此实例不被销毁。</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>terrainExaggeration</td>
+<td><code>Number</code></td>
+<td><code>1.0</code></td>
+<td>用于夸大地形的标量。请注意，设置地形夸张不会修改其它任何数据。</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>shadows</td>
+<td><code>Boolean</code></td>
+<td><code>false</code></td>
+<td>确定阴影是否由太阳投射形成。</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>terrainShadows</td>
+<td><code>ShadowMode</code></td>
+<td><code>ShadowMode.RECEIVE_ONLY</code></td>
+<td>确定地形是否投射或接受来自太阳的阴影。</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>mapMode2D</td>
+<td><code>MapMode2D</code></td>
+<td><code>MapMode2D.INFINITE_SCROLL</code></td>
+<td>确定二维地图是可旋转的或是可以在在水平方向上无限滚动。</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>navigation</td>
+<td><code>Boolean</code></td>
+<td><code>false</code></td>
+<td>是否显示导航罗盘控件。如需显示，需在初始化viewer时此项设置为true。</td>
+</tr>
+</tbody></table>
+<h3 id="添加图层（Adding-Imagery）"><a href="#添加图层（Adding-Imagery）" class="headerlink" title="添加图层（Adding Imagery）"></a>添加图层（<code>Adding Imagery</code>）</h3><hr>
+<p><code>Imagery</code>不用说，在Cesium项目中一定是关键元素，瓦片图集合根据不同投影方式映射到三维地球表面，通过相机指向地表的方向距离，Cesium会自动请求不同层级的图层信息进行渲染。</p>
+<p>Cesium支持多种图层格式：</p>
+<ul>
+<li>wms</li>
+<li>TMS</li>
+<li>WMTS</li>
+<li>ArcGIS</li>
+<li>BingMaps</li>
+<li>GoogleEarth</li>
+<li>Mapbox</li>
+<li>OpenStreetMap</li>
+</ul>
+<blockquote>
+<p>默认地，Cesium使用Bing Maps作为默认的图层。这个图层被打包进Viewer中用于演示。</p>
+</blockquote>
+<p>Cesium中基本的添加底图的方法为<code>viewer.imageryLayers.addImageryProvider()</code></p>
+<p>我们在<code>init()</code>方法中添加下方代码，尝试一下。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> layer = viewer.<span class="hljs-property">imageryLayers</span>.<span class="hljs-title function_">addImageryProvider</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">ArcGisMapServerImageryProvider</span>(&#123;<br>    <span class="hljs-attr">url</span>: <span class="hljs-string">&#x27;http://cache1.arcgisonline.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer&#x27;</span><br>&#125;));<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/86c80980222c4490b0ba10c92bb2961e~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="1.gif"></p>
+<p>对于天地图WebGL提供了一个天地图影像服务提供者类<code>TiandituImageryProvider</code>，具体的使用方法可以<a target="_blank" rel="noopener" href="http://support.supermap.com.cn:8090/webgl/examples/webgl/editor.html#tianditu">参照示例</a>和<a target="_blank" rel="noopener" href="http://support.supermap.com.cn/DataWarehouse/WebDocHelp/iPortal/webgl/docs/Documentation/TiandituImageryProvider.html">api文档</a></p>
+<h3 id="Camera实体"><a href="#Camera实体" class="headerlink" title="Camera实体"></a>Camera实体</h3><hr>
+<p>我们已经把自己想要的底图添加到地球上了，但是实际项目中肯定不可能一进项目就给人展示整个地球（如果需求是这样的，那我道歉！）。所以我们需要在地球生成后定位到我们需要的位置，这就不得不说一下<code>Camera</code>了。</p>
+<p>Cesium中有很多方法可以操作Camera，如旋转(rotate)、缩放(zoom)、平移(pan)和飞到目的地(flyTo)。CesiumJS有鼠标和触摸事件用来处理与Camrea的交互，还有API来以编程方式操作摄像机。</p>
+<p>使用<code>setView</code>函数可设置Camera的位置和方向。<code>destination</code>可以是<code>Cartesian3</code>或者<code>Rectangle</code>，<code>orientation</code>可以是<code>heading | pitch | roll | direction | up</code>。航向角、俯仰角和横滚角以弧度定义。航向角是从正角度向东增加的局部北向旋转。俯仰角是指从局部的东北平面开始旋转。正俯仰角在平面上方。负俯仰角在平面以下。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs js"><br> <span class="hljs-comment">//   初始化场景位置</span><br>viewer.<span class="hljs-property">scene</span>.<span class="hljs-property">camera</span>.<span class="hljs-title function_">setView</span>(&#123;<br>    <span class="hljs-comment">// 初始化相机经纬度（这里使用了经纬度转换世界坐标的方法）</span><br>    <span class="hljs-attr">destination</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartesian3</span>.<span class="hljs-title function_">fromDegrees</span>(<br>      <span class="hljs-number">121.54035</span>,<br>      <span class="hljs-number">38.92146</span>,<br>      <span class="hljs-number">2000</span><br>    ),<br>    <span class="hljs-attr">orientation</span>: &#123;<br>      <span class="hljs-attr">heading</span>: <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Math</span>.<span class="hljs-title function_">toRadians</span>(<span class="hljs-number">0.0</span>),<br>      <span class="hljs-attr">pitch</span>: <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Math</span>.<span class="hljs-title function_">toRadians</span>(-<span class="hljs-number">25.0</span>), <span class="hljs-comment">//从上往下看为-90</span><br>      <span class="hljs-attr">roll</span>: <span class="hljs-number">0</span>,<br>    &#125;,<br>&#125;);<br></code></pre></td></tr></table></figure>
+<p><code>flyTo</code>方法的参数和<code>setView</code>是基本一样的。只是<code>setView</code>是直接将视角根据参数定位，而<code>flyTo</code>如字面意思，会有一个飞向定位点的动画效果。</p>
+<p>两者效果图：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b4dd71de89504a73a1846edf0bcc9e5f~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="2.gif"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6a6f904d242e440c86d15c2c874d4cf8~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="3.gif"></p>
+<h4 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;template&gt;<br>  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;container&quot;</span>&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;cesiumContainer&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="language-xml">  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br>&lt;/template&gt;<br><br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">var</span> viewer, camera;</span></span><br><span class="language-javascript"><span class="language-xml"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;</span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-title function_">data</span>(<span class="hljs-params"></span>) &#123;</span></span><br><span class="language-javascript"><span class="language-xml">    <span class="hljs-keyword">return</span> &#123;&#125;;</span></span><br><span class="language-javascript"><span class="language-xml">  &#125;,</span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-title function_">mounted</span>(<span class="hljs-params"></span>) &#123;</span></span><br><span class="language-javascript"><span class="language-xml">    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">init</span>();</span></span><br><span class="language-javascript"><span class="language-xml">  &#125;,</span></span><br><span class="language-javascript"><span class="language-xml">  <span class="hljs-attr">methods</span>: &#123;</span></span><br><span class="language-javascript"><span class="language-xml">    <span class="hljs-title function_">init</span>(<span class="hljs-params"></span>) &#123;</span></span><br><span class="language-javascript"><span class="language-xml">      viewer = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">Viewer</span>(<span class="hljs-string">&quot;cesiumContainer&quot;</span>, &#123;&#125;);</span></span><br><span class="language-javascript"><span class="language-xml">      <span class="hljs-keyword">var</span> layer = viewer.<span class="hljs-property">imageryLayers</span>.<span class="hljs-title function_">addImageryProvider</span>(</span></span><br><span class="language-javascript"><span class="language-xml">        <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">ArcGisMapServerImageryProvider</span>(&#123;</span></span><br><span class="language-javascript"><span class="language-xml">          <span class="hljs-attr">url</span>:</span></span><br><span class="language-javascript"><span class="language-xml">            <span class="hljs-string">&quot;http://cache1.arcgisonline.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer&quot;</span>,</span></span><br><span class="language-javascript"><span class="language-xml">        &#125;)</span></span><br><span class="language-javascript"><span class="language-xml">      );</span></span><br><span class="language-javascript"><span class="language-xml">      <span class="hljs-comment">//   初始化场景位置</span></span></span><br><span class="language-javascript"><span class="language-xml">      viewer.<span class="hljs-property">scene</span>.<span class="hljs-property">camera</span>.<span class="hljs-title function_">flyTo</span>(&#123;</span></span><br><span class="language-javascript"><span class="language-xml">        <span class="hljs-comment">// 初始化相机经纬度</span></span></span><br><span class="language-javascript"><span class="language-xml">        <span class="hljs-attr">destination</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartesian3</span>.<span class="hljs-title function_">fromDegrees</span>(</span></span><br><span class="language-javascript"><span class="language-xml">          <span class="hljs-number">121.54035</span>,</span></span><br><span class="language-javascript"><span class="language-xml">          <span class="hljs-number">38.92146</span>,</span></span><br><span class="language-javascript"><span class="language-xml">          <span class="hljs-number">2000</span></span></span><br><span class="language-javascript"><span class="language-xml">        ),</span></span><br><span class="language-javascript"><span class="language-xml">        <span class="hljs-attr">orientation</span>: &#123;</span></span><br><span class="language-javascript"><span class="language-xml">          <span class="hljs-attr">heading</span>: <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Math</span>.<span class="hljs-title function_">toRadians</span>(<span class="hljs-number">0.0</span>),</span></span><br><span class="language-javascript"><span class="language-xml">          <span class="hljs-attr">pitch</span>: <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Math</span>.<span class="hljs-title function_">toRadians</span>(-<span class="hljs-number">25.0</span>), <span class="hljs-comment">//从上往下看为-90</span></span></span><br><span class="language-javascript"><span class="language-xml">          <span class="hljs-attr">roll</span>: <span class="hljs-number">0</span>,</span></span><br><span class="language-javascript"><span class="language-xml">        &#125;,</span></span><br><span class="language-javascript"><span class="language-xml">      &#125;);</span></span><br><span class="language-javascript"><span class="language-xml">    &#125;,</span></span><br><span class="language-javascript"><span class="language-xml">  &#125;,</span></span><br><span class="language-javascript"><span class="language-xml">&#125;;</span></span><br><span class="language-javascript"><span class="language-xml"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span><br><br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">style</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;scss&quot;</span> <span class="hljs-attr">scoped</span>&gt;</span></span><br><span class="language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span></span><br></code></pre></td></tr></table></figure>
+
+<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><hr>
+<p>本来想在这篇文章中把点线面的添加写进来的，计划不如变化快，所以这篇暂时就只讲一下坐标系和Viewer、Camera相关的东西吧。下一篇再实现添加点线面要素吧。头疼哈哈哈。最后谢谢看过赞过评论过我上一篇文章的兄弟们，写了文章有了反馈确实是更有动力创作下去！</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/GIS/" class="category-chain-item">GIS</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/JavaScript/">#JavaScript</a>
+      
+        <a href="/tags/GIS/">#GIS</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（二）</div>
+      <div>https://moewang0321.github.io/2021/04/25/【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（二）/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Moe Wang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年4月25日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/05/05/%E3%80%90%E4%B8%89%E7%BB%B4GIS%E5%8F%AF%E8%A7%86%E5%8C%96%E3%80%91%E5%9F%BA%E4%BA%8EVue+Cesium+Supermap%E5%AE%9E%E7%8E%B0%E6%99%BA%E6%85%A7%E5%9F%8E%E5%B8%82%EF%BC%88%E4%B8%89%EF%BC%89/" title="【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（三）">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（三）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/04/22/%E3%80%90%E4%B8%89%E7%BB%B4GIS%E5%8F%AF%E8%A7%86%E5%8C%96%E3%80%91%E5%9F%BA%E4%BA%8EVue+Cesium+Supermap%E5%AE%9E%E7%8E%B0%E6%99%BA%E6%85%A7%E5%9F%8E%E5%B8%82%EF%BC%88%E4%B8%80%EF%BC%89/" title="【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（一）">
+                        <span class="hidden-mobile">【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（一）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

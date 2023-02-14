@@ -1,0 +1,706 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Moe Wang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前言 不久前受命研究开发3D可视化及智慧城市的技术路线，第一个想到的就是Cesium这个世界级开源库。但是我的业务上可能会有很多关于空间及地理分析相关的功能实现，所以我找到了超图。超图拥有基于Cesium包装和二次封装的三维产品3D-WebGL包（文末附产品下载地址）。一切准备就绪，接下来简单了解一下Cesium是什么神奇的东东吧。 Cesium Cesium是什么Cesium是一个跨平台，跨浏览">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（一）">
+<meta property="og:url" content="https://moewang0321.github.io/2021/04/22/%E3%80%90%E4%B8%89%E7%BB%B4GIS%E5%8F%AF%E8%A7%86%E5%8C%96%E3%80%91%E5%9F%BA%E4%BA%8EVue+Cesium+Supermap%E5%AE%9E%E7%8E%B0%E6%99%BA%E6%85%A7%E5%9F%8E%E5%B8%82%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
+<meta property="og:site_name" content="moe_大杂烩">
+<meta property="og:description" content="前言 不久前受命研究开发3D可视化及智慧城市的技术路线，第一个想到的就是Cesium这个世界级开源库。但是我的业务上可能会有很多关于空间及地理分析相关的功能实现，所以我找到了超图。超图拥有基于Cesium包装和二次封装的三维产品3D-WebGL包（文末附产品下载地址）。一切准备就绪，接下来简单了解一下Cesium是什么神奇的东东吧。 Cesium Cesium是什么Cesium是一个跨平台，跨浏览">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/70b22bd76fd649038222986ee0ec685b~tplv-k3u1fbpfcp-watermark.image">
+<meta property="article:published_time" content="2021-04-22T13:13:55.000Z">
+<meta property="article:modified_time" content="2023-02-14T08:17:42.336Z">
+<meta property="article:author" content="Moe Wang">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="GIS">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/70b22bd76fd649038222986ee0ec685b~tplv-k3u1fbpfcp-watermark.image">
+  
+  
+  
+  <title>【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（一） - moe_大杂烩</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"moewang0321.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>moe_大杂烩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（一）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-04-22 21:13" pubdate>
+          2021年4月22日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          31 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（一）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><hr>
+<p>不久前受命研究开发3D可视化及智慧城市的技术路线，第一个想到的就是<a target="_blank" rel="noopener" href="https://cesium.com/">Cesium</a>这个世界级开源库。但是我的业务上可能会有很多关于空间及地理分析相关的功能实现，所以我找到了超图。超图拥有基于Cesium包装和二次封装的三维产品3D-WebGL包（文末附产品下载地址）。一切准备就绪，接下来简单了解一下Cesium是什么神奇的东东吧。</p>
+<h3 id="Cesium"><a href="#Cesium" class="headerlink" title="Cesium"></a>Cesium</h3><hr>
+<h4 id="Cesium是什么"><a href="#Cesium是什么" class="headerlink" title="Cesium是什么"></a>Cesium是什么</h4><p>Cesium是一个跨平台，跨浏览器的展示三维地球和地图的JavaScript库。Cesium使用WebGL来进行硬件加速图形，使用时不需要任何插件的支持，但需要浏览器支持WebGL。它提供了依据Javascript的开发包，方便我们高效快速的搭建一个3D项目。</p>
+<h4 id="Cesium能干什么"><a href="#Cesium能干什么" class="headerlink" title="Cesium能干什么"></a>Cesium能干什么</h4><ul>
+<li>支持2D，2.5D,3D形式的地图展示</li>
+<li>可以绘制各种几何图形、高亮区域，支持导入图片，甚至3D模型等多种数据可视化展示。</li>
+<li>可用于动态数据可视化并提供良好的触摸支持，支持绝大多数浏览器和mobile。</li>
+<li>Cesium还支持基于时间轴的动态数据展示。<h4 id="Cesium怎么用"><a href="#Cesium怎么用" class="headerlink" title="Cesium怎么用"></a>Cesium怎么用</h4><blockquote>
+<p>接下来的代码中我使用的是超图基于Cesium二次封装过的产品包，所以在这简单说一下最基本的Cesium如何使用。</p>
+</blockquote>
+</li>
+</ul>
+<p>将Cesium源码中的Build文件夹，拷入到我们的项目中。然后在项目中静态引入相关文件。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;stylesheet&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;./Build/Cesium/Widgets/widgets.css&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;./Build/Cesium/Cesium.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>发布后运行，熟悉的helloworld和地球就出现了。</p>
+<h4 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs html"><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>  <span class="hljs-comment">&lt;!-- Use correct character set. --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;utf-8&quot;</span>&gt;</span><br>  <span class="hljs-comment">&lt;!-- Tell IE to use the latest, best version. --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">http-equiv</span>=<span class="hljs-string">&quot;X-UA-Compatible&quot;</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;IE=edge&quot;</span>&gt;</span><br>  <span class="hljs-comment">&lt;!-- Make the application on mobile take up the full browser screen and disable user scaling. --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;viewport&quot;</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no&quot;</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Hello World!<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;../Build/Cesium/Cesium.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="language-css"></span><br><span class="language-css">      <span class="hljs-keyword">@import</span> url(../Build/Cesium/Widgets/widgets.css);</span><br><span class="language-css">      <span class="hljs-selector-tag">html</span>, <span class="hljs-selector-tag">body</span>, <span class="hljs-selector-id">#cesiumContainer</span> &#123;</span><br><span class="language-css">          <span class="hljs-attribute">width</span>: <span class="hljs-number">100%</span>; <span class="hljs-attribute">height</span>: <span class="hljs-number">100%</span>; <span class="hljs-attribute">margin</span>: <span class="hljs-number">0</span>; <span class="hljs-attribute">padding</span>: <span class="hljs-number">0</span>; <span class="hljs-attribute">overflow</span>: hidden;</span><br><span class="language-css">      &#125;</span><br><span class="language-css">  </span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;cesiumContainer&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"></span><br><span class="language-javascript">    <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Ion</span>.<span class="hljs-property">defaultAccessToken</span>=<span class="hljs-string">&#x27;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI3ZjA2ZDQ2ZS02NTA4LTQ2NTItODE1My1kZjE3MjBkMjFkNzAiLCJpZCI6NDM5NCwic2NvcGVzIjpbImFzciIsImdjIl0sImlhdCI6MTU0MDcyNzI4Nn0.L7P8pJponZfYjdsGnEw2hIHd2AN0h-SuYl6XvzOwLeA&#x27;</span>;</span><br><span class="language-javascript">    <span class="hljs-keyword">var</span> viewer = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">Viewer</span>(<span class="hljs-string">&#x27;cesiumContainer&#x27;</span>);</span><br><span class="language-javascript">  </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="项目搭建"><a href="#项目搭建" class="headerlink" title="项目搭建"></a>项目搭建</h3><hr>
+<p>我们选择Vue作为开发框架，所以搭建Vue项目这个我就不多做介绍了，大家能在掘金相遇那证明大家都是优秀的前端（<del>摸鱼摸摸</del>），不会的xdm就百度一下吧。</p>
+<h4 id="引入WebGL包"><a href="#引入WebGL包" class="headerlink" title="引入WebGL包"></a>引入WebGL包</h4><p>因为这个包是基于Cesium二次开发的，所以引入方式可以和Cesium一样，只需要将包内的<code>Build/Cesium</code>文件夹放到我们的<code>public/static</code>下，在<code>index.html</code>内静态引入即可。</p>
+<blockquote>
+<p>widgets.css包含了Ceisum的可视化控件</p>
+</blockquote>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;stylesheet&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;static/Cesium/Widgets/widgets.css&quot;</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Cesium.js定义了Cesium对象，其中包括我们需要的东西</p>
+</blockquote>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;static/Cesium/Cesium.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="经典HelloWorld"><a href="#经典HelloWorld" class="headerlink" title="经典HelloWorld"></a>经典HelloWorld</h4><p>像很多的地图api一样，Cesium也需要一个div作为三维场景的唯一容器，并在页面初始化时生成对应的Viewer实例。</p>
+<h4 id="强调！强调！强调！"><a href="#强调！强调！强调！" class="headerlink" title="强调！强调！强调！"></a>强调！强调！强调！</h4><p>重要的事情说三遍。所有关于Cesium的变量请！一定！<strong>不要放在data中维护</strong>！因为Vue会对data中的状态进行数据劫持，而对象则会递归的进行数据劫持，以此方式监听状态变化。而Cesium实例的属性极多，层级极深，如果将其挂载到data上。不出意外，你的浏览器会崩溃。</p>
+<p>如果需要通信的话，最简单的方法就是挂载到window对象上。</p>
+<h4 id="完整代码-1"><a href="#完整代码-1" class="headerlink" title="完整代码"></a>完整代码</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;container&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;cesiumContainer&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"></span><br><span class="language-javascript"><span class="hljs-keyword">var</span> viewer, camera;</span><br><span class="language-javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;</span><br><span class="language-javascript">  <span class="hljs-title function_">data</span>(<span class="hljs-params"></span>) &#123;</span><br><span class="language-javascript">    <span class="hljs-keyword">return</span> &#123;&#125;;</span><br><span class="language-javascript">  &#125;,</span><br><span class="language-javascript">  <span class="hljs-title function_">mounted</span>(<span class="hljs-params"></span>) &#123;</span><br><span class="language-javascript">    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">init</span>();</span><br><span class="language-javascript">  &#125;,</span><br><span class="language-javascript">  <span class="hljs-attr">methods</span>: &#123;</span><br><span class="language-javascript">    <span class="hljs-title function_">init</span>(<span class="hljs-params"></span>) &#123;</span><br><span class="language-javascript">      viewer = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">Viewer</span>(<span class="hljs-string">&quot;cesiumContainer&quot;</span>, &#123;&#125;);</span><br><span class="language-javascript">    &#125;,</span><br><span class="language-javascript">  &#125;,</span><br><span class="language-javascript">&#125;;</span><br><span class="language-javascript"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">style</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;scss&quot;</span> <span class="hljs-attr">scoped</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>启动项目，我们就能看到下图的效果了。<br><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/70b22bd76fd649038222986ee0ec685b~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="helloworld.gif"></p>
+<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><hr>
+<p>这篇文章我们只是实现了最基本的将三维场景放到我们的项目中，下一篇我们将会简单介绍地图上的基本概念并尝试将点线面等要素绘制到我们这个地球上。然后逐步向其中丰富我们的功能。</p>
+<h3 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h3><hr>
+<h4 id="Cesium相关网址"><a href="#Cesium相关网址" class="headerlink" title="Cesium相关网址"></a>Cesium相关网址</h4><ul>
+<li><p><a target="_blank" rel="noopener" href="https://cesium.com/docs/">https://cesium.com/docs/</a>   Cesium文档</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://cesium.com/docs/cesiumjs-ref-doc/">https://cesium.com/docs/cesiumjs-ref-doc/</a> Cesium API</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://sandcastle.cesium.com/">https://sandcastle.cesium.com/</a> Cesium沙盒示例（好多效果都可以在这找到）</p>
+<h4 id="超图相关网址"><a href="#超图相关网址" class="headerlink" title="超图相关网址"></a>超图相关网址</h4></li>
+<li><p><a target="_blank" rel="noopener" href="http://support.supermap.com.cn:8090/webgl/web/downloads/download1.html">http://support.supermap.com.cn:8090/webgl/web/downloads/download1.html</a> 超图WebGL产品包下载</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://support.supermap.com.cn:8090/webgl/examples/webgl/examples.html#layer">http://support.supermap.com.cn:8090/webgl/examples/webgl/examples.html#layer</a> 超图3维示例</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://support.supermap.com.cn:8090/webgl/web/apis/3dwebgl.html">http://support.supermap.com.cn:8090/webgl/web/apis/3dwebgl.html</a> 超图及Cesium相关API属性文档（个人觉得比较方便）</p>
+</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/GIS/" class="category-chain-item">GIS</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/JavaScript/">#JavaScript</a>
+      
+        <a href="/tags/GIS/">#GIS</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（一）</div>
+      <div>https://moewang0321.github.io/2021/04/22/【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（一）/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Moe Wang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年4月22日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/04/25/%E3%80%90%E4%B8%89%E7%BB%B4GIS%E5%8F%AF%E8%A7%86%E5%8C%96%E3%80%91%E5%9F%BA%E4%BA%8EVue+Cesium+Supermap%E5%AE%9E%E7%8E%B0%E6%99%BA%E6%85%A7%E5%9F%8E%E5%B8%82%EF%BC%88%E4%BA%8C%EF%BC%89/" title="【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（二）">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（二）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/07/10/2020-07-10-%E8%87%AA%E5%AE%9A%E4%B9%89windows%E7%BB%88%E7%AB%AF/" title="自定义一个windows终端吧">
+                        <span class="hidden-mobile">自定义一个windows终端吧</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
