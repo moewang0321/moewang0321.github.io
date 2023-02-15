@@ -1,0 +1,771 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Moe Wang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前言我又双叒来参加活动了，新年新气象，作为新年的第一篇文章，必须福气满满，给自己一个好兆头（读书笔记暂时鸽一下，哈哈哈哈）。不知道jym还记不记得去年支付宝的一个写福字的活动，我当时还写了一个自认为很好看的福呢。   前几天突发奇想，身为一个前端人为什么不能自己做一个呢？说干就干！ 怎么实现美其名曰写福，其实就是在浏览器绘制，我们很容易就能想到用canvas实现。我们只需要用canvas捕捉鼠标移">
+<meta property="og:type" content="article">
+<meta property="og:title" content="「新春创意」写个福字送给新年的自己吧！">
+<meta property="og:url" content="https://moewang0321.github.io/2022/01/10/%E3%80%8C%E6%96%B0%E6%98%A5%E5%88%9B%E6%84%8F%E3%80%8D%E5%86%99%E4%B8%AA%E7%A6%8F%E5%AD%97%E9%80%81%E7%BB%99%E6%96%B0%E5%B9%B4%E7%9A%84%E8%87%AA%E5%B7%B1%E5%90%A7%EF%BC%81/index.html">
+<meta property="og:site_name" content="moe_大杂烩">
+<meta property="og:description" content="前言我又双叒来参加活动了，新年新气象，作为新年的第一篇文章，必须福气满满，给自己一个好兆头（读书笔记暂时鸽一下，哈哈哈哈）。不知道jym还记不记得去年支付宝的一个写福字的活动，我当时还写了一个自认为很好看的福呢。   前几天突发奇想，身为一个前端人为什么不能自己做一个呢？说干就干！ 怎么实现美其名曰写福，其实就是在浏览器绘制，我们很容易就能想到用canvas实现。我们只需要用canvas捕捉鼠标移">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fed104db39d84e0b915c72a33361303d~tplv-k3u1fbpfcp-watermark.image?">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a22919591657406e80274eea2ec13765~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/65365afddca7490bb9e0c6f9256d3e8d~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2bcc1610bf984a5abe290d29581e574a~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3084f9d581a44469bdceb165fd252623~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f35b61f458524dfcbdb8f0d27e924ebb~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="article:published_time" content="2022-01-10T00:34:25.000Z">
+<meta property="article:modified_time" content="2023-02-15T00:02:09.441Z">
+<meta property="article:author" content="Moe Wang">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="Canvas">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fed104db39d84e0b915c72a33361303d~tplv-k3u1fbpfcp-watermark.image?">
+  
+  
+  
+  <title>「新春创意」写个福字送给新年的自己吧！ - moe_大杂烩</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"moewang0321.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>moe_大杂烩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="「新春创意」写个福字送给新年的自己吧！"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-01-10 08:34" pubdate>
+          2022年1月10日 早上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          79 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">「新春创意」写个福字送给新年的自己吧！</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我又双叒来参加活动了，新年新气象，作为新年的第一篇文章，必须福气满满，给自己一个好兆头（读书笔记暂时鸽一下，哈哈哈哈）。不知道jym还记不记得去年支付宝的一个写福字的活动，我当时还写了一个自认为很好看的福呢。</p>
+<img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fed104db39d84e0b915c72a33361303d~tplv-k3u1fbpfcp-watermark.image?" srcset="/img/loading.gif" lazyload alt="" width="175" height="360" align="bottom" />
+
+<p>前几天突发奇想，身为一个前端人为什么不能自己做一个呢？说干就干！</p>
+<h2 id="怎么实现"><a href="#怎么实现" class="headerlink" title="怎么实现"></a>怎么实现</h2><p>美其名曰写福，其实就是在浏览器绘制，我们很容易就能想到用canvas实现。我们只需要用canvas捕捉鼠标移动轨迹并将其绘制出来就能实现这样的效果（实现的时候发现是我想的太简单了……）。这就需要我们对canvas的api有足够的了解，这里就不介绍了，想了解的百度一下你就知道~</p>
+<h2 id="V1-0实现"><a href="#V1-0实现" class="headerlink" title="V1.0实现"></a>V1.0实现</h2><p>首先我们肯定需要一个canvas，为了方便观察，给它加上一个背景色：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">&lt;canvas <span class="hljs-attribute">id</span>=<span class="hljs-string">&quot;canvas&quot;</span> <span class="hljs-attribute">style</span>=<span class="hljs-string">&quot;background:#ffffcc&quot;</span> <span class="hljs-attribute">width</span>=<span class="hljs-string">&quot;400&quot;</span> <span class="hljs-attribute">height</span>=<span class="hljs-string">&quot;500&quot;</span>&gt;&lt;/canvas&gt;<br></code></pre></td></tr></table></figure>
+
+<p>接下来我们需要定义几个变量并开始实现效果：</p>
+<ul>
+<li>moveFlag&lt;Boolean&gt;：开始绘制的标志</li>
+<li>offset&lt;Object&gt;：鼠标的当前位置</li>
+<li>posList&lt;Array&gt;：鼠标运动的位置集合</li>
+</ul>
+<p>绘制出来的线实质上是一个个点的集合，所以我们需要对鼠标运动过的位置加以记录。</p>
+<p>首先我们需要定义画笔的颜色并对canvas绑定上鼠标相关事件（移动端可调整为touch相关事件，这里不做编写）。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-selector-tag">var</span> moveFlag = false<br><span class="hljs-selector-tag">var</span> offset = &#123;&#125;,<br>    posList = <span class="hljs-selector-attr">[]</span> <br><br><span class="hljs-selector-tag">var</span> <span class="hljs-selector-tag">canvas</span> = document<span class="hljs-selector-class">.getElementById</span>(<span class="hljs-string">&#x27;canvas&#x27;</span>)<br><span class="hljs-selector-tag">var</span> ctx = <span class="hljs-selector-tag">canvas</span><span class="hljs-selector-class">.getContext</span>(<span class="hljs-string">&#x27;2d&#x27;</span>)<br>ctx<span class="hljs-selector-class">.fillStyle</span> = <span class="hljs-string">&#x27;rgba(0,0,0,0.3)&#x27;</span><br><br><span class="hljs-selector-tag">canvas</span><span class="hljs-selector-class">.onmousedown</span> = (e) =&gt; &#123;<br>    <span class="hljs-built_in">downEvent</span>(e)<br>&#125;<br><span class="hljs-selector-tag">canvas</span><span class="hljs-selector-class">.onmousemove</span> = (e) =&gt; &#123;<br>    <span class="hljs-built_in">moveEvent</span>(e)<br>&#125;<br><span class="hljs-selector-tag">canvas</span><span class="hljs-selector-class">.onmouseup</span> = (e) =&gt; &#123;<br>    <span class="hljs-built_in">upEvent</span>(e)<br>&#125;<br><span class="hljs-selector-tag">canvas</span><span class="hljs-selector-class">.onmouseout</span> = (e) =&gt; &#123;<br>    <span class="hljs-built_in">upEvent</span>(e)<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>鼠标按下事件的逻辑就是修改标志为true，清空位置集合并保存当前鼠标位置，抬起和移出事件无非就是修改标志为false，实现的重点在移动事件，稍后重点讲解。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">function</span> down<span class="hljs-constructor">Event(<span class="hljs-params">e</span>)</span> &#123;<br>    moveFlag = <span class="hljs-literal">true</span><br>    posList = <span class="hljs-literal">[]</span><br>    offset = get<span class="hljs-constructor">Pos(<span class="hljs-params">e</span>)</span><br>&#125;<br><span class="hljs-keyword">function</span> up<span class="hljs-constructor">Event(<span class="hljs-params">e</span>)</span> &#123;<br>    moveFlag = <span class="hljs-literal">false</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>鼠标按下时使用了一个工具函数获取位置：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs stylus">function <span class="hljs-built_in">getPos</span>(e) &#123;<br>    return &#123;<br>        x: e<span class="hljs-selector-class">.clientX</span> - <span class="hljs-selector-tag">canvas</span><span class="hljs-selector-class">.offsetLeft</span>,<br>        y: e<span class="hljs-selector-class">.clientY</span> - <span class="hljs-selector-tag">canvas</span><span class="hljs-selector-class">.offsetTop</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>鼠标移动时我们都要干什么，获取当前鼠标位置，将两次鼠标位置移动的距离置入集合，并根据移动距离绘制无数个点以构成线，然后将当前点变成鼠标移动终点位置。</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs maxima">function moveEvent(e) &#123;<br>    <span class="hljs-keyword">if</span> (!moveFlag) <span class="hljs-built_in">return</span><br>    <span class="hljs-built_in">var</span> currentOffset = getPos(e)<br>    <span class="hljs-built_in">var</span> prevOffset = offset<br>    <span class="hljs-built_in">var</span> <span class="hljs-built_in">radius</span> = <span class="hljs-number">1</span><br><br>    posList.unshift(&#123;<br>        distance: getDistance(prevOffset, currentOffset),<br>        <span class="hljs-built_in">time</span>: <span class="hljs-built_in">new</span> Date().getTime()<br>    &#125;)<br><br>    <span class="hljs-built_in">var</span> dis = <span class="hljs-number">0</span>,<br>        <span class="hljs-built_in">time</span> = <span class="hljs-number">0</span><br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-built_in">var</span> i = <span class="hljs-number">0</span>, l = posList.<span class="hljs-built_in">length</span> - <span class="hljs-number">1</span>; i &lt; l; i++) &#123;<br>        dis += posList[i].distance<br>        <span class="hljs-built_in">time</span> += posList[i].<span class="hljs-built_in">time</span> - posList[i + <span class="hljs-number">1</span>].<span class="hljs-built_in">time</span><br>    &#125;<br><br>    offset = currentOffset<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-built_in">var</span> i = <span class="hljs-number">0</span>, l = Math.<span class="hljs-built_in">round</span>(posList[<span class="hljs-number">0</span>].distance / <span class="hljs-number">1</span>); i &lt; l + <span class="hljs-number">1</span>; i++) &#123;<br>        <span class="hljs-built_in">var</span> x = prevOffset.x + (currentOffset.x - prevOffset.x) / l * i<br>        <span class="hljs-built_in">var</span> y = prevOffset.y + (currentOffset.y - prevOffset.y) / l * i<br><br>        ctx.beginPath()<br>        ctx.arc(x, y, <span class="hljs-built_in">radius</span>, <span class="hljs-number">0</span>, <span class="hljs-number">2</span> * Math.PI, <span class="hljs-literal">true</span>)<br>        ctx.fill()<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>上述代码中，第一个for循环内我们计算了鼠标移动距离，第二个for循环内则是将距离以1为单位分成若干份，每份都画一个圆，形成直线。代码中用到了一个工具函数计算距离：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs stylus">function <span class="hljs-built_in">getDistance</span>(<span class="hljs-selector-tag">a</span>, b) &#123;<br>    return Math<span class="hljs-selector-class">.sqrt</span>(Math<span class="hljs-selector-class">.pow</span>((<span class="hljs-selector-tag">b</span><span class="hljs-selector-class">.x</span> - <span class="hljs-selector-tag">a</span>.x), <span class="hljs-number">2</span>) + Math<span class="hljs-selector-class">.pow</span>((<span class="hljs-selector-tag">b</span><span class="hljs-selector-class">.y</span> - <span class="hljs-selector-tag">a</span>.y), <span class="hljs-number">2</span>))<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>至此我们的v1.0版本就已经完成了，现在我们可以在canvas中比比划划了。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a22919591657406e80274eea2ec13765~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="1.gif"><br>虽然实现了但是它也太丑了，没有笔锋也没有粗细变化，怎么能写出好看的福字呢，接下来我们进行2.0版本改造。</p>
+<h2 id="V2-0实现"><a href="#V2-0实现" class="headerlink" title="V2.0实现"></a>V2.0实现</h2><p>相比于1.0版本，我们需要给画笔添加更加真实的效果，比如触摸的压力，笔的最大宽度和最小宽度，以及笔的平滑程度。尽最大程度还原真实的使用感觉。</p>
+<p>新增如下参数</p>
+<ul>
+<li>  lineMax&lt;Number&gt;：线宽最大值</li>
+<li>  lineMin&lt;Number&gt;：线宽最小值</li>
+<li>  smoothness&lt;Number&gt;：笔触平滑程度</li>
+<li>  linePressure&lt;Number&gt;：笔触压力</li>
+</ul>
+<p>如何实现笔触的平滑，我们在计算距离的时候判断当前距离和笔触的平滑程度大小，若距离大于平滑程度则跳出此次循环。</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">for <span class="hljs-params">(var <span class="hljs-attr">i</span> = 0, <span class="hljs-attr">l</span> = posList.length - 1; i &lt; l; i++)</span> &#123;<br>    dis += posList[i]<span class="hljs-string">.distance</span><br>    time += posList[i]<span class="hljs-string">.time</span> - posList[i + 1]<span class="hljs-string">.time</span><br>    <span class="hljs-keyword">if</span> <span class="hljs-params">(dis &gt; smoothness)</span> break; <span class="hljs-string">//</span> 新增，保持平滑<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>那我们如何实现笔触的压力效果呢，在使用中，无非就是停留时间长、使劲会让线条更加浑厚粗犷，在代码中，我们可以通过两点之间<code>time</code>的间隔和距离模拟这一使用场景，动态生成圆的半径用来绘制。</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs maxima"><span class="hljs-built_in">var</span> offsetRadius = Math.<span class="hljs-built_in">min</span>((<span class="hljs-built_in">time</span> / dis) * linePressure + lineMin, lineMax) / <span class="hljs-number">2</span> <br></code></pre></td></tr></table></figure>
+
+<p>这里可以看到，我们利用最小线宽、压力、点的时间和距离模拟了动态圆的半径，并限制住圆半径范围不超过最大线宽。接着在第二个for循环绘制圆中我们就可以使用动态的圆半径来绘制大小不一的圆，模拟粗细有致的平滑笔触。</p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs arcade"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>, l = Math.<span class="hljs-built_in">round</span>(posList[<span class="hljs-number">0</span>].<span class="hljs-built_in">distance</span> / <span class="hljs-number">1</span>); i &lt; l + <span class="hljs-number">1</span>; i++) &#123;<br>    <span class="hljs-keyword">var</span> x = prevOffset.x + (currentOffset.x - prevOffset.x) / l * i<br>    <span class="hljs-keyword">var</span> y = prevOffset.y + (currentOffset.y - prevOffset.y) / l * i<br>    <span class="hljs-keyword">var</span> r = currentRadius + (offsetRadius - currentRadius) / l * i<br>    ctx.beginPath()<br>    ctx.arc(x, y, r, <span class="hljs-number">0</span>, <span class="hljs-number">2</span> * Math.<span class="hljs-literal">PI</span>, <span class="hljs-literal">true</span>)<br>    ctx.fill()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>2.0的完整代码不摆在这了，下面还有3.0完整版，我最后会附上3.0的完整版代码</p>
+</blockquote>
+<p>看效果：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/65365afddca7490bb9e0c6f9256d3e8d~tplv-k3u1fbpfcp-zoom-1.image" srcset="/img/loading.gif" lazyload alt="2.gif"></p>
+<p>到这其实基本上对绘制以及笔触的模拟都已完成，但毕竟是过年，需要有点过年的气氛，而且关于线宽这些我们也可以将其交给用户，让其自己配置，接下来就是3.0终极版。</p>
+<h2 id="V3-0实现"><a href="#V3-0实现" class="headerlink" title="V3.0实现"></a>V3.0实现</h2><p>V3.0主要添加了撤销的功能。撤销的实现说白了就是在鼠标移动的时候维护一个笔划的历史数组，点击撤销后去除历史数组中的最末一个对整幅canvas进行重新绘制。</p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs arcade"><span class="hljs-built_in">back</span>() &#123;<br>    history.<span class="hljs-built_in">pop</span>();<br>    ctx.clearRect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, canvas.width, canvas.height);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; history.<span class="hljs-built_in">length</span>; i++) &#123;<br>        <span class="hljs-keyword">var</span> h = history[i];<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> j = <span class="hljs-number">0</span>; j &lt; h.<span class="hljs-built_in">length</span>; j += <span class="hljs-number">3</span>) &#123;<br>            ctx.beginPath();<br>            canvas<br>                .getContext(<span class="hljs-string">&quot;2d&quot;</span>)<br>                .arc(h[j], h[j + <span class="hljs-number">1</span>], h[j + <span class="hljs-number">2</span>], <span class="hljs-number">0</span>, <span class="hljs-number">2</span> * Math.<span class="hljs-literal">PI</span>, <span class="hljs-literal">true</span>);<br>            ctx.fill();<br>        &#125;<br>    &#125;<br>&#125;,<br></code></pre></td></tr></table></figure>
+
+<p>效果如下</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2bcc1610bf984a5abe290d29581e574a~tplv-k3u1fbpfcp-zoom-1.image" srcset="/img/loading.gif" lazyload alt="3.gif"></p>
+<p>在上边的图片中也看到了，我将线宽范围、笔触压力和平滑程度可视化出来方便用户自己配置调节想要的效果，这里简单写了一个原生的双向绑定支持随改随生效。</p>
+<p>最后为了烘托一下过年的气氛，我们找一张喜庆的背景图作为canvas的背景绘制上去。</p>
+<p>有人会问为什么不直接在css里添加background，其实最开始我也是这么加的，但这种方式在canvas转图片时是不会将背景也作为canvas的一部分的，所以直接将图片绘到canvas上了。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">var img = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Image()</span>;<br>img.set<span class="hljs-constructor">Attribute(&#x27;<span class="hljs-params">crossOrigin</span>&#x27;, &#x27;<span class="hljs-params">anonymous</span>&#x27;)</span>;<br>img.onload = <span class="hljs-keyword">function</span> <span class="hljs-literal">()</span> &#123;<br>    ctx.draw<span class="hljs-constructor">Image(<span class="hljs-params">img</span>, 0, 0)</span>;<br>&#125;<br>img.src = &#x27;./drawBG.jpg&#x27;;<br></code></pre></td></tr></table></figure>
+
+<p>最后就是添加一个保存逻辑，这个就不列出来了。</p>
+<p>大功告成，我们最终形成的就是这样的一个页面，重点在功能实现哈，页面实在是懒得去美化了，至少这个背景看着就很有过年的气氛嘛哈哈哈。美中不足（之一）就是对于笔锋的模拟还是不够到位，但这是我目前能够想到最好的方案了，欢迎小伙伴评论区讨论哈，我一定虚心倾听。v3.0版本的最终代码放在最后了。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3084f9d581a44469bdceb165fd252623~tplv-k3u1fbpfcp-zoom-1.image" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>就把我写的这不争气的福发出来祝大家新年心想事成福气满满！</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f35b61f458524dfcbdb8f0d27e924ebb~tplv-k3u1fbpfcp-zoom-1.image" srcset="/img/loading.gif" lazyload alt="下载 (4).png"></p>
+<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span> /&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">http-equiv</span>=<span class="hljs-string">&quot;X-UA-Compatible&quot;</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;IE=edge,chrome=1&quot;</span> /&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">style</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/css&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">canvas</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;canvas&quot;</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;background:#ffffcc&quot;</span> <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;400&quot;</span> <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;700&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">canvas</span>&gt;</span><br>	<span class="hljs-comment">&lt;!-- &lt;img src=&quot;./drawBG.jpg&quot; crossorigin=&quot;anonymous&quot; id=&quot;bg&quot; alt=&quot;&quot; style=&quot;display: none;&quot;&gt; --&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;position: absolute;top: 10px;left: 420px;&quot;</span>&gt;</span><br>		线宽范围：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;display:inline&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">model</span>=<span class="hljs-string">&#x27;lineMin&#x27;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;lineMin&quot;</span> /&gt;</span> - <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;display:inline&quot;</span></span><br><span class="hljs-tag">			<span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">model</span>=<span class="hljs-string">&#x27;lineMax&#x27;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;lineMax&quot;</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span><br>		笔触压力：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">model</span>=<span class="hljs-string">&#x27;linePressure&#x27;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;linePressure&quot;</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span><br>		平滑程度：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">model</span>=<span class="hljs-string">&#x27;smoothness&#x27;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;smoothness&quot;</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&#x27;back&#x27;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;撤销&quot;</span> <span class="hljs-attr">onclick</span>=<span class="hljs-string">&quot;back()&quot;</span> /&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&#x27;clear&#x27;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;清空&quot;</span> <span class="hljs-attr">onclick</span>=<span class="hljs-string">&quot;clear()&quot;</span> /&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&#x27;save&#x27;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;保存&quot;</span> <span class="hljs-attr">onclick</span>=<span class="hljs-string">&quot;save()&quot;</span> /&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><br>	<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-javascript"></span><br><span class="language-javascript">		<span class="hljs-keyword">var</span> moveFlag = <span class="hljs-literal">false</span></span><br><span class="language-javascript">		<span class="hljs-keyword">var</span> offset = &#123;&#125;, <span class="hljs-comment">// 当前位置</span></span><br><span class="language-javascript">			posList = [] <span class="hljs-comment">// 运动位置集合</span></span><br><span class="language-javascript"></span><br><span class="language-javascript">		<span class="hljs-keyword">var</span> drawHistory = [],</span><br><span class="language-javascript">			startOffset = <span class="hljs-literal">null</span></span><br><span class="language-javascript"></span><br><span class="language-javascript">		<span class="hljs-keyword">var</span> lineMax = <span class="hljs-number">30</span>,</span><br><span class="language-javascript">			lineMin = <span class="hljs-number">2</span>,</span><br><span class="language-javascript">			linePressure = <span class="hljs-number">3</span>,</span><br><span class="language-javascript">			smoothness = <span class="hljs-number">80</span></span><br><span class="language-javascript"></span><br><span class="language-javascript">		<span class="hljs-keyword">var</span> radius = <span class="hljs-number">0</span></span><br><span class="language-javascript">		<span class="hljs-keyword">var</span> canvas = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&#x27;canvas&#x27;</span>)</span><br><span class="language-javascript">		<span class="hljs-keyword">var</span> ctx = canvas.<span class="hljs-title function_">getContext</span>(<span class="hljs-string">&#x27;2d&#x27;</span>)</span><br><span class="language-javascript"></span><br><span class="language-javascript">		<span class="hljs-keyword">var</span> img = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Image</span>();</span><br><span class="language-javascript">		img.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;crossOrigin&#x27;</span>, <span class="hljs-string">&#x27;anonymous&#x27;</span>);</span><br><span class="language-javascript">		img.<span class="hljs-property">onload</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;</span><br><span class="language-javascript">			ctx.<span class="hljs-title function_">drawImage</span>(img, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);</span><br><span class="language-javascript">		&#125;</span><br><span class="language-javascript">		img.<span class="hljs-property">src</span> = <span class="hljs-string">&#x27;./drawBG.jpg&#x27;</span>;</span><br><span class="language-javascript">		ctx.<span class="hljs-property">fillStyle</span> = <span class="hljs-string">&#x27;rgba(0,0,0,0.3)&#x27;</span></span><br><span class="language-javascript"></span><br><span class="language-javascript">		canvas.<span class="hljs-property">onmousedown</span> = <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> &#123;</span><br><span class="language-javascript">			<span class="hljs-title function_">downEvent</span>(e)</span><br><span class="language-javascript">		&#125;</span><br><span class="language-javascript">		canvas.<span class="hljs-property">onmousemove</span> = <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> &#123;</span><br><span class="language-javascript">			<span class="hljs-title function_">moveEvent</span>(e)</span><br><span class="language-javascript">		&#125;</span><br><span class="language-javascript">		canvas.<span class="hljs-property">onmouseup</span> = <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> &#123;</span><br><span class="language-javascript">			<span class="hljs-title function_">upEvent</span>(e)</span><br><span class="language-javascript">		&#125;</span><br><span class="language-javascript">		canvas.<span class="hljs-property">onmouseout</span> = <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> &#123;</span><br><span class="language-javascript">			<span class="hljs-title function_">upEvent</span>(e)</span><br><span class="language-javascript">		&#125;</span><br><span class="language-javascript"></span><br><span class="language-javascript">		<span class="hljs-keyword">function</span> <span class="hljs-title function_">downEvent</span>(<span class="hljs-params">e</span>) &#123;</span><br><span class="language-javascript">			moveFlag = <span class="hljs-literal">true</span></span><br><span class="language-javascript">			posList = []</span><br><span class="language-javascript">			drawHistory.<span class="hljs-title function_">push</span>([])</span><br><span class="language-javascript">			<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(drawHistory);</span><br><span class="language-javascript">			startOffset = offset = <span class="hljs-title function_">getPos</span>(e)</span><br><span class="language-javascript">		&#125;</span><br><span class="language-javascript"></span><br><span class="language-javascript">		<span class="hljs-keyword">function</span> <span class="hljs-title function_">moveEvent</span>(<span class="hljs-params">e</span>) &#123;</span><br><span class="language-javascript">			<span class="hljs-keyword">if</span> (!moveFlag) <span class="hljs-keyword">return</span></span><br><span class="language-javascript"></span><br><span class="language-javascript">			<span class="hljs-keyword">var</span> currentOffset = <span class="hljs-title function_">getPos</span>(e)</span><br><span class="language-javascript">			<span class="hljs-keyword">var</span> prevOffset = offset</span><br><span class="language-javascript">			<span class="hljs-keyword">var</span> currentRadius = radius</span><br><span class="language-javascript"></span><br><span class="language-javascript">			posList.<span class="hljs-title function_">unshift</span>(&#123;</span><br><span class="language-javascript">				<span class="hljs-attr">distance</span>: <span class="hljs-title function_">getDistance</span>(prevOffset, currentOffset),</span><br><span class="language-javascript">				<span class="hljs-attr">time</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>().<span class="hljs-title function_">getTime</span>()</span><br><span class="language-javascript">			&#125;)</span><br><span class="language-javascript"></span><br><span class="language-javascript">			<span class="hljs-keyword">var</span> dis = <span class="hljs-number">0</span>,</span><br><span class="language-javascript">				time = <span class="hljs-number">0</span></span><br><span class="language-javascript"></span><br><span class="language-javascript">			<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>, l = posList.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>; i &lt; l; i++) &#123;</span><br><span class="language-javascript">				dis += posList[i].<span class="hljs-property">distance</span></span><br><span class="language-javascript">				time += posList[i].<span class="hljs-property">time</span> - posList[i + <span class="hljs-number">1</span>].<span class="hljs-property">time</span></span><br><span class="language-javascript">				<span class="hljs-keyword">if</span> (dis &gt; smoothness) <span class="hljs-keyword">break</span>; <span class="hljs-comment">// 新增，保持平滑</span></span><br><span class="language-javascript">			&#125;</span><br><span class="language-javascript"></span><br><span class="language-javascript">			<span class="hljs-keyword">var</span> offsetRadius = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>((time / dis) * linePressure + lineMin, lineMax) / <span class="hljs-number">2</span> <span class="hljs-comment">// 新增，压力控制圆半径</span></span><br><span class="language-javascript">			radius = offsetRadius <span class="hljs-comment">// 新增</span></span><br><span class="language-javascript">			offset = currentOffset</span><br><span class="language-javascript">			<span class="hljs-keyword">if</span> (dis &lt; <span class="hljs-number">7</span>) <span class="hljs-keyword">return</span>;</span><br><span class="language-javascript">			<span class="hljs-keyword">if</span> (startOffset) &#123;</span><br><span class="language-javascript">				prevOffset = startOffset</span><br><span class="language-javascript">				currentRadius = offsetRadius</span><br><span class="language-javascript">				startOffset = <span class="hljs-literal">null</span></span><br><span class="language-javascript">			&#125;</span><br><span class="language-javascript"></span><br><span class="language-javascript">			<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>, l = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(posList[<span class="hljs-number">0</span>].<span class="hljs-property">distance</span> / <span class="hljs-number">1</span>); i &lt; l + <span class="hljs-number">1</span>; i++) &#123;</span><br><span class="language-javascript">				<span class="hljs-keyword">var</span> x = prevOffset.<span class="hljs-property">x</span> + (currentOffset.<span class="hljs-property">x</span> - prevOffset.<span class="hljs-property">x</span>) / l * i</span><br><span class="language-javascript">				<span class="hljs-keyword">var</span> y = prevOffset.<span class="hljs-property">y</span> + (currentOffset.<span class="hljs-property">y</span> - prevOffset.<span class="hljs-property">y</span>) / l * i</span><br><span class="language-javascript"></span><br><span class="language-javascript">				<span class="hljs-keyword">var</span> r = currentRadius + (offsetRadius - currentRadius) / l * i</span><br><span class="language-javascript"></span><br><span class="language-javascript">				ctx.<span class="hljs-title function_">beginPath</span>()</span><br><span class="language-javascript">				ctx.<span class="hljs-title function_">arc</span>(x, y, r, <span class="hljs-number">0</span>, <span class="hljs-number">2</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>, <span class="hljs-literal">true</span>)</span><br><span class="language-javascript">				ctx.<span class="hljs-title function_">fill</span>()</span><br><span class="language-javascript"></span><br><span class="language-javascript">				drawHistory[drawHistory.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>].<span class="hljs-title function_">push</span>(x, y, r)</span><br><span class="language-javascript">			&#125;</span><br><span class="language-javascript">		&#125;</span><br><span class="language-javascript"></span><br><span class="language-javascript">		<span class="hljs-keyword">function</span> <span class="hljs-title function_">upEvent</span>(<span class="hljs-params">e</span>) &#123;</span><br><span class="language-javascript">			moveFlag = <span class="hljs-literal">false</span></span><br><span class="language-javascript">		&#125;</span><br><span class="language-javascript"></span><br><span class="language-javascript">		<span class="hljs-keyword">function</span> <span class="hljs-title function_">getPos</span>(<span class="hljs-params">e</span>) &#123;</span><br><span class="language-javascript">			<span class="hljs-keyword">return</span> &#123;</span><br><span class="language-javascript">				<span class="hljs-attr">x</span>: e.<span class="hljs-property">clientX</span> - canvas.<span class="hljs-property">offsetLeft</span>,</span><br><span class="language-javascript">				<span class="hljs-attr">y</span>: e.<span class="hljs-property">clientY</span> - canvas.<span class="hljs-property">offsetTop</span></span><br><span class="language-javascript">			&#125;</span><br><span class="language-javascript">		&#125;</span><br><span class="language-javascript"></span><br><span class="language-javascript">		<span class="hljs-keyword">function</span> <span class="hljs-title function_">getDistance</span>(<span class="hljs-params">a, b</span>) &#123;</span><br><span class="language-javascript">			<span class="hljs-keyword">return</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sqrt</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>((b.<span class="hljs-property">x</span> - a.<span class="hljs-property">x</span>), <span class="hljs-number">2</span>) + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>((b.<span class="hljs-property">y</span> - a.<span class="hljs-property">y</span>), <span class="hljs-number">2</span>))</span><br><span class="language-javascript">		&#125;</span><br><span class="language-javascript"></span><br><span class="language-javascript">		<span class="hljs-keyword">function</span> <span class="hljs-title function_">clear</span>(<span class="hljs-params"></span>) &#123;</span><br><span class="language-javascript">			drawHistory = []</span><br><span class="language-javascript">			ctx.<span class="hljs-title function_">clearRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, canvas.<span class="hljs-property">width</span>, canvas.<span class="hljs-property">height</span>);</span><br><span class="language-javascript">		&#125;</span><br><span class="language-javascript"></span><br><span class="language-javascript">		<span class="hljs-keyword">function</span> <span class="hljs-title function_">back</span>(<span class="hljs-params"></span>) &#123;</span><br><span class="language-javascript">			drawHistory.<span class="hljs-title function_">pop</span>();</span><br><span class="language-javascript">			ctx.<span class="hljs-title function_">clearRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, canvas.<span class="hljs-property">width</span>, canvas.<span class="hljs-property">height</span>);</span><br><span class="language-javascript">			ctx.<span class="hljs-title function_">drawImage</span>(img, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);</span><br><span class="language-javascript">			<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; drawHistory.<span class="hljs-property">length</span>; i++) &#123;</span><br><span class="language-javascript">				<span class="hljs-keyword">var</span> h = drawHistory[i];</span><br><span class="language-javascript">				<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> j = <span class="hljs-number">0</span>; j &lt; h.<span class="hljs-property">length</span>; j += <span class="hljs-number">3</span>) &#123;</span><br><span class="language-javascript">					ctx.<span class="hljs-title function_">beginPath</span>();</span><br><span class="language-javascript">					canvas</span><br><span class="language-javascript">						.<span class="hljs-title function_">getContext</span>(<span class="hljs-string">&quot;2d&quot;</span>)</span><br><span class="language-javascript">						.<span class="hljs-title function_">arc</span>(h[j], h[j + <span class="hljs-number">1</span>], h[j + <span class="hljs-number">2</span>], <span class="hljs-number">0</span>, <span class="hljs-number">2</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>, <span class="hljs-literal">true</span>);</span><br><span class="language-javascript">					ctx.<span class="hljs-title function_">fill</span>();</span><br><span class="language-javascript">				&#125;</span><br><span class="language-javascript">			&#125;</span><br><span class="language-javascript">		&#125;</span><br><span class="language-javascript"></span><br><span class="language-javascript">		<span class="hljs-keyword">function</span> <span class="hljs-title function_">save</span>(<span class="hljs-params"></span>) &#123;</span><br><span class="language-javascript">			<span class="hljs-keyword">var</span> url = canvas.<span class="hljs-title function_">toDataURL</span>(<span class="hljs-string">&quot;image/png&quot;</span>);</span><br><span class="language-javascript"></span><br><span class="language-javascript">			<span class="hljs-keyword">var</span> oA = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;a&quot;</span>);</span><br><span class="language-javascript">			oA.<span class="hljs-property">download</span> = <span class="hljs-string">&#x27;&#x27;</span>; <span class="hljs-comment">// 设置下载的文件名，默认是&#x27;下载&#x27;</span></span><br><span class="language-javascript">			oA.<span class="hljs-property">href</span> = url;</span><br><span class="language-javascript">			<span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-title function_">appendChild</span>(oA);</span><br><span class="language-javascript">			oA.<span class="hljs-title function_">click</span>();</span><br><span class="language-javascript">			oA.<span class="hljs-title function_">remove</span>(); <span class="hljs-comment">// 下载之后把创建的元素删除</span></span><br><span class="language-javascript">		&#125;</span><br><span class="language-javascript">		<span class="hljs-comment">// input双向绑定</span></span><br><span class="language-javascript">		<span class="hljs-keyword">const</span> ngmodel = &#123;</span><br><span class="language-javascript">			lineMin,</span><br><span class="language-javascript">			lineMax,</span><br><span class="language-javascript">			linePressure,</span><br><span class="language-javascript">			smoothness</span><br><span class="language-javascript">		&#125;;</span><br><span class="language-javascript">		<span class="hljs-comment">// 初始化赋值</span></span><br><span class="language-javascript">		<span class="hljs-keyword">const</span> inputs = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;input[model]&#x27;</span>);</span><br><span class="language-javascript">		<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; inputs.<span class="hljs-property">length</span>; i++) &#123;</span><br><span class="language-javascript">			inputs[i].<span class="hljs-property">value</span> = ngmodel[inputs[i].<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;model&#x27;</span>)]</span><br><span class="language-javascript">			inputs[i].<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;keyup&#x27;</span>, change)</span><br><span class="language-javascript"></span><br><span class="language-javascript">		&#125;;</span><br><span class="language-javascript">		<span class="hljs-comment">// input操作赋值</span></span><br><span class="language-javascript">		<span class="hljs-keyword">function</span> <span class="hljs-title function_">change</span>(<span class="hljs-params">e</span>) &#123;</span><br><span class="language-javascript">			<span class="hljs-keyword">const</span> attr = e.<span class="hljs-property">target</span>.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;model&#x27;</span>);</span><br><span class="language-javascript"></span><br><span class="language-javascript">			<span class="hljs-variable language_">window</span>[attr] = ngmodel[attr] = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span></span><br><span class="language-javascript">		&#125;</span><br><span class="language-javascript">	</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/JavaScript/" class="category-chain-item">JavaScript</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/JavaScript/">#JavaScript</a>
+      
+        <a href="/tags/Canvas/">#Canvas</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>「新春创意」写个福字送给新年的自己吧！</div>
+      <div>https://moewang0321.github.io/2022/01/10/「新春创意」写个福字送给新年的自己吧！/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Moe Wang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年1月10日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/01/10/%E3%80%8C%E6%96%B0%E6%98%A5%E5%88%9B%E6%84%8F%E3%80%8D%E7%94%A8%E5%96%9C%E5%BA%86%E7%9A%84%E9%9F%B3%E4%B9%90%E9%80%81%E8%87%AA%E5%B7%B1%E4%B8%80%E5%9C%BA%E9%9F%B3%E4%B9%90%E7%83%9F%E8%8A%B1show%F0%9F%8E%8A%F0%9F%8E%8A/" title="「新春创意」用喜庆的音乐送自己一场音乐烟花show🎊🎊">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">「新春创意」用喜庆的音乐送自己一场音乐烟花show🎊🎊</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/12/06/w%E5%AD%97%E6%80%BB%E7%BB%93%E3%80%8A%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAVue.js%E3%80%8B%E4%B9%8B%E5%8F%98%E5%8C%96%E4%BE%A6%E6%B5%8B%E7%AF%87/" title="w字总结《深入浅出Vue.js》之变化侦测篇">
+                        <span class="hidden-mobile">w字总结《深入浅出Vue.js》之变化侦测篇</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+    <div id="giscus" class="giscus"></div>
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#giscus', function() {
+        var options = {"repo":"moewang0321/moewang0321.github.io","repo-id":"MDEwOlJlcG9zaXRvcnkyMDEyNDI0NTY=","category":"Show and tell","category-id":"DIC_kwDOC_63WM4CUMsH","theme-light":"light_protanopia","theme-dark":"dark_dimmed","mapping":"pathname","reactions-enabled":1,"emit-metadata":1,"input-position":"top","loading":"lazy","lang":"zh-CN"};
+        var attributes = {};
+        for (let option in options) {
+          if (!option.startsWith('theme-')) {
+            var key = option.startsWith('data-') ? option : 'data-' + option;
+            attributes[key] = options[option];
+          }
+        }
+        var light = 'light_protanopia';
+        var dark = 'dark_dimmed';
+        window.GiscusThemeLight = light;
+        window.GiscusThemeDark = dark;
+        attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
+        for (let attribute in attributes) {
+          var value = attributes[attribute];
+          if (value === undefined || value === null || value === '') {
+            delete attributes[attribute];
+          }
+        }
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('crossorigin', 'anonymous');
+        for (let attribute in attributes) {
+          s.setAttribute(attribute, attributes[attribute]);
+        }
+        var ss = document.getElementsByTagName('script');
+        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+        e.parentNode.insertBefore(s, e.nextSibling);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

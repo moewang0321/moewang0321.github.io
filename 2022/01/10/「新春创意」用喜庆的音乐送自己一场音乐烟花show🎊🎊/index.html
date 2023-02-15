@@ -1,0 +1,788 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Moe Wang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前言继写个福字送给新年的自己后，为了让新春氛围更加浓厚，必不可少的就是烟花和 BGM 了，这篇文章我们就利用 p5.js 实现一个根据音乐来绽放烟花，为新春增色添彩~ 效果预览 什么是 p5.js 官网：p5.js 是个 JavaScript 创意编程程式库，其专注在让编程更易于使用及更加广泛的包容艺术家、设计师、教育家、初学者以及任何其他人！p5.js 是个免费及开源的软件因为我们相信所有人都应">
+<meta property="og:type" content="article">
+<meta property="og:title" content="「新春创意」用喜庆的音乐送自己一场音乐烟花show🎊🎊">
+<meta property="og:url" content="https://moewang0321.github.io/2022/01/10/%E3%80%8C%E6%96%B0%E6%98%A5%E5%88%9B%E6%84%8F%E3%80%8D%E7%94%A8%E5%96%9C%E5%BA%86%E7%9A%84%E9%9F%B3%E4%B9%90%E9%80%81%E8%87%AA%E5%B7%B1%E4%B8%80%E5%9C%BA%E9%9F%B3%E4%B9%90%E7%83%9F%E8%8A%B1show%F0%9F%8E%8A%F0%9F%8E%8A/index.html">
+<meta property="og:site_name" content="moe_大杂烩">
+<meta property="og:description" content="前言继写个福字送给新年的自己后，为了让新春氛围更加浓厚，必不可少的就是烟花和 BGM 了，这篇文章我们就利用 p5.js 实现一个根据音乐来绽放烟花，为新春增色添彩~ 效果预览 什么是 p5.js 官网：p5.js 是个 JavaScript 创意编程程式库，其专注在让编程更易于使用及更加广泛的包容艺术家、设计师、教育家、初学者以及任何其他人！p5.js 是个免费及开源的软件因为我们相信所有人都应">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b925f83d24f54322bbd7257581f04134~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/043e880dbae54477a802eb3f369efdae~tplv-k3u1fbpfcp-watermark.image">
+<meta property="article:published_time" content="2022-01-10T06:24:31.000Z">
+<meta property="article:modified_time" content="2023-02-15T00:03:22.290Z">
+<meta property="article:author" content="Moe Wang">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="p5.js">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b925f83d24f54322bbd7257581f04134~tplv-k3u1fbpfcp-watermark.image">
+  
+  
+  
+  <title>「新春创意」用喜庆的音乐送自己一场音乐烟花show🎊🎊 - moe_大杂烩</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"moewang0321.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>moe_大杂烩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="「新春创意」用喜庆的音乐送自己一场音乐烟花show🎊🎊"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-01-10 14:24" pubdate>
+          2022年1月10日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          53 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">「新春创意」用喜庆的音乐送自己一场音乐烟花show🎊🎊</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>继<a target="_blank" rel="noopener" href="https://juejin.cn/post/7051372704787595277">写个福字送给新年的自己</a>后，为了让新春氛围更加浓厚，必不可少的就是烟花和 BGM 了，这篇文章我们就利用 p5.js 实现一个根据音乐来绽放烟花，为新春增色添彩~</p>
+<h2 id="效果预览"><a href="#效果预览" class="headerlink" title="效果预览"></a>效果预览</h2><p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b925f83d24f54322bbd7257581f04134~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="6.gif"></p>
+<h2 id="什么是-p5-js"><a href="#什么是-p5-js" class="headerlink" title="什么是 p5.js"></a>什么是 p5.js</h2><blockquote>
+<p>官网：p5.js 是个 JavaScript 创意编程程式库，其专注在让编程更易于使用及更加广泛的包容艺术家、设计师、教育家、初学者以及任何其他人！p5.js 是个免费及开源的软件因为我们相信所有人都应该能自由使用软件及用于学习软件的工具。p5.js 使用绘图的比喻并有一副完整的绘画功能。除此之外，您也不单限于您的绘图画布。您可以将您整个浏览器页面当作您的绘图，这包括了 HTML5 物件如文字、输入框、视屏、摄像头及音频。</p>
+</blockquote>
+<p>简单来说，p5.js 可以利用 canvas 实现许许多多炫酷的浏览器效果，以及在浏览器中进行绘图。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>首先我们先引用 p5 的 cdn，因为我们要利用音频相关功能，所以再引用它的扩展包 p5.sound</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdn.bootcdn.net/ajax/libs/p5.js/1.4.0/p5.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdn.bootcdn.net/ajax/libs/p5.js/1.4.0/addons/p5.sound.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>接下来我们首先实现烟花的部分，然后再将音乐与烟花结合起来</p>
+<h3 id="创建画布"><a href="#创建画布" class="headerlink" title="创建画布"></a>创建画布</h3><p>p5 的写法与一般情况不同，js 中直接定义 setup 函数即可实现初始化,draw 函数则用来对画布进行绘制：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">function</span> <span class="hljs-title function_">setup</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-title function_">createCanvas</span>(<span class="hljs-variable language_">window</span>.<span class="hljs-property">innerWidth</span>, <span class="hljs-variable language_">window</span>.<span class="hljs-property">innerHeight</span>)<br>&#125;<br><span class="hljs-keyword">function</span> <span class="hljs-title function_">draw</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-title function_">background</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">20</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在 vue 中如果想要定义 setup 函数则需要使用另一种声明方式：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> <span class="hljs-title function_">s</span> = (<span class="hljs-params">sketch</span>) =&gt; &#123;<br>  sketch.<span class="hljs-property">setup</span> = <span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-title function_">createCanvas</span>(<span class="hljs-variable language_">window</span>.<span class="hljs-property">innerWidth</span>, <span class="hljs-variable language_">window</span>.<span class="hljs-property">innerHeight</span>)<br>  &#125;<br>  sketch.<span class="hljs-property">draw</span> = <span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-title function_">background</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">20</span>)<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在本文中我们直接在 html 中编写代码所以采用第一种方式。</p>
+<h3 id="创建烟花"><a href="#创建烟花" class="headerlink" title="创建烟花"></a>创建烟花</h3><p>这里我们模拟的烟花由一个中心点和围绕在周围的随机点构成。 具体代码作用和含义在注释中标注</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 目前接收一个爆炸半径参数。</span><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">Fireworks</span>(<span class="hljs-params">radius</span>) &#123;<br>  <span class="hljs-keyword">var</span> num = <span class="hljs-number">64</span> <span class="hljs-comment">// 一个烟花有多少个点</span><br><br>  <span class="hljs-comment">// 随机中心点位置，width和height为画布的宽高。</span><br>  <span class="hljs-keyword">var</span> cp = <span class="hljs-keyword">new</span> p5.<span class="hljs-title class_">Vector</span>(<br>    <span class="hljs-title function_">random</span>(<span class="hljs-number">0</span>, width),<br>    <span class="hljs-title function_">random</span>(height / <span class="hljs-number">2</span>, height / <span class="hljs-number">5</span>),<br>    <span class="hljs-title function_">random</span>(-<span class="hljs-number">100</span>, <span class="hljs-number">100</span>)<br>  )<br><br>  <span class="hljs-comment">// 定义烟花发射的速度和加速度，目前高度写死，后续会根据音频相关数据进行动态修改。</span><br>  <span class="hljs-keyword">var</span> velocity = <span class="hljs-keyword">new</span> p5.<span class="hljs-title class_">Vector</span>(<span class="hljs-number">0</span>, -<span class="hljs-number">15</span>, <span class="hljs-number">0</span>)<br>  <span class="hljs-keyword">var</span> accel = <span class="hljs-keyword">new</span> p5.<span class="hljs-title class_">Vector</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0.4</span>, <span class="hljs-number">0</span>)<br><br>  <span class="hljs-keyword">var</span> img<br><br>  <span class="hljs-keyword">var</span> fp = []<br><br>  <span class="hljs-keyword">var</span> cosTheta<br>  <span class="hljs-keyword">var</span> sinTheta<br>  <span class="hljs-keyword">var</span> phi<br>  <span class="hljs-keyword">var</span> colorChange = <span class="hljs-title function_">random</span>(<span class="hljs-number">0</span>, <span class="hljs-number">5</span>)<br><br>  <span class="hljs-comment">// 初始化烟花的点</span><br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; num; i++) &#123;<br>    cosTheta = <span class="hljs-title function_">random</span>(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>) * <span class="hljs-number">2</span> - <span class="hljs-number">1</span><br>    sinTheta = <span class="hljs-title function_">sqrt</span>(<span class="hljs-number">1</span> - cosTheta * cosTheta)<br>    phi = <span class="hljs-title function_">random</span>(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>) * <span class="hljs-number">2</span> * <span class="hljs-variable constant_">PI</span><br>    fp[i] = <span class="hljs-keyword">new</span> p5.<span class="hljs-title class_">Vector</span>(<br>      radius * sinTheta * <span class="hljs-title function_">cos</span>(phi),<br>      radius * sinTheta * <span class="hljs-title function_">sin</span>(phi),<br>      radius * cosTheta<br>    ) <span class="hljs-comment">//1发烟花里各个点的位置计算</span><br>    fp[i] = p5.<span class="hljs-property">Vector</span>.<span class="hljs-title function_">mult</span>(fp[i], <span class="hljs-number">1.01</span>)<br>  &#125;<br><br>  <span class="hljs-comment">// 为烟花进行随机上色</span><br>  <span class="hljs-keyword">var</span> side = <span class="hljs-number">64</span><br>  <span class="hljs-keyword">var</span> center = side / <span class="hljs-number">2.0</span><br><br>  img = <span class="hljs-title function_">createImage</span>(side, side)<br>  img.<span class="hljs-title function_">loadPixels</span>()<br>  <span class="hljs-keyword">const</span> r = <span class="hljs-title function_">random</span>(<span class="hljs-number">0.5</span>, <span class="hljs-number">0.8</span>)<br>  <span class="hljs-keyword">const</span> g = <span class="hljs-title function_">random</span>(<span class="hljs-number">0.5</span>, <span class="hljs-number">0.8</span>)<br>  <span class="hljs-keyword">const</span> b = <span class="hljs-title function_">random</span>(<span class="hljs-number">0.5</span>, <span class="hljs-number">0.8</span>)<br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> y = <span class="hljs-number">0</span>; y &lt; side; y++) &#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> x = <span class="hljs-number">0</span>; x &lt; side; x++) &#123;<br>      <span class="hljs-keyword">var</span> distance = (<span class="hljs-title function_">sq</span>(center - x) + <span class="hljs-title function_">sq</span>(center - y)) / <span class="hljs-number">10.0</span><br>      <span class="hljs-keyword">var</span> r = <span class="hljs-title function_">int</span>((<span class="hljs-number">255</span> * r) / distance)<br>      <span class="hljs-keyword">var</span> g = <span class="hljs-title function_">int</span>((<span class="hljs-number">255</span> * g) / distance)<br>      <span class="hljs-keyword">var</span> b = <span class="hljs-title function_">int</span>((<span class="hljs-number">255</span> * b) / distance)<br>      <span class="hljs-comment">// img.pixels[x + y * side] = color(r, g, b);</span><br>      img.<span class="hljs-title function_">set</span>(y, x, <span class="hljs-title function_">color</span>(r, g, b))<br>    &#125;<br>  &#125;<br><br>  img.<span class="hljs-title function_">updatePixels</span>()<br><br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">display</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; num; i++) &#123;<br>      <span class="hljs-title function_">push</span>()<br>      <span class="hljs-title function_">translate</span>(cp.<span class="hljs-property">x</span>, cp.<span class="hljs-property">y</span>, cp.<span class="hljs-property">z</span>)<br>      <span class="hljs-title function_">translate</span>(fp[i].<span class="hljs-property">x</span>, fp[i].<span class="hljs-property">y</span>, fp[i].<span class="hljs-property">z</span>)<br>      <span class="hljs-title function_">blendMode</span>(<span class="hljs-variable constant_">ADD</span>) <span class="hljs-comment">//各个小点（发光源遮罩效果）</span><br>      <span class="hljs-title function_">image</span>(img, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>)<br>      <span class="hljs-title function_">pop</span>()<br><br>      fp[i] = p5.<span class="hljs-property">Vector</span>.<span class="hljs-title function_">mult</span>(fp[i], <span class="hljs-number">1.015</span>) <span class="hljs-comment">//更新小点（发光源）扩散位置</span><br>    &#125;<br>  &#125;<br><br>  <span class="hljs-comment">//模拟重力加速度</span><br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">update</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>    radius = <span class="hljs-title function_">dist</span>(<br>      <span class="hljs-number">0</span>,<br>      <span class="hljs-number">0</span>,<br>      <span class="hljs-number">0</span>,<br>      fp[<span class="hljs-number">0</span>].<span class="hljs-property">x</span>,<br>      fp[<span class="hljs-number">0</span>].<span class="hljs-property">y</span>,<br>      fp[<span class="hljs-number">0</span>].<span class="hljs-property">z</span><br>    )<br>    centerPosition.<span class="hljs-title function_">add</span>(velocity)<br>    velocity.<span class="hljs-title function_">add</span>(accel)<br>  &#125;<br><br>  <span class="hljs-comment">//   判断是否需要销毁</span><br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">needRemove</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">if</span> (centerPosition.<span class="hljs-property">y</span> - radius &gt; height) &#123;<br>      <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span><br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>现在基本的烟花类已经被定义好了，我们可以给画布绑定一个键盘事件，并修改 draw 函数中相关逻辑来看一下效果。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">function</span> <span class="hljs-title function_">keyPressed</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-comment">//键盘事件添加一发烟花</span><br>  fireworks.<span class="hljs-title function_">push</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Fireworks</span>(<span class="hljs-number">20</span>)) <span class="hljs-comment">//80为烟花初始半径</span><br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">draw</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-title function_">background</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">20</span>)<br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; fireworks.<span class="hljs-property">length</span>; i++) &#123;<br>    fireworks[i].<span class="hljs-title function_">display</span>()<br>    fireworks[i].<span class="hljs-title function_">update</span>()<br>    <span class="hljs-keyword">if</span> (fireworks[i].<span class="hljs-title function_">needRemove</span>()) &#123;<br>      fireworks.<span class="hljs-title function_">splice</span>(i, <span class="hljs-number">1</span>)<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/043e880dbae54477a802eb3f369efdae~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="7.gif"></p>
+<p><strong>相关 API</strong></p>
+<p>这里将上述用到的相关 api 和类 单列出来方便查看</p>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>createCanvas</td>
+<td>创建画布</td>
+</tr>
+<tr>
+<td>background</td>
+<td>设置背景色</td>
+</tr>
+<tr>
+<td>p5.Vector</td>
+<td>创建包含幅度和方向的新 p5 向量</td>
+</tr>
+<tr>
+<td>random</td>
+<td>返回在作为参数给出的范围之间的随机浮点数</td>
+</tr>
+<tr>
+<td>sqrt</td>
+<td>获取任何输入数字的平方根</td>
+</tr>
+<tr>
+<td>createImage</td>
+<td>创建图片</td>
+</tr>
+<tr>
+<td>translate</td>
+<td>指定在显示窗口内放置对象的数量 x 参数用于指定左/右平移 y 参数用于指定上/下平移</td>
+</tr>
+<tr>
+<td>blendMode</td>
+<td>根据给定的混合模式混合两个像素</td>
+</tr>
+<tr>
+<td>dist</td>
+<td>测量计算在 2D 或 3D 中两点之间的距离</td>
+</tr>
+</tbody></table>
+<h3 id="获取音频参数"><a href="#获取音频参数" class="headerlink" title="获取音频参数"></a>获取音频参数</h3><p>首先我们需要添加一个<code>audio</code>标签来存放我们的音乐</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">audio</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;./1.mp3&quot;</span> <span class="hljs-attr">autoplay</span> <span class="hljs-attr">controls</span>&gt;</span>您的浏览器不支持 audio 标签。<span class="hljs-tag">&lt;/<span class="hljs-name">audio</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>接着改造我们的 setup 函数，让它能够获取到我们的音频资源</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> fireworks = []<br><span class="hljs-keyword">var</span> highMap = [<span class="hljs-number">2</span>, <span class="hljs-number">5</span>, <span class="hljs-number">10</span>, <span class="hljs-number">15</span>]<br><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">ORI_NUM</span> = <span class="hljs-number">32</span><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">setup</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-comment">//processing初始化设置</span><br>  <span class="hljs-title function_">createCanvas</span>(<span class="hljs-variable language_">window</span>.<span class="hljs-property">innerWidth</span>, <span class="hljs-variable language_">window</span>.<span class="hljs-property">innerHeight</span>)<br>  <span class="hljs-title function_">frameRate</span>(<span class="hljs-number">60</span>) <span class="hljs-comment">// 每秒渲染次数</span><br>  <span class="hljs-title function_">imageMode</span>(<span class="hljs-variable constant_">CENTER</span>)<br>  audioContext_ = <span class="hljs-title function_">getAudioContext</span>()<br>  <span class="hljs-comment">//取得声音dom</span><br>  <span class="hljs-keyword">let</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;audio&#x27;</span>)<br>  <span class="hljs-comment">//根据声音dom创建web audio API source node, 并且连接主输出</span><br>  <span class="hljs-keyword">const</span> source = audioContext_.<span class="hljs-title function_">createMediaElementSource</span>(el)<br>  source.<span class="hljs-title function_">connect</span>(p5.<span class="hljs-property">soundOut</span>)<br>  <span class="hljs-comment">//0.8是变化程度，越小图案越抖</span><br>  fft = <span class="hljs-keyword">new</span> p5.<span class="hljs-title function_">FFT</span>(<span class="hljs-number">0.8</span>, <span class="hljs-variable constant_">ORI_NUM</span>)<br>  fft.<span class="hljs-title function_">setInput</span>(source)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这里我们获取了音频资源的频谱，未来用来控制我们烟花的大小以及高度。当然 p5.sound 还可以获取音频的音量等等，以实现更炫酷的可视化效果。</p>
+<p>接下来我们改造 draw 绘制函数，解析本地音频的频谱并利用它来搞事情</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">function</span> <span class="hljs-title function_">draw</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-comment">//循环执行，达成画面渲染效果</span><br><br>  audioContext_.<span class="hljs-title function_">resume</span>()<br>  <span class="hljs-title function_">background</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">20</span>)<br>  <span class="hljs-keyword">let</span> spectrum = fft.<span class="hljs-title function_">analyze</span>()<br><br>  spectrum.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">item, j</span>) =&gt;</span> &#123;<br>    <span class="hljs-keyword">if</span> (item !== <span class="hljs-number">0</span> &amp;&amp; j % <span class="hljs-number">2</span>) &#123;<br>      <span class="hljs-keyword">let</span> a = highMap[<span class="hljs-number">0</span>]<br>      <span class="hljs-keyword">if</span> (item &gt;= <span class="hljs-number">64</span> &amp;&amp; item &lt; <span class="hljs-number">128</span>) &#123;<br>        a = highMap[<span class="hljs-number">1</span>]<br>      &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item &gt;= <span class="hljs-number">128</span> &amp;&amp; item &lt; <span class="hljs-number">192</span>) &#123;<br>        a = highMap[<span class="hljs-number">2</span>]<br>      &#125; <span class="hljs-keyword">else</span> &#123;<br>        a = highMap[<span class="hljs-number">3</span>]<br>      &#125;<br>      <span class="hljs-keyword">const</span> fire = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Fireworks</span>(item, a)<br>      fireworks.<span class="hljs-title function_">push</span>(fire)<br>      <span class="hljs-keyword">if</span> (fireworks.<span class="hljs-property">length</span> &gt; <span class="hljs-number">64</span>) &#123;<br>        fireworks.<span class="hljs-title function_">shift</span>()<br>      &#125;<br>    &#125;<br>  &#125;)<br><br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; fireworks.<span class="hljs-property">length</span>; i++) &#123;<br>    fireworks[i].<span class="hljs-title function_">display</span>()<br>    fireworks[i].<span class="hljs-title function_">update</span>()<br>    <span class="hljs-keyword">if</span> (fireworks[i].<span class="hljs-title function_">needRemove</span>()) &#123;<br>      fireworks.<span class="hljs-title function_">splice</span>(i, <span class="hljs-number">1</span>)<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意<code>audioContext_.resume()</code>是必须要添加的，因为谷歌浏览器默认不会自动播放音频。</p>
+</blockquote>
+<p>spectrum 就是我们分析得到的频谱数值组成的数组，ORI_NUM 作为频谱的个数，最少需要 32 个。我们理论上可以放更多的烟花，但是由于本人电脑性能一般，所以直接取 16 个来放烟花。</p>
+<p>代码中我们可以看到，Fireworks 类我们传了两个参数：频谱的值和我们定义的高度值，现在就可以对烟花类改造，以实现根据音频来控制烟花的爆炸半径和发射高度。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">function</span> <span class="hljs-title function_">Fireworks</span>(<span class="hljs-params">radius, h</span>) &#123;<br>  <span class="hljs-keyword">var</span> num = <span class="hljs-number">64</span> <span class="hljs-comment">//一发烟花里，有多少个点 (比较吃机器)</span><br><br>  <span class="hljs-keyword">var</span> cp = <span class="hljs-keyword">new</span> p5.<span class="hljs-title class_">Vector</span>(<br>    <span class="hljs-title function_">random</span>(<span class="hljs-number">0</span>, width),<br>    <span class="hljs-title function_">random</span>(height / <span class="hljs-number">2</span>, height / <span class="hljs-number">5</span>),<br>    <span class="hljs-title function_">random</span>(-<span class="hljs-number">100</span>, <span class="hljs-number">100</span>)<br>  ) <span class="hljs-comment">//烟花的中心位置</span><br>  <span class="hljs-keyword">var</span> velocity = <span class="hljs-keyword">new</span> p5.<span class="hljs-title class_">Vector</span>(<span class="hljs-number">0</span>, -h, <span class="hljs-number">0</span>)<br>  <span class="hljs-keyword">var</span> accel = <span class="hljs-keyword">new</span> p5.<span class="hljs-title class_">Vector</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0.4</span>, <span class="hljs-number">0</span>)<br><br>  ……<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>为了效果更真实，我们优化一下烟花的随机颜色，让它更亮</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">if</span> (colorChange &gt;= <span class="hljs-number">3.5</span>) &#123;<br>  img = <span class="hljs-title function_">makeColor</span>(<span class="hljs-number">0.9</span>, <span class="hljs-title function_">random</span>(<span class="hljs-number">0.2</span>, <span class="hljs-number">0.5</span>), <span class="hljs-title function_">random</span>(<span class="hljs-number">0.2</span>, <span class="hljs-number">0.5</span>))<br>&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (colorChange &gt; <span class="hljs-number">3.2</span>) &#123;<br>  img = <span class="hljs-title function_">makeColor</span>(<span class="hljs-title function_">random</span>(<span class="hljs-number">0.2</span>, <span class="hljs-number">0.5</span>), <span class="hljs-number">0.9</span>, <span class="hljs-title function_">random</span>(<span class="hljs-number">0.2</span>, <span class="hljs-number">0.5</span>))<br>&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (colorChange &gt; <span class="hljs-number">2</span>) &#123;<br>  img = <span class="hljs-title function_">makeColor</span>(<span class="hljs-title function_">random</span>(<span class="hljs-number">0.2</span>, <span class="hljs-number">0.5</span>), <span class="hljs-title function_">random</span>(<span class="hljs-number">0.2</span>, <span class="hljs-number">0.5</span>), <span class="hljs-number">0.9</span>)<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>  img = <span class="hljs-title function_">makeColor</span>(<span class="hljs-title function_">random</span>(<span class="hljs-number">0.5</span>, <span class="hljs-number">0.8</span>), <span class="hljs-title function_">random</span>(<span class="hljs-number">0.5</span>, <span class="hljs-number">0.8</span>), <span class="hljs-title function_">random</span>(<span class="hljs-number">0.5</span>, <span class="hljs-number">0.8</span>))<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">makeColor</span>(<span class="hljs-params">rr, gg, bb</span>) &#123;<br>  <span class="hljs-keyword">var</span> side = <span class="hljs-number">64</span><br>  <span class="hljs-keyword">var</span> center = side / <span class="hljs-number">2.0</span><br><br>  <span class="hljs-keyword">var</span> img = <span class="hljs-title function_">createImage</span>(side, side)<br>  img.<span class="hljs-title function_">loadPixels</span>()<br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> y = <span class="hljs-number">0</span>; y &lt; side; y++) &#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> x = <span class="hljs-number">0</span>; x &lt; side; x++) &#123;<br>      <span class="hljs-keyword">var</span> distance = (<span class="hljs-title function_">sq</span>(center - x) + <span class="hljs-title function_">sq</span>(center - y)) / <span class="hljs-number">10.0</span><br>      <span class="hljs-keyword">var</span> r = <span class="hljs-title function_">int</span>((<span class="hljs-number">255</span> * rr) / distance)<br>      <span class="hljs-keyword">var</span> g = <span class="hljs-title function_">int</span>((<span class="hljs-number">255</span> * gg) / distance)<br>      <span class="hljs-keyword">var</span> b = <span class="hljs-title function_">int</span>((<span class="hljs-number">255</span> * bb) / distance)<br>      <span class="hljs-comment">// img.pixels[x + y * side] = color(r, g, b);</span><br>      img.<span class="hljs-title function_">set</span>(y, x, <span class="hljs-title function_">color</span>(r, g, b))<br>    &#125;<br>  &#125;<br><br>  img.<span class="hljs-title function_">updatePixels</span>()<br>  <span class="hljs-keyword">return</span> img<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>效果就如文章开头那样绚烂多彩。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>至此音乐烟花就实现了，而 p5.js 也是我不经意间发现的一个库，发现用它可以做出各种强大的动画。本以为我会是第一个用 p5,js 来实现效果的人，而就在我把这个 demo 写出来的第二天，活动的第一天，就读到了北京哥的<a target="_blank" rel="noopener" href="https://juejin.cn/post/7051353946052362277">一场烟花盛宴 🎇，祝你新年快乐 🎉</a>，实现思路不同，效果我觉得北京哥的也更美观真实~，心痛哈哈哈哈做不了第一那做个……第n也不错。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/JavaScript/" class="category-chain-item">JavaScript</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/JavaScript/">#JavaScript</a>
+      
+        <a href="/tags/p5-js/">#p5.js</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>「新春创意」用喜庆的音乐送自己一场音乐烟花show🎊🎊</div>
+      <div>https://moewang0321.github.io/2022/01/10/「新春创意」用喜庆的音乐送自己一场音乐烟花show🎊🎊/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Moe Wang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年1月10日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/01/16/%E3%80%8C%E6%96%B0%E6%98%A5%E5%88%9B%E6%84%8F%E3%80%8D%E5%BF%AB%E6%89%93%E5%BC%80%E6%91%84%E5%83%8F%E5%A4%B4%E5%8F%AC%E5%94%A4%E5%B1%9E%E4%BA%8E%E4%BD%A0%E7%9A%84%E8%99%8E%E5%B9%B4%E5%90%89%E7%A5%A5%E7%89%A9%F0%9F%90%85/" title="「新春创意」快打开摄像头召唤属于你的虎年吉祥物🐅">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">「新春创意」快打开摄像头召唤属于你的虎年吉祥物🐅</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/01/10/%E3%80%8C%E6%96%B0%E6%98%A5%E5%88%9B%E6%84%8F%E3%80%8D%E5%86%99%E4%B8%AA%E7%A6%8F%E5%AD%97%E9%80%81%E7%BB%99%E6%96%B0%E5%B9%B4%E7%9A%84%E8%87%AA%E5%B7%B1%E5%90%A7%EF%BC%81/" title="「新春创意」写个福字送给新年的自己吧！">
+                        <span class="hidden-mobile">「新春创意」写个福字送给新年的自己吧！</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+    <div id="giscus" class="giscus"></div>
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#giscus', function() {
+        var options = {"repo":"moewang0321/moewang0321.github.io","repo-id":"MDEwOlJlcG9zaXRvcnkyMDEyNDI0NTY=","category":"Show and tell","category-id":"DIC_kwDOC_63WM4CUMsH","theme-light":"light_protanopia","theme-dark":"dark_dimmed","mapping":"pathname","reactions-enabled":1,"emit-metadata":1,"input-position":"top","loading":"lazy","lang":"zh-CN"};
+        var attributes = {};
+        for (let option in options) {
+          if (!option.startsWith('theme-')) {
+            var key = option.startsWith('data-') ? option : 'data-' + option;
+            attributes[key] = options[option];
+          }
+        }
+        var light = 'light_protanopia';
+        var dark = 'dark_dimmed';
+        window.GiscusThemeLight = light;
+        window.GiscusThemeDark = dark;
+        attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
+        for (let attribute in attributes) {
+          var value = attributes[attribute];
+          if (value === undefined || value === null || value === '') {
+            delete attributes[attribute];
+          }
+        }
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('crossorigin', 'anonymous');
+        for (let attribute in attributes) {
+          s.setAttribute(attribute, attributes[attribute]);
+        }
+        var ss = document.getElementsByTagName('script');
+        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+        e.parentNode.insertBefore(s, e.nextSibling);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

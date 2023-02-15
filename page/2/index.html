@@ -226,6 +226,258 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2021/06/17/Cesium%E4%B8%ADPrimitive%E5%9B%BE%E5%85%83%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%B8%8EEntity%E5%AF%B9%E6%AF%94/" target="_self">
+          Cesium | Primitive图元介绍及与Entity对比
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2021/06/17/Cesium%E4%B8%ADPrimitive%E5%9B%BE%E5%85%83%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%B8%8EEntity%E5%AF%B9%E6%AF%94/" target="_self">
+        <div>
+          前言在之前的文章中，我们大部分使用的添加实体的方式都是entity添加，而在性能优化中我们提到了primitive添加的方式，entity在本文就不多做介绍了，本文主要介绍一下primitive相关知识。 什么是Primitive首先我们在Cesium API文档中搜索primitive，看文档中对Primitive类的介绍，翻译过来大致如下：  图元代表场景中的几何体。 几何可以来自单个 Geo
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-06-17 10:58" pubdate>
+              2021/06/17
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Cesium/" class="category-chain-item">Cesium</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/JavaScript/">#JavaScript</a>
+            
+              <a href="/tags/Cesium/">#Cesium</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/06/11/Cesium%E6%B5%B7%E9%87%8F%E7%82%B9%E7%9A%84%E5%8A%A0%E8%BD%BD%E4%B8%8E%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" target="_self">
+          Cesium | 海量点的加载与性能优化
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2021/06/11/Cesium%E6%B5%B7%E9%87%8F%E7%82%B9%E7%9A%84%E5%8A%A0%E8%BD%BD%E4%B8%8E%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" target="_self">
+        <div>
+          前言在Cesium中我们可能会遇到加载海量数据的情况，但当我们进行实现的时候会发现页面渲染会因为数据量过大而变得迟缓，十分影响用户体验。接下来我将先通过大数量的点进行性能检测，然后对其进行优化。  本文利用Turf进行海量随机点的生成  测试首先我们通过Turf生成万量级的点位信息 1234567891011121314let points = turf.randomPoint(10000, &#
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-06-11 13:22" pubdate>
+              2021/06/11
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Cesium/" class="category-chain-item">Cesium</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/JavaScript/">#JavaScript</a>
+            
+              <a href="/tags/Cesium/">#Cesium</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/06/10/Cesium%E5%88%A9%E7%94%A8Property%E6%9C%BA%E5%88%B6%E5%AE%9E%E7%8E%B0%E8%BD%A8%E8%BF%B9%E5%9B%9E%E6%94%BE/" target="_self">
+          Cesium | 利用Property机制实现轨迹回放
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2021/06/10/Cesium%E5%88%A9%E7%94%A8Property%E6%9C%BA%E5%88%B6%E5%AE%9E%E7%8E%B0%E8%BD%A8%E8%BF%B9%E5%9B%9E%E6%94%BE/" target="_self">
+        <div>
+          前言我们在前面的文章中介绍过Cesium的Property机制，了解了它的作用以及它的用法，这篇文章我们通过一个实际场景来深入学习和复习一下Property机制。 在智慧城市系统中，必不可少的就是轨迹回放或者让模型沿着指定路径行走，而Cesium提供的Property机制能够在很好的实现这样的场景的同时保证性能。下面简单来讲一下Property，更多的知识可以阅读Cesium的Property机制
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-06-10 16:10" pubdate>
+              2021/06/10
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Cesium/" class="category-chain-item">Cesium</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/JavaScript/">#JavaScript</a>
+            
+              <a href="/tags/Cesium/">#Cesium</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/06/09/Electron%E5%AE%9E%E7%8E%B0%E5%90%AF%E5%8A%A8Loading%E5%8A%A8%E7%94%BB%E6%95%88%E6%9E%9C/" target="_self">
+          Electron实现启动Loading动画效果
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2021/06/09/Electron%E5%AE%9E%E7%8E%B0%E5%90%AF%E5%8A%A8Loading%E5%8A%A8%E7%94%BB%E6%95%88%E6%9E%9C/" target="_self">
+        <div>
+          Electron是什么 使用 JavaScript，HTML 和 CSS 构建跨平台的桌面应用程序 ——官网   Electron是GitHub开发的一个开源框架。它允许使用Node.js（作为后端）和Chromium（作为前端）完成桌面GUI应用程序的开发。Electron现已被多个开源Web应用程序用于前端与后端的开发，著名项目包括GitHub的Atom和微软的Visual Studio Co
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-06-09 09:51" pubdate>
+              2021/06/09
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Electron/" class="category-chain-item">Electron</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/JavaScript/">#JavaScript</a>
+            
+              <a href="/tags/Electron/">#Electron</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2021/06/07/Cesium%E7%9A%84Property%E6%9C%BA%E5%88%B6%E7%A9%B6%E7%AB%9F%E6%9C%89%E5%A4%9A%E9%A6%99/" target="_self">
           Cesium的Property机制究竟有多香
         </a>
@@ -609,274 +861,6 @@
               <a href="/tags/JavaScript/">#JavaScript</a>
             
               <a href="/tags/Cesium/">#Cesium</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2021/05/05/%E3%80%90%E4%B8%89%E7%BB%B4GIS%E5%8F%AF%E8%A7%86%E5%8C%96%E3%80%91%E5%9F%BA%E4%BA%8EVue+Cesium+Supermap%E5%AE%9E%E7%8E%B0%E6%99%BA%E6%85%A7%E5%9F%8E%E5%B8%82%EF%BC%88%E4%B8%89%EF%BC%89/" target="_self">
-          <img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/949a196a072149f9bd16b5006e014ce8~tplv-k3u1fbpfcp-zoom-crop-mark:3024:3024:3024:1702.awebp" srcset="/img/loading.gif" lazyload alt="【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（三）">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/05/05/%E3%80%90%E4%B8%89%E7%BB%B4GIS%E5%8F%AF%E8%A7%86%E5%8C%96%E3%80%91%E5%9F%BA%E4%BA%8EVue+Cesium+Supermap%E5%AE%9E%E7%8E%B0%E6%99%BA%E6%85%A7%E5%9F%8E%E5%B8%82%EF%BC%88%E4%B8%89%EF%BC%89/" target="_self">
-          【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（三）
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt " href="/2021/05/05/%E3%80%90%E4%B8%89%E7%BB%B4GIS%E5%8F%AF%E8%A7%86%E5%8C%96%E3%80%91%E5%9F%BA%E4%BA%8EVue+Cesium+Supermap%E5%AE%9E%E7%8E%B0%E6%99%BA%E6%85%A7%E5%9F%8E%E5%B8%82%EF%BC%88%E4%B8%89%EF%BC%89/" target="_self">
-        <div>
-          FBI  WARNING！                                     五一假期已结束                不知道xdm都去哪里玩了？给点游玩的建议，我十一假期参考一下啊哈哈……   复习一下，上一篇我们首先讲了地图上的几大要素，包括点线面，然后了解了二维地图、三维地图中所使用的几大坐标系
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-05-05 15:57" pubdate>
-              2021/05/05
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/Cesium/" class="category-chain-item">Cesium</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/JavaScript/">#JavaScript</a>
-            
-              <a href="/tags/Cesium/">#Cesium</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2021/04/25/%E3%80%90%E4%B8%89%E7%BB%B4GIS%E5%8F%AF%E8%A7%86%E5%8C%96%E3%80%91%E5%9F%BA%E4%BA%8EVue+Cesium+Supermap%E5%AE%9E%E7%8E%B0%E6%99%BA%E6%85%A7%E5%9F%8E%E5%B8%82%EF%BC%88%E4%BA%8C%EF%BC%89/" target="_self">
-          <img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/949a196a072149f9bd16b5006e014ce8~tplv-k3u1fbpfcp-zoom-crop-mark:3024:3024:3024:1702.awebp" srcset="/img/loading.gif" lazyload alt="【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（二）">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/04/25/%E3%80%90%E4%B8%89%E7%BB%B4GIS%E5%8F%AF%E8%A7%86%E5%8C%96%E3%80%91%E5%9F%BA%E4%BA%8EVue+Cesium+Supermap%E5%AE%9E%E7%8E%B0%E6%99%BA%E6%85%A7%E5%9F%8E%E5%B8%82%EF%BC%88%E4%BA%8C%EF%BC%89/" target="_self">
-          【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（二）
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt " href="/2021/04/25/%E3%80%90%E4%B8%89%E7%BB%B4GIS%E5%8F%AF%E8%A7%86%E5%8C%96%E3%80%91%E5%9F%BA%E4%BA%8EVue+Cesium+Supermap%E5%AE%9E%E7%8E%B0%E6%99%BA%E6%85%A7%E5%9F%8E%E5%B8%82%EF%BC%88%E4%BA%8C%EF%BC%89/" target="_self">
-        <div>
-          上一篇文章中我们实现了最基本的项目搭建并生成了一个三维地球，这篇文章我们主要介绍一下地图中基本的几大要素、地图相对应坐标系知识的介绍及如何将这几大元素呈现在我们的地球上。同样的，如果文章中有错误的话欢迎评论区指出，定当虚心请教并及时修改！  前言接下来会有部分篇幅用来介绍地图元素以及坐标系及其转换相关知识，仅作了解。不想看的就直接跳到Viewer相关配置，直接进行实际操作。 地图元素 要素我们首
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-04-25 16:34" pubdate>
-              2021/04/25
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/Cesium/" class="category-chain-item">Cesium</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/JavaScript/">#JavaScript</a>
-            
-              <a href="/tags/Cesium/">#Cesium</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2021/04/22/%E3%80%90%E4%B8%89%E7%BB%B4GIS%E5%8F%AF%E8%A7%86%E5%8C%96%E3%80%91%E5%9F%BA%E4%BA%8EVue+Cesium+Supermap%E5%AE%9E%E7%8E%B0%E6%99%BA%E6%85%A7%E5%9F%8E%E5%B8%82%EF%BC%88%E4%B8%80%EF%BC%89/" target="_self">
-          <img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/949a196a072149f9bd16b5006e014ce8~tplv-k3u1fbpfcp-zoom-crop-mark:3024:3024:3024:1702.awebp" srcset="/img/loading.gif" lazyload alt="【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（一）">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/04/22/%E3%80%90%E4%B8%89%E7%BB%B4GIS%E5%8F%AF%E8%A7%86%E5%8C%96%E3%80%91%E5%9F%BA%E4%BA%8EVue+Cesium+Supermap%E5%AE%9E%E7%8E%B0%E6%99%BA%E6%85%A7%E5%9F%8E%E5%B8%82%EF%BC%88%E4%B8%80%EF%BC%89/" target="_self">
-          【三维GIS可视化】基于Vue+Cesium+Supermap实现智慧城市（一）
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt " href="/2021/04/22/%E3%80%90%E4%B8%89%E7%BB%B4GIS%E5%8F%AF%E8%A7%86%E5%8C%96%E3%80%91%E5%9F%BA%E4%BA%8EVue+Cesium+Supermap%E5%AE%9E%E7%8E%B0%E6%99%BA%E6%85%A7%E5%9F%8E%E5%B8%82%EF%BC%88%E4%B8%80%EF%BC%89/" target="_self">
-        <div>
-          前言 不久前受命研究开发3D可视化及智慧城市的技术路线，第一个想到的就是Cesium这个世界级开源库。但是我的业务上可能会有很多关于空间及地理分析相关的功能实现，所以我找到了超图。超图拥有基于Cesium包装和二次封装的三维产品3D-WebGL包（文末附产品下载地址）。一切准备就绪，接下来简单了解一下Cesium是什么神奇的东东吧。 Cesium Cesium是什么Cesium是一个跨平台，跨浏览
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-04-22 21:13" pubdate>
-              2021/04/22
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/Cesium/" class="category-chain-item">Cesium</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/JavaScript/">#JavaScript</a>
-            
-              <a href="/tags/Cesium/">#Cesium</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/07/10/2020-07-10-%E8%87%AA%E5%AE%9A%E4%B9%89windows%E7%BB%88%E7%AB%AF/" target="_self">
-          自定义一个windows终端吧
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2020/07/10/2020-07-10-%E8%87%AA%E5%AE%9A%E4%B9%89windows%E7%BB%88%E7%AB%AF/" target="_self">
-        <div>
-          效果 怎么样，这不比默认的”傻黑粗“来的赏心悦目 开始废话不多说，开始我们的自定义powerShell之旅  window默认的powershell由”傻黑粗”进化为”傻大蓝”，丑也是真的丑，所以我一直用的都是cmder去处理命令行，知道今天我在摸鱼的时候发现了  抱着试一试的心态获取了它，咳咳，结果还是蛮失望的，一如既往的微软风格，但是这是开源的，也就意味着可以修改它的配置， 而它的配置文件存储
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-07-10 17:31" pubdate>
-              2020/07/10
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/others/" class="category-chain-item">others</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/powerShell/">#powerShell</a>
             
           </div>
         

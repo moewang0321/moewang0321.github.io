@@ -1,0 +1,779 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Moe Wang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="实现效果 前言第一篇简单实现了一下支付宝写福字的效果，当时就有一个想法，能不能实现支付宝的扫福呢，查找了许多资料后发现单靠前端还是无法实现，于是我换了个思路，利用 ar 去扫福，召唤虎年吉祥物。本文实现效果也许很 low，但旨在抛砖引玉，希望各路大神能让我大开眼界（春节企划的文章都挺 nb 的……发现大家脑洞和实力简直太强了） 实现的技术路线：AR.js + A-Frame + artoolkit">
+<meta property="og:type" content="article">
+<meta property="og:title" content="「新春创意」快打开摄像头召唤属于你的虎年吉祥物🐅">
+<meta property="og:url" content="https://moewang0321.github.io/2022/01/16/%E3%80%8C%E6%96%B0%E6%98%A5%E5%88%9B%E6%84%8F%E3%80%8D%E5%BF%AB%E6%89%93%E5%BC%80%E6%91%84%E5%83%8F%E5%A4%B4%E5%8F%AC%E5%94%A4%E5%B1%9E%E4%BA%8E%E4%BD%A0%E7%9A%84%E8%99%8E%E5%B9%B4%E5%90%89%E7%A5%A5%E7%89%A9%F0%9F%90%85/index.html">
+<meta property="og:site_name" content="moe_大杂烩">
+<meta property="og:description" content="实现效果 前言第一篇简单实现了一下支付宝写福字的效果，当时就有一个想法，能不能实现支付宝的扫福呢，查找了许多资料后发现单靠前端还是无法实现，于是我换了个思路，利用 ar 去扫福，召唤虎年吉祥物。本文实现效果也许很 low，但旨在抛砖引玉，希望各路大神能让我大开眼界（春节企划的文章都挺 nb 的……发现大家脑洞和实力简直太强了） 实现的技术路线：AR.js + A-Frame + artoolkit">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d426b51ec3024dc6b5194854b35cca27~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/98e2e17194d243dcaf6dd44f5d4cd5d1~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5952b0a8fa13431b96580410b540860a~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/370d8899d9054b71ad6663a87429c576~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/002c45711e124719b383e1df70656fa4~tplv-k3u1fbpfcp-watermark.image">
+<meta property="article:published_time" content="2022-01-16T08:11:07.000Z">
+<meta property="article:modified_time" content="2023-02-15T00:05:12.411Z">
+<meta property="article:author" content="Moe Wang">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="AR.js">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d426b51ec3024dc6b5194854b35cca27~tplv-k3u1fbpfcp-watermark.image">
+  
+  
+  
+  <title>「新春创意」快打开摄像头召唤属于你的虎年吉祥物🐅 - moe_大杂烩</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"moewang0321.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>moe_大杂烩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="「新春创意」快打开摄像头召唤属于你的虎年吉祥物🐅"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-01-16 16:11" pubdate>
+          2022年1月16日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          32 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">「新春创意」快打开摄像头召唤属于你的虎年吉祥物🐅</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="实现效果"><a href="#实现效果" class="headerlink" title="实现效果"></a>实现效果</h2><p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d426b51ec3024dc6b5194854b35cca27~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="7.gif"></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>第一篇简单实现了一下支付宝写福字的效果，当时就有一个想法，能不能实现支付宝的扫福呢，查找了许多资料后发现单靠前端还是无法实现，于是我换了个思路，利用 ar 去扫福，召唤虎年吉祥物。本文实现效果也许很 low，但旨在抛砖引玉，希望各路大神能让我大开眼界（春节企划的文章都挺 nb 的……发现大家脑洞和实力简直太强了）</p>
+<p>实现的技术路线：<code>AR.js</code> + <code>A-Frame</code> + <code>artoolkit</code> + <code>obj2gltf</code></p>
+<h2 id="关于-AR-js-与-A-Frame"><a href="#关于-AR-js-与-A-Frame" class="headerlink" title="关于 AR.js 与 A Frame"></a>关于 AR.js 与 A Frame</h2><p>首先简单介绍一下 AR.js 和 A-Frame，因为后续看似很少的代码中其实 A-Frame 帮我们做了很多事情，这个后面再说。</p>
+<h3 id="AR-js"><a href="#AR-js" class="headerlink" title="AR.js"></a>AR.js</h3><p>AR.js 是一个轻量级的增强现实类 JavaScript 库，支持基于标记和位置的增强现实。AR.js 框架包括跨浏览器兼容性，并且支持 WebGL 和 WebRTC，这意味着它可以在 iOS 11 以上的 Android 和 iPhone 设备上正常工作。通过包装许多不同的 AR 框架，包括 three.js，a-frame 和 ARToolKit，AR.js 使得将 AR 引入 Web 应用程序变得更加简单高效。它具有以下优点：</p>
+<ul>
+<li><p>跨浏览器兼容性</p>
+</li>
+<li><p>即使在较旧的设备上也可以达到 60fps 的高性能</p>
+</li>
+<li><p>基于 Web，无需安装</p>
+</li>
+<li><p>开源，可免费访问</p>
+</li>
+<li><p>使用 WebGL 和 WebRTC 在所有移动设备上均可使用</p>
+</li>
+<li><p>无需额外或不常见的硬件</p>
+</li>
+<li><p>可以用不到 10 行 HTML 来完成</p>
+</li>
+</ul>
+<h3 id="A-Frame"><a href="#A-Frame" class="headerlink" title="A-Frame"></a>A-Frame</h3><p>A-Frame 是一个用来构建虚拟现实（VR）应用的网页开发框架。由 WebVR 的发起人 Mozilla VR 团队所开发，是当下用来开发 WebVR 内容主流技术方案。WebVR 是一个完全开源的项目，已成长为领先的 VR 社区。</p>
+<p>A-Frame 基于 HTML，容易上手。但是 A-Frame 不仅仅是一个 3D 场景渲染引擎或者一个标记语言。其核心思想是基于 Three.js 来提供一个声明式、可扩展以及组件化的编程结构。</p>
+<p>A-Frame 让我们能够在纯 html 中使用组件式的标签来快速开发，下边贴上基本代码，用 vue 的兄弟会觉得很舒服：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span><br><br> <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://aframe.io/releases/1.1.0/aframe.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><br> <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><br> <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br><br>  <span class="hljs-tag">&lt;<span class="hljs-name">a-scene</span>&gt;</span><br><br>   <span class="hljs-tag">&lt;<span class="hljs-name">a-box</span> <span class="hljs-attr">position</span>=<span class="hljs-string">&quot;-1 0.5 -3&quot;</span> <span class="hljs-attr">rotation</span>=<span class="hljs-string">&quot;0 45 0&quot;</span> <span class="hljs-attr">color</span>=<span class="hljs-string">&quot;#4CC3D9&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">a-box</span>&gt;</span><br><br>   <span class="hljs-tag">&lt;<span class="hljs-name">a-sphere</span> <span class="hljs-attr">position</span>=<span class="hljs-string">&quot;0 1.25 -5&quot;</span> <span class="hljs-attr">radius</span>=<span class="hljs-string">&quot;1.25&quot;</span> <span class="hljs-attr">color</span>=<span class="hljs-string">&quot;#EF2D5E&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">a-sphere</span>&gt;</span><br><br>   <span class="hljs-tag">&lt;<span class="hljs-name">a-cylinder</span></span><br><span class="hljs-tag"></span><br><span class="hljs-tag">    <span class="hljs-attr">position</span>=<span class="hljs-string">&quot;1 0.75 -3&quot;</span></span><br><span class="hljs-tag"></span><br><span class="hljs-tag">    <span class="hljs-attr">radius</span>=<span class="hljs-string">&quot;0.5&quot;</span></span><br><span class="hljs-tag"></span><br><span class="hljs-tag">	<span class="hljs-attr">height</span>=<span class="hljs-string">&quot;1.5&quot;</span></span><br><span class="hljs-tag"></span><br><span class="hljs-tag">    <span class="hljs-attr">color</span>=<span class="hljs-string">&quot;#FFC65D&quot;</span></span><br><span class="hljs-tag"></span><br><span class="hljs-tag">   &gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">a-cylinder</span>&gt;</span><br><br>   <span class="hljs-tag">&lt;<span class="hljs-name">a-plane</span></span><br><span class="hljs-tag"></span><br><span class="hljs-tag">    <span class="hljs-attr">position</span>=<span class="hljs-string">&quot;0 0 -4&quot;</span></span><br><span class="hljs-tag"></span><br><span class="hljs-tag">    <span class="hljs-attr">rotation</span>=<span class="hljs-string">&quot;-90 0 0&quot;</span></span><br><span class="hljs-tag"></span><br><span class="hljs-tag">    <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;4&quot;</span></span><br><span class="hljs-tag"></span><br><span class="hljs-tag">    <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;4&quot;</span></span><br><span class="hljs-tag"></span><br><span class="hljs-tag">    <span class="hljs-attr">color</span>=<span class="hljs-string">&quot;#7BC8A4&quot;</span></span><br><span class="hljs-tag"></span><br><span class="hljs-tag">   &gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">a-plane</span>&gt;</span><br><br>   <span class="hljs-tag">&lt;<span class="hljs-name">a-sky</span> <span class="hljs-attr">color</span>=<span class="hljs-string">&quot;#ECECEC&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">a-sky</span>&gt;</span><br><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">a-scene</span>&gt;</span><br><br> <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+<p>总结一下 A-Frame 的特性：</p>
+<ul>
+<li><p>简化 VR 制作: 只需要引入 <code>&lt;script&gt;</code> 标签 和 <code>&lt;a-scene&gt;</code>，A-Frame 将自动生成 3D 渲染的样板代码，VR 相关设置和缺省的交互控制。不需要安装任何东西也无需编译构建。</p>
+</li>
+<li><p>声明式 HTML: HTML 很容易阅读，理解和复制粘贴。</p>
+</li>
+<li><p>实体-组件架构: A-Frame 基于强大的 three.js 框架, 同时提供声明式、组件化、可复用的实体组件结构。HTML 只是冰山的一角，开发者可以自由的使用 JavaScript、DOM API，Three.js，WebVR，和 WebGL。</p>
+</li>
+<li><p>高性能: A-Frame 从底层对 WebVR 做了优化，尽管 A-Frame 使用 DOM，但其元素并不接触浏览器的布局引擎。3D 对象的更新全部在低开销内存中通过单个 requestAnimationFrame 来调用，甚至能够像本地应用一样来运行 (90+ FPS)。</p>
+</li>
+<li><p>工具无关性: 由于是构建在 HTML 之上，所以 A-Frame 和大多数开发库、框架和工具如 React, Vue.js, Angular, d3.js, Ember.js, jQuery 兼容。</p>
+</li>
+</ul>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><h3 id="前置资源准备"><a href="#前置资源准备" class="headerlink" title="前置资源准备"></a>前置资源准备</h3><p>首先准备好<code>aframe</code>及其继承了 ar 和 nft 的 js 文件（可以从我的项目中取），一个用来扫的图片（<strong>图片的要素尽量多，jpg 格式，长宽一致</strong>）以及一个识别后召唤的吉祥物模型（obj 格式或 gltf 格式）。</p>
+<h4 id="标志图片"><a href="#标志图片" class="headerlink" title="标志图片"></a>标志图片</h4><p>首先我们需要对图片处理一下，因为我们识别的是自然图片所以需要利用<code>artoolkit</code>（项目代码中有安装包）对图片进行特征点提取，特征点越多识别的越准确，这也是为什么我提醒要选择要素多的图片。</p>
+<p>artoolkit 安装后的文件目录为<code>C:\Program Files (x86)\ARToolKit5</code>，我们进入<code>bin</code>目录，添加一个<code>image</code>文件夹，将我们选择的图片放进去，接着在<code>bin</code>目录下打开终端，输入命令：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmd">$ genTexData.exe 图片相对路径<br><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/98e2e17194d243dcaf6dd44f5d4cd5d1~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p>接着回车两次，这两步是选择提取图片特征的程度，数值越大提取的特征越多。当相机离图片越近的时候，追踪效果会越好。此处使用默认值。</p>
+<p>接下来需要选择最大最小分辨率，根据不同相机分辨率及相机远近有不同取值，一般使用20到120最为合适。而我们这边最大分辨率只有96，所以我选择20到96。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5952b0a8fa13431b96580410b540860a~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p>接着回车，等待生成特征点，图片目录下会生成<code>.fset</code>,<code>.fset3</code>,<code>.iset</code>三个文件，这些文件就是我们需要的。</p>
+<p>我们使用 dispFeatureSet 工具可以显示一下看看特征点提取情况：</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/370d8899d9054b71ad6663a87429c576~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<h4 id="吉祥物模型"><a href="#吉祥物模型" class="headerlink" title="吉祥物模型"></a>吉祥物模型</h4><p>模型就在网上找免费的模型就好，如果模型是 glTF 格式是最完美的，其他格式需要转换成模型的通用 obj 格式，然后利用 obj2gltf 工具（代码仓库中提供）将其转换成 gltf 模式。</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmd">node bin/obj2gltf.js -i obj模型路径 -o 输出路径/输出模型名.gltf<br></code></pre></td></tr></table></figure>
+
+
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p>首先我们利用 a-scene 搭建出一个场景，开启<code>arjs</code>，<code>gesture-detector</code>手势检测，<code>vr-mode-ui=&quot;enabled: false;&quot;</code>不展示 vr 按钮，并放置一个相机组件用来调用我们的设备摄像头。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">a-scene</span> <span class="hljs-attr">arjs</span> <span class="hljs-attr">vr-mode-ui</span>=<span class="hljs-string">&quot;enabled: false;&quot;</span> <span class="hljs-attr">gesture-detector</span>&gt;</span><br><br> <span class="hljs-tag">&lt;<span class="hljs-name">a-entity</span> <span class="hljs-attr">camera</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">a-entity</span>&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">a-scene</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>接下来将我们生成的模型、图片及其特征文件放到项目目录中，并使用 nft 组件并进行相应配置：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">a-nft</span></span><br><span class="hljs-tag"></span><br><span class="hljs-tag"> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;nft&quot;</span></span><br><span class="hljs-tag"></span><br><span class="hljs-tag"> <span class="hljs-attr">url</span>=<span class="hljs-string">&quot;./assets/2&quot;</span></span><br><span class="hljs-tag"></span><br><span class="hljs-tag">&gt;</span><br><br> <span class="hljs-tag">&lt;<span class="hljs-name">a-entity</span> <span class="hljs-attr">gltf-model</span>=<span class="hljs-string">&quot;./assets/tiger.gltf&quot;</span> <span class="hljs-attr">scale</span>=<span class="hljs-string">&quot;1 1 1&quot;</span> <span class="hljs-attr">position</span>=<span class="hljs-string">&quot;0 0 0&quot;</span>&gt;</span><br><br> <span class="hljs-tag">&lt;/<span class="hljs-name">a-entity</span>&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">a-nft</span>&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+<p>注意nft的url中写的是图片的名，不需要后缀，在它里面添加我们识别后想要展示的模型，并设置放大级别和位置。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>到这里其实这个代码就完成了，我们兴致勃勃的对项目开启live-server，用手机访问一下页面。</p>
+<p>咦，为什么提示我们的浏览器没有<code>navigator.mediaDevices</code>，百度了一下发现，浏览器端想要调用摄像头只有几种情况：</p>
+<ul>
+<li><p>file</p>
+</li>
+<li><p>localhost</p>
+</li>
+<li><p>https</p>
+</li>
+</ul>
+<p>那我们如果在本地该怎么调试呢，这里介绍一个一直在用的内网穿透神器：ngrok（安装包也放在仓库中了）</p>
+<p>解压打开后执行ngrok http 8080，第一次需要注册账号并绑定Authtoken，绑定完成后重启ngrok再执行。成功后会返回给你三个地址，本地、http和https的url路径，我们使用https的即可。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/002c45711e124719b383e1df70656fa4~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p>手机访问地址后就可以开启摄像头权限了。</p>
+<blockquote>
+<p>因为是内网穿透，所以打开页面及识别加载都会比较慢。</p>
+</blockquote>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>关于识别的图片，我作为一个前端认为如果想识别通用的福字应该是需要进行模型训练的，但是我不会，所以就改成了识别自然图片，期待大佬们的完善。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/JavaScript/" class="category-chain-item">JavaScript</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/JavaScript/">#JavaScript</a>
+      
+        <a href="/tags/AR-js/">#AR.js</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>「新春创意」快打开摄像头召唤属于你的虎年吉祥物🐅</div>
+      <div>https://moewang0321.github.io/2022/01/16/「新春创意」快打开摄像头召唤属于你的虎年吉祥物🐅/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Moe Wang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年1月16日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/02/10/%F0%9F%8F%82%E6%8A%A2%E4%B8%8D%E5%88%B0%E5%86%B0%E5%A2%A9%E5%A2%A9%EF%BC%9F%E5%BF%AB%E7%94%A8canvas%E7%94%BB%E4%B8%80%E4%B8%AA%E8%B0%81%E4%B9%9F%E6%8A%A2%E4%B8%8D%E8%B5%B0%E7%9A%84%E5%86%B0%E5%A2%A9%E5%A2%A9%E5%90%A7%EF%BC%81/" title="🏂抢不到冰墩墩？快用canvas画一个谁也抢不走的冰墩墩吧！">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">🏂抢不到冰墩墩？快用canvas画一个谁也抢不走的冰墩墩吧！</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/01/10/%E3%80%8C%E6%96%B0%E6%98%A5%E5%88%9B%E6%84%8F%E3%80%8D%E7%94%A8%E5%96%9C%E5%BA%86%E7%9A%84%E9%9F%B3%E4%B9%90%E9%80%81%E8%87%AA%E5%B7%B1%E4%B8%80%E5%9C%BA%E9%9F%B3%E4%B9%90%E7%83%9F%E8%8A%B1show%F0%9F%8E%8A%F0%9F%8E%8A/" title="「新春创意」用喜庆的音乐送自己一场音乐烟花show🎊🎊">
+                        <span class="hidden-mobile">「新春创意」用喜庆的音乐送自己一场音乐烟花show🎊🎊</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+    <div id="giscus" class="giscus"></div>
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#giscus', function() {
+        var options = {"repo":"moewang0321/moewang0321.github.io","repo-id":"MDEwOlJlcG9zaXRvcnkyMDEyNDI0NTY=","category":"Show and tell","category-id":"DIC_kwDOC_63WM4CUMsH","theme-light":"light_protanopia","theme-dark":"dark_dimmed","mapping":"pathname","reactions-enabled":1,"emit-metadata":1,"input-position":"top","loading":"lazy","lang":"zh-CN"};
+        var attributes = {};
+        for (let option in options) {
+          if (!option.startsWith('theme-')) {
+            var key = option.startsWith('data-') ? option : 'data-' + option;
+            attributes[key] = options[option];
+          }
+        }
+        var light = 'light_protanopia';
+        var dark = 'dark_dimmed';
+        window.GiscusThemeLight = light;
+        window.GiscusThemeDark = dark;
+        attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
+        for (let attribute in attributes) {
+          var value = attributes[attribute];
+          if (value === undefined || value === null || value === '') {
+            delete attributes[attribute];
+          }
+        }
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('crossorigin', 'anonymous');
+        for (let attribute in attributes) {
+          s.setAttribute(attribute, attributes[attribute]);
+        }
+        var ss = document.getElementsByTagName('script');
+        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+        e.parentNode.insertBefore(s, e.nextSibling);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
