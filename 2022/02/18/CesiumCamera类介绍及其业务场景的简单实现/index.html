@@ -1,0 +1,879 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Moe Wang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前言在二维地图中，我们只需要提供经纬度坐标即可定位到指定地点，而在三维世界中，经纬度（即二维坐标系）是无法描述一个要素的位置，所以需要使用笛卡尔坐标系来描述空间要素的位置。具体介绍这里不啰嗦，在之前的文章中已经大致介绍过，这篇主要来讲解一下 camera 相关参数及利用camera能够做出的效果及其实现思路。 camera我在 blender 中截了一张图模拟我们的相机对象，球体便是 cesium">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cesium | Camera类介绍及其业务场景的简单实现">
+<meta property="og:url" content="https://moewang0321.github.io/2022/02/18/CesiumCamera%E7%B1%BB%E4%BB%8B%E7%BB%8D%E5%8F%8A%E5%85%B6%E4%B8%9A%E5%8A%A1%E5%9C%BA%E6%99%AF%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/index.html">
+<meta property="og:site_name" content="moe_大杂烩">
+<meta property="og:description" content="前言在二维地图中，我们只需要提供经纬度坐标即可定位到指定地点，而在三维世界中，经纬度（即二维坐标系）是无法描述一个要素的位置，所以需要使用笛卡尔坐标系来描述空间要素的位置。具体介绍这里不啰嗦，在之前的文章中已经大致介绍过，这篇主要来讲解一下 camera 相关参数及利用camera能够做出的效果及其实现思路。 camera我在 blender 中截了一张图模拟我们的相机对象，球体便是 cesium">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a5bc4008246e44cf842c81abf0d6e450~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/55c8090699a54434b4ce02972330d8e5~tplv-k3u1fbpfcp-watermark.image?">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/49726e433226456dbd37b1698651a302~tplv-k3u1fbpfcp-watermark.image?">
+<meta property="og:image" content="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f810946bd4684afe8f5e655515b295ae~tplv-k3u1fbpfcp-watermark.image?">
+<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a8daefe2cf1f45eea55a650dff540f57~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4cfd676500e9480986c7541603f6730b~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1599d988afc7416f9335d9d62cd1d88b~tplv-k3u1fbpfcp-watermark.image">
+<meta property="article:published_time" content="2022-02-18T03:13:21.000Z">
+<meta property="article:modified_time" content="2023-02-16T00:26:48.021Z">
+<meta property="article:author" content="Moe Wang">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="Cesium">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a5bc4008246e44cf842c81abf0d6e450~tplv-k3u1fbpfcp-watermark.image">
+  
+  
+  
+  <title>Cesium | Camera类介绍及其业务场景的简单实现 - moe_大杂烩</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"moewang0321.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>moe_大杂烩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Cesium | Camera类介绍及其业务场景的简单实现"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-02-18 11:13" pubdate>
+          2022年2月18日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          60 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Cesium | Camera类介绍及其业务场景的简单实现</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在二维地图中，我们只需要提供经纬度坐标即可定位到指定地点，而在三维世界中，经纬度（即二维坐标系）是无法描述一个要素的位置，所以需要使用笛卡尔坐标系来描述空间要素的位置。具体介绍这里不啰嗦，在<a target="_blank" rel="noopener" href="https://juejin.cn/post/6955011037070360589#heading-3">之前的文章</a>中已经大致介绍过，这篇主要来讲解一下 camera 相关参数及利用camera能够做出的效果及其实现思路。</p>
+<h1 id="camera"><a href="#camera" class="headerlink" title="camera"></a>camera</h1><p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a5bc4008246e44cf842c81abf0d6e450~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="image.png"><br>我在 blender 中截了一张图模拟我们的相机对象，球体便是 cesium 的地球 🌏，个人觉得是很生动形象的。有助于我们了解相机的视角，方便后续讲解调整相机的相关参数。</p>
+<p>官网的 api 中是这么介绍的：<code>相机类由位置、方向和视锥体定义。 视锥体(viewing frustum)由6个(上、下、左、右、近、远)平面限定，每个平面可 由Cartesian4对象表示，其中x，y和z分量定义垂直于平面的单位向量，w分量是平面距原点/相机位置的距离。</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javaScript"><span class="hljs-comment">//创建相机对象。</span><br><span class="hljs-keyword">var</span> camera = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">Camera</span>(scene);<br>camera.<span class="hljs-property">position</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">Cartesian3</span>();<br>camera.<span class="hljs-property">direction</span> = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartesian3</span>.<span class="hljs-title function_">negate</span>(<span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartesian3</span>.<span class="hljs-property">UNIT_Z</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">Cartesian3</span>());<br>camera.<span class="hljs-property">up</span> = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartesian3</span>.<span class="hljs-title function_">clone</span>(<span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartesian3</span>.<span class="hljs-property">UNIT_Y</span>);<br>camera.<span class="hljs-property">frustum</span>.<span class="hljs-property">fov</span> = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Math</span>.<span class="hljs-property">PI_OVER_THREE</span>;<br>camera.<span class="hljs-property">frustum</span>.<span class="hljs-property">near</span> = <span class="hljs-number">1.0</span>;<br>camera.<span class="hljs-property">frustum</span>.<span class="hljs-property">far</span> = <span class="hljs-number">2.0</span>;<br></code></pre></td></tr></table></figure>
+
+<p>说的什么鸟语，目前我们不需要了解这么复杂的自定义实现，只需要专注于它给我们提供的变换视角方法即可！</p>
+<h2 id="操作-camera"><a href="#操作-camera" class="headerlink" title="操作 camera"></a>操作 camera</h2><p>cesium 中提供了多种方式对相机进行操作：<code>setView</code>、<code>flyTo</code>和<code>lookAt</code>,主要介绍一下这三种方式的使用及异同</p>
+<h3 id="setView-options"><a href="#setView-options" class="headerlink" title="setView(options)"></a>setView(options)</h3><p><code>viewer.camera.setView(options)</code></p>
+<p>设置相机位置、方向和变换。</p>
+<p>opitons<code>&lt;Object&gt;</code>参数列表：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>destination</td>
+<td>Cartesian3 | Rectangle</td>
+<td>相机在 wgs84 坐标系中的最终位置，或自顶向下视图可见的矩形区域</td>
+</tr>
+<tr>
+<td>orientation</td>
+<td>Object</td>
+<td>包含方位（direction），上方向（up）及方位角（heading），仰角（pitch），滚动角（roll）属性的对象</td>
+</tr>
+<tr>
+<td>endTransform</td>
+<td>Matrix4</td>
+<td>相机参考坐标系的变换矩阵</td>
+</tr>
+<tr>
+<td>convert</td>
+<td>Boolean</td>
+<td>Whether to convert the destination from world cool。(这参数我也不知道干嘛的……)</td>
+</tr>
+</tbody></table>
+<p>用法：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs javaScript"><span class="hljs-comment">// 1. 通过top-down视图设置位置。</span><br>viewer.<span class="hljs-property">camera</span>.<span class="hljs-title function_">setView</span>(&#123;<br>    destination : <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartesian3</span>.<span class="hljs-title function_">fromDegrees</span>(-<span class="hljs-number">117.16</span>, <span class="hljs-number">32.71</span>, <span class="hljs-number">15000.0</span>)<br>&#125;);<br><br><span class="hljs-comment">// 2 通过方位角、俯仰角、滚动角设置视图。</span><br>viewer.<span class="hljs-property">camera</span>.<span class="hljs-title function_">setView</span>(&#123;<br>    destination : cartesianPosition,<br>    <span class="hljs-attr">orientation</span>: &#123;<br>        heading : <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Math</span>.<span class="hljs-title function_">toRadians</span>(<span class="hljs-number">90.0</span>), <span class="hljs-comment">// east, default value is 0.0 (north)</span><br>        pitch : <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Math</span>.<span class="hljs-title function_">toRadians</span>(-<span class="hljs-number">90</span>),    <span class="hljs-comment">// default value (looking down)</span><br>        roll : <span class="hljs-number">0.0</span>                             <span class="hljs-comment">// default value</span><br>    &#125;<br>&#125;);<br><br><span class="hljs-comment">// 3. 相机空间位置不变，改变方位角、俯仰角和滚动角。.</span><br>viewer.<span class="hljs-property">camera</span>.<span class="hljs-title function_">setView</span>(&#123;<br>    <span class="hljs-attr">orientation</span>: &#123;<br>        heading : <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Math</span>.<span class="hljs-title function_">toRadians</span>(<span class="hljs-number">90.0</span>), <span class="hljs-comment">// east, default value is 0.0 (north)</span><br>        pitch : <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Math</span>.<span class="hljs-title function_">toRadians</span>(-<span class="hljs-number">90</span>),    <span class="hljs-comment">// default value (looking down)</span><br>        roll : <span class="hljs-number">0.0</span>                             <span class="hljs-comment">// default value</span><br>    &#125;<br>&#125;);<br><br><br><span class="hljs-comment">// 4. 通过自顶向下视图查看矩形。</span><br>viewer.<span class="hljs-property">camera</span>.<span class="hljs-title function_">setView</span>(&#123;<br>    destination : <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Rectangle</span>.<span class="hljs-title function_">fromDegrees</span>(west, south, east, north)<br>&#125;);<br><br><span class="hljs-comment">// 5. 通过使用单位向量的方向(orientation)设置相机位置。</span><br>viewer.<span class="hljs-property">camera</span>.<span class="hljs-title function_">setView</span>(&#123;<br>    destination : <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartesian3</span>.<span class="hljs-title function_">fromDegrees</span>(-<span class="hljs-number">122.19</span>, <span class="hljs-number">46.25</span>, <span class="hljs-number">5000.0</span>),<br>    orientation : &#123;<br>        direction : <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">Cartesian3</span>(-<span class="hljs-number">0.04231243104240401</span>, -<span class="hljs-number">0.20123236049443421</span>, -<span class="hljs-number">0.97862924300734</span>),<br>        up : <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">Cartesian3</span>(-<span class="hljs-number">0.47934589305293746</span>, -<span class="hljs-number">0.8553216253114552</span>, <span class="hljs-number">0.1966022179118339</span>)<br>    &#125;<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<h3 id="flyTo-options"><a href="#flyTo-options" class="headerlink" title="flyTo(options)"></a>flyTo(options)</h3><p><code>viewer.camera.flyTo(options)</code></p>
+<p>相机从当前位置飞行到新的空间位置。</p>
+<p>opitons<code>&lt;Object&gt;</code>参数列表（其余参数请查阅<a target="_blank" rel="noopener" href="https://cesium.com/learn/cesiumjs/ref-doc/Camera.html">官方文档</a>）：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>destination</td>
+<td>Cartesian3 | Rectangle</td>
+<td>相机在 wgs84 坐标系中的最终位置，或自顶向下视图可见的矩形区域</td>
+</tr>
+<tr>
+<td>orientation</td>
+<td>Object</td>
+<td>包含方位（direction），上方向（up）及方位角（heading），仰角（pitch），滚动角（roll）属性的对象</td>
+</tr>
+<tr>
+<td>duration</td>
+<td>Number</td>
+<td>飞行持续时间（以秒为单位）。如果省略，由飞行距离计算合理的持续时间。</td>
+</tr>
+<tr>
+<td>complete</td>
+<td>Camera~FlightCompleteCallback</td>
+<td>飞行完成时执行的功能。</td>
+</tr>
+<tr>
+<td>cancel</td>
+<td>Camera~FlightCompleteCallback</td>
+<td>飞行取消时执行的功能。</td>
+</tr>
+<tr>
+<td>endTransform</td>
+<td>Matrix4</td>
+<td>飞行完成时相机将处于的参考系的变换矩阵。</td>
+</tr>
+<tr>
+<td>maximumHeight</td>
+<td>Number</td>
+<td>飞行中的最大高度。</td>
+</tr>
+<tr>
+<td>easingFunction</td>
+<td>EasingFunction | EasingFunction~Callback</td>
+<td>释放时调用功能。</td>
+</tr>
+<tr>
+<td>……</td>
+<td>……</td>
+<td>……</td>
+</tr>
+</tbody></table>
+<p>用法：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs javaScript"><span class="hljs-comment">// 1. 飞向通过top-down视图表示的位置</span><br>viewer.<span class="hljs-property">camera</span>.<span class="hljs-title function_">flyTo</span>(&#123;<br>    destination : <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartesian3</span>.<span class="hljs-title function_">fromDegrees</span>(-<span class="hljs-number">117.16</span>, <span class="hljs-number">32.71</span>, <span class="hljs-number">15000.0</span>)<br>&#125;);<br><br><span class="hljs-comment">// 2. 飞向通过top-down视图表示的矩形</span><br>viewer.<span class="hljs-property">camera</span>.<span class="hljs-title function_">flyTo</span>(&#123;<br>    destination : <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Rectangle</span>.<span class="hljs-title function_">fromDegrees</span>(west, south, east, north)<br>&#125;);<br><br><span class="hljs-comment">// 3. 飞向利用单位向量表示方向(orientatin)的位置</span><br>viewer.<span class="hljs-property">camera</span>.<span class="hljs-title function_">flyTo</span>(&#123;<br>    destination : <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartesian3</span>.<span class="hljs-title function_">fromDegrees</span>(-<span class="hljs-number">122.19</span>, <span class="hljs-number">46.25</span>, <span class="hljs-number">5000.0</span>),<br>    orientation : &#123;<br>        direction : <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">Cartesian3</span>(-<span class="hljs-number">0.04231243104240401</span>, -<span class="hljs-number">0.20123236049443421</span>, -<span class="hljs-number">0.97862924300734</span>),<br>        up : <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">Cartesian3</span>(-<span class="hljs-number">0.47934589305293746</span>, -<span class="hljs-number">0.8553216253114552</span>, <span class="hljs-number">0.1966022179118339</span>)<br>    &#125;<br>&#125;);<br><br><span class="hljs-comment">// 4. 飞向利用方位角(heading)、俯仰角(pitch)、滚动角(roll)表示方向(orientatin)的位置</span><br>viewer.<span class="hljs-property">camera</span>.<span class="hljs-title function_">flyTo</span>(&#123;<br>    destination : <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartesian3</span>.<span class="hljs-title function_">fromDegrees</span>(-<span class="hljs-number">122.19</span>, <span class="hljs-number">46.25</span>, <span class="hljs-number">5000.0</span>),<br>    orientation : &#123;<br>        heading : <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Math</span>.<span class="hljs-title function_">toRadians</span>(<span class="hljs-number">175.0</span>),<br>        pitch : <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Math</span>.<span class="hljs-title function_">toRadians</span>(-<span class="hljs-number">35.0</span>),<br>        roll : <span class="hljs-number">0.0</span><br>    &#125;<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<h3 id="lookAt-target-offset"><a href="#lookAt-target-offset" class="headerlink" title="lookAt(target,offset)"></a>lookAt(target,offset)</h3><p>通过目标(target)和偏移(offset)设置相机位置、方向。 目标(target)以世界坐标方式表示；偏移(offset)是在以目标为中心的本地“东-北-上”参考系中的笛卡尔坐标或“方位角/俯仰角/范围（heading/pitch/range）”。 如果偏移(offset)由笛卡尔坐标表示，它表示距离由变换矩阵定义的参考系中心的偏移量。 如果偏移(offset)由“heading/pitch/range”表示，方位角(heading)和俯仰角(pitch)的角度由根据变换矩阵定义的参考系确定，方位角(heading)从 y 轴开始朝向 x 轴增加，俯仰角(pitch)为从 xy 平面的旋转角度，正的俯仰角位于平面下方，负的俯仰角位于平面上方。 范围(range)为距中心点的距离。在 2D 中必须为自上而下视图，相机位于俯视目标的上方，目标上方的高度值是偏移量的大小。方位角根据偏移确定，如果不能从偏移确定方位角，则方位角为北方向。</p>
+<p><code>viewer.camera.lookAt(target,offset)</code></p>
+<p>设置相机位置、方向和变换。</p>
+<p>opitons<code>&lt;Object&gt;</code>参数列表：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>target</td>
+<td>Cartesian3</td>
+<td>目标在世界坐标中的空间位置。</td>
+</tr>
+<tr>
+<td>offset</td>
+<td>Cartesian3 | HeadingPitchRange</td>
+<td>距以目标为中心的本地“东-北-上”参考系的偏移。</td>
+</tr>
+</tbody></table>
+<p>用法：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javaScript"><span class="hljs-comment">// 1. 利用笛卡尔坐标设置偏移</span><br><span class="hljs-keyword">var</span> center = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartesian3</span>.<span class="hljs-title function_">fromDegrees</span>(-<span class="hljs-number">98.0</span>, <span class="hljs-number">40.0</span>);<br>viewer.<span class="hljs-property">camera</span>.<span class="hljs-title function_">lookAt</span>(center, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">Cartesian3</span>(<span class="hljs-number">0.0</span>, -<span class="hljs-number">4790000.0</span>, <span class="hljs-number">3930000.0</span>));<br><br><span class="hljs-comment">// 2. 利用HeadingPitchRange设置偏移</span><br><span class="hljs-keyword">var</span> center = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartesian3</span>.<span class="hljs-title function_">fromDegrees</span>(-<span class="hljs-number">72.0</span>, <span class="hljs-number">40.0</span>);<br><span class="hljs-keyword">var</span> heading = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Math</span>.<span class="hljs-title function_">toRadians</span>(<span class="hljs-number">50.0</span>);<br><span class="hljs-keyword">var</span> pitch = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Math</span>.<span class="hljs-title function_">toRadians</span>(-<span class="hljs-number">20.0</span>);<br><span class="hljs-keyword">var</span> range = <span class="hljs-number">5000.0</span>;<br>viewer.<span class="hljs-property">camera</span>.<span class="hljs-title function_">lookAt</span>(center, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">HeadingPitchRange</span>(heading, pitch, range));<br></code></pre></td></tr></table></figure>
+
+<h3 id="三者异同"><a href="#三者异同" class="headerlink" title="三者异同"></a>三者异同</h3><p>首先三者基本都是通过调整相机对象的<code>destination</code>和<code>orientation</code>达到定位到指定位置的目的，不同点在于<code>flyTo</code>是带有动画效果的飞入目的地，其余二者是直接定位到对应位置（如图）接下来我们详细说明一下参数中的方位角/俯仰角/滚动角，因为这和我们想要实现的效果息息相关。</p>
+<table>
+<thead>
+<tr>
+<th>setView</th>
+<th>flyTo</th>
+<th>lookAt</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/55c8090699a54434b4ce02972330d8e5~tplv-k3u1fbpfcp-watermark.image?" srcset="/img/loading.gif" lazyload width="100%"></td>
+<td><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/49726e433226456dbd37b1698651a302~tplv-k3u1fbpfcp-watermark.image?" srcset="/img/loading.gif" lazyload width="100%"></td>
+<td><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f810946bd4684afe8f5e655515b295ae~tplv-k3u1fbpfcp-watermark.image?" srcset="/img/loading.gif" lazyload width="100%"></td>
+</tr>
+</tbody></table>
+<h2 id="Heading-Pitch-Roll"><a href="#Heading-Pitch-Roll" class="headerlink" title="Heading/Pitch/Roll"></a>Heading/Pitch/Roll</h2><p>上文中已经对这三个角进行了中文注释</p>
+<ul>
+<li><p>Heading：方位角</p>
+</li>
+<li><p>Pitch：俯仰角</p>
+</li>
+<li><p>Roll：滚动角</p>
+</li>
+</ul>
+<p>现在以你聪明的小脑袋瓜为中心，heading类似于左右环顾也就是左右方向的改变，pitch相当于低头抬头也就是上下方向的改变，而roll可以想象你在侧翻，而你的头始终朝前看，滚动一圈也就相当于roll了360°。</p>
+<p>下图直观的展现了视角与三个角的关系：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a8daefe2cf1f45eea55a650dff540f57~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<h3 id="HeadingPitchRange与HeadingPitchRoll"><a href="#HeadingPitchRange与HeadingPitchRoll" class="headerlink" title="HeadingPitchRange与HeadingPitchRoll"></a>HeadingPitchRange与HeadingPitchRoll</h3><p>这两者都是用来定义一个局部使用的角对象，二者区别在HeadingPitchRoll主要用在模型变换上，而HeadingPitchRange更多用于相机、视角相关操作的时候。下边简单将二者有区别的参数进行展示。</p>
+<ul>
+<li><p>range：代表一个半径值，也就是锁定了相机距离目标的距离。</p>
+</li>
+<li><p>roll：滚动分量（以弧度为单位）</p>
+</li>
+</ul>
+<h1 id="实战案例"><a href="#实战案例" class="headerlink" title="实战案例"></a>实战案例</h1><p>相机能做的效果非常多，而最经典的因该就是绕点飞行和漫游了，接下俩就两个实现效果来简单实现。</p>
+<h2 id="绕点飞行"><a href="#绕点飞行" class="headerlink" title="绕点飞行"></a>绕点飞行</h2><p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4cfd676500e9480986c7541603f6730b~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="绕点飞行.gif"></p>
+<p>我们首先创建一个点将绕点飞行的中心点可视化出来，不多介绍了就是基本的创建实体：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javaScript"><span class="hljs-keyword">var</span> entity = <span class="hljs-variable language_">this</span>.<span class="hljs-property">GLOBAL</span>.<span class="hljs-property">Viewer</span>.<span class="hljs-property">entities</span>.<span class="hljs-title function_">add</span>(&#123;<br>    <span class="hljs-attr">position</span>: <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Cartesian3</span>.<span class="hljs-title function_">fromDegrees</span>(<span class="hljs-number">116.391935</span>, <span class="hljs-number">39.907123</span>),<br>    <span class="hljs-attr">point</span>: &#123;<br>        <span class="hljs-attr">color</span>: <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Color</span>.<span class="hljs-property">YELLOW</span>,<br>        <span class="hljs-attr">pixelSize</span>: <span class="hljs-number">10</span>,<br>    &#125;,<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>接下来利用<code>zoomTo</code>将视角定位到我们创建的点，在<code>then</code>中利用<code>onTick</code>绑定一个每帧运行的方法，在方法中调整我们的heading（方位角），实现绕着点位旋转：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs javaScript"><span class="hljs-keyword">var</span> heading = <span class="hljs-number">0</span> <span class="hljs-comment">// 朝向</span><br><span class="hljs-keyword">var</span> offset = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">HeadingPitchRange</span>(<br>    <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Math</span>.<span class="hljs-title function_">toRadians</span>(heading),<br>    -<span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Math</span>.<span class="hljs-title function_">toRadians</span>(<span class="hljs-number">30</span>),<br>    <span class="hljs-number">1000</span><br>)<br><span class="hljs-variable language_">this</span>.<span class="hljs-property">GLOBAL</span>.<span class="hljs-property">Viewer</span>.<span class="hljs-title function_">zoomTo</span>(entity, offset).<span class="hljs-title function_">then</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">GLOBAL</span>.<span class="hljs-property">Viewer</span>.<span class="hljs-property">clock</span>.<span class="hljs-property">onTick</span>.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>        heading += <span class="hljs-number">0.1</span><br>        offset = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">HeadingPitchRange</span>(<br>        <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Math</span>.<span class="hljs-title function_">toRadians</span>(heading),<br>        -<span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Math</span>.<span class="hljs-title function_">toRadians</span>(<span class="hljs-number">30</span>),<br>        <span class="hljs-number">1000</span><br>        )<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">GLOBAL</span>.<span class="hljs-property">Viewer</span>.<span class="hljs-title function_">zoomTo</span>(entity, offset)<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">GLOBAL</span>.<span class="hljs-property">Viewer</span>.<span class="hljs-property">scene</span>.<span class="hljs-property">screenSpaceCameraController</span>.<span class="hljs-property">enableInputs</span> = <span class="hljs-literal">false</span><br>    &#125;)<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<h2 id="第一人称视角漫游"><a href="#第一人称视角漫游" class="headerlink" title="第一人称视角漫游"></a>第一人称视角漫游</h2><p>在之前的<a target="_blank" rel="noopener" href="https://juejin.cn/post/6972075984291889183">文章【Cesium | 利用Property机制实现轨迹回放】</a>中我们已经实现了轨迹回放，现在我们可以利用相机和变换来实现固定视角。</p>
+<p>在<code>addRoamLine</code>方法中，我们添加固定视角方法：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs javaScript"><span class="hljs-comment">// 添加漫游路线</span><br><span class="hljs-title function_">addRoamLine</span>(<span class="hljs-params">positions, speed</span>) &#123;<br>    <span class="hljs-comment">// ……</span><br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">viewer</span>.<span class="hljs-property">trackedEntity</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">animateEntity</span>;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">isFirstPerson</span>) &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">clockEvent</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">viewer</span>.<span class="hljs-property">clock</span>.<span class="hljs-property">onTick</span>.<span class="hljs-title function_">addEventListener</span>(<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">firstPersonEvent</span>()<br>        );<br>    &#125;<br>    <span class="hljs-comment">// ……</span><br>&#125;<br><span class="hljs-title function_">firstPersonEvent</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-function">() =&gt;</span> &#123;<br>        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">animateEntity</span>) <span class="hljs-keyword">return</span>;<br>        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">viewer</span>.<span class="hljs-property">trackedEntity</span>) <span class="hljs-keyword">return</span>;<br><br>        <span class="hljs-keyword">let</span> center = <span class="hljs-variable language_">this</span>.<span class="hljs-property">animateEntity</span>.<span class="hljs-property">position</span>.<span class="hljs-title function_">getValue</span>(<br>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">viewer</span>.<span class="hljs-property">clock</span>.<span class="hljs-property">currentTime</span><br>        );<br>        <span class="hljs-keyword">let</span> orientation = <span class="hljs-variable language_">this</span>.<span class="hljs-property">animateEntity</span>.<span class="hljs-property">orientation</span>.<span class="hljs-title function_">getValue</span>(<br>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">viewer</span>.<span class="hljs-property">clock</span>.<span class="hljs-property">currentTime</span><br>        );<br>        <span class="hljs-keyword">if</span> (center) &#123;<br>        <span class="hljs-keyword">let</span> transform = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Transforms</span>.<span class="hljs-title function_">eastNorthUpToFixedFrame</span>(center);<br>        transform = <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Matrix4</span>.<span class="hljs-title function_">fromRotationTranslation</span>(<br>            <span class="hljs-title class_">Cesium</span>.<span class="hljs-property">Matrix3</span>.<span class="hljs-title function_">fromQuaternion</span>(orientation),<br>            center<br>        );<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">viewer</span>.<span class="hljs-property">camera</span>.<span class="hljs-title function_">lookAtTransform</span>(<br>            transform,<br>            <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cesium</span>.<span class="hljs-title class_">Cartesian3</span>(-<span class="hljs-number">100</span>, <span class="hljs-number">0</span>, <span class="hljs-number">50</span>)<br>        );<br>        &#125;<br>    &#125;;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>关于transform相关的知识等我统一梳理一下在分享吧，本来想在这篇文章里写，写着写着感觉自己的理解还不够到位……太弟弟了/(ㄒoㄒ)/~~</p>
+</blockquote>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1599d988afc7416f9335d9d62cd1d88b~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="第一人称视角漫游.gif"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Cesium/" class="category-chain-item">Cesium</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/JavaScript/">#JavaScript</a>
+      
+        <a href="/tags/Cesium/">#Cesium</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Cesium | Camera类介绍及其业务场景的简单实现</div>
+      <div>https://moewang0321.github.io/2022/02/18/CesiumCamera类介绍及其业务场景的简单实现/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Moe Wang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年2月18日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/06/23/%E5%B9%B4%E4%B8%AD%E6%80%BB%E7%BB%93/" title="2022年中总结 | 拒绝摆烂！卷人想唠唠2022前半年">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">2022年中总结 | 拒绝摆烂！卷人想唠唠2022前半年</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/10/%F0%9F%8F%82%E6%8A%A2%E4%B8%8D%E5%88%B0%E5%86%B0%E5%A2%A9%E5%A2%A9%EF%BC%9F%E5%BF%AB%E7%94%A8canvas%E7%94%BB%E4%B8%80%E4%B8%AA%E8%B0%81%E4%B9%9F%E6%8A%A2%E4%B8%8D%E8%B5%B0%E7%9A%84%E5%86%B0%E5%A2%A9%E5%A2%A9%E5%90%A7%EF%BC%81/" title="🏂抢不到冰墩墩？快用canvas画一个谁也抢不走的冰墩墩吧！">
+                        <span class="hidden-mobile">🏂抢不到冰墩墩？快用canvas画一个谁也抢不走的冰墩墩吧！</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+    <div id="giscus" class="giscus"></div>
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#giscus', function() {
+        var options = {"repo":"moewang0321/moewang0321.github.io","repo-id":"MDEwOlJlcG9zaXRvcnkyMDEyNDI0NTY=","category":"Show and tell","category-id":"DIC_kwDOC_63WM4CUMsH","theme-light":"light_protanopia","theme-dark":"dark_dimmed","mapping":"pathname","reactions-enabled":1,"emit-metadata":1,"input-position":"top","loading":"lazy","lang":"zh-CN"};
+        var attributes = {};
+        for (let option in options) {
+          if (!option.startsWith('theme-')) {
+            var key = option.startsWith('data-') ? option : 'data-' + option;
+            attributes[key] = options[option];
+          }
+        }
+        var light = 'light_protanopia';
+        var dark = 'dark_dimmed';
+        window.GiscusThemeLight = light;
+        window.GiscusThemeDark = dark;
+        attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
+        for (let attribute in attributes) {
+          var value = attributes[attribute];
+          if (value === undefined || value === null || value === '') {
+            delete attributes[attribute];
+          }
+        }
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('crossorigin', 'anonymous');
+        for (let attribute in attributes) {
+          s.setAttribute(attribute, attributes[attribute]);
+        }
+        var ss = document.getElementsByTagName('script');
+        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+        e.parentNode.insertBefore(s, e.nextSibling);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

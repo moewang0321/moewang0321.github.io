@@ -1,0 +1,756 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Moe Wang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一图流总结2022上半年   为什么今年想写一篇年中总结 首先自我检讨，这半点由于工作方向的转变和大量的工作和学习安排，导致我并没有太多的时间去薅掘金的羊毛写文输出  兜兜转转，在掘金写文也一年时间了，真正开始输出是在去年6月的第一次更文活动，当时研究方向主要是3维gis和智慧城市方向，所以输出了一系列Cesium相关的文章，也认识到了一众同样在Cesium领域内摸爬滚打的小伙伴，去年对三维gi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2022年中总结 | 拒绝摆烂！卷人想唠唠2022前半年">
+<meta property="og:url" content="https://moewang0321.github.io/2022/06/23/%E5%B9%B4%E4%B8%AD%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="moe_大杂烩">
+<meta property="og:description" content="一图流总结2022上半年   为什么今年想写一篇年中总结 首先自我检讨，这半点由于工作方向的转变和大量的工作和学习安排，导致我并没有太多的时间去薅掘金的羊毛写文输出  兜兜转转，在掘金写文也一年时间了，真正开始输出是在去年6月的第一次更文活动，当时研究方向主要是3维gis和智慧城市方向，所以输出了一系列Cesium相关的文章，也认识到了一众同样在Cesium领域内摸爬滚打的小伙伴，去年对三维gi">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/010e46eab8bd40869c0e0815d12df2d3~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/04a56f9128e34b29a9744d84a0c9e12b~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/39fdde418d61421c8cdda40551806932~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3ac69635b188405e950db826f4a07798~tplv-k3u1fbpfcp-watermark.image">
+<meta property="article:published_time" content="2022-06-23T04:44:03.000Z">
+<meta property="article:modified_time" content="2023-02-16T00:30:42.656Z">
+<meta property="article:author" content="Moe Wang">
+<meta property="article:tag" content="总结，年中">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/010e46eab8bd40869c0e0815d12df2d3~tplv-k3u1fbpfcp-watermark.image">
+  
+  
+  
+  <title>2022年中总结 | 拒绝摆烂！卷人想唠唠2022前半年 - moe_大杂烩</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"moewang0321.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>moe_大杂烩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="2022年中总结 | 拒绝摆烂！卷人想唠唠2022前半年"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-23 12:44" pubdate>
+          2022年6月23日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          18 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">2022年中总结 | 拒绝摆烂！卷人想唠唠2022前半年</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <blockquote>
+<p>一图流总结2022上半年</p>
+</blockquote>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/010e46eab8bd40869c0e0815d12df2d3~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="f45f0de5c0b67cb23d7b12f9053bd4a.jpg"></p>
+<h3 id="为什么今年想写一篇年中总结"><a href="#为什么今年想写一篇年中总结" class="headerlink" title="为什么今年想写一篇年中总结"></a>为什么今年想写一篇年中总结</h3><blockquote>
+<p>首先自我检讨，这半点由于工作方向的转变和大量的工作和学习安排，导致我并没有太多的时间去<del>薅掘金的羊毛</del>写文输出</p>
+</blockquote>
+<p>兜兜转转，在掘金写文也一年时间了，真正开始输出是在去年6月的第一次更文活动，当时研究方向主要是3维gis和智慧城市方向，所以输出了一系列Cesium相关的文章，也认识到了一众同样在Cesium领域内摸爬滚打的小伙伴，去年对三维gis和智慧城市的研究成果也已应用在项目中，所以今年年初的时候我把方向定位到了node相关后端开发的部分，用nest从0到1搭建了一套带有单表、多表关联增删改查的后端框架，接着三月得到一个做兼容mysql的数据库开发的机会，投身c语言的怀抱中。这半年可以说是从深度和广度双向的提升了自己，所以想唠一唠这半年我到底干了啥。</p>
+<h3 id="生活"><a href="#生活" class="headerlink" title="生活"></a>生活</h3><h4 id="爱乐之人"><a href="#爱乐之人" class="headerlink" title="爱乐之人"></a>爱乐之人</h4><ul>
+<li><p>捡起了多年不弹的🎸</p>
+</li>
+<li><p>为了平衡自己左右脑而去摸了架子鼓</p>
+</li>
+<li><p>网易云成功九级 老嘻哈的倔强</p>
+</li>
+</ul>
+<h4 id="现实爱情与理想爱情之间的万丈沟壑"><a href="#现实爱情与理想爱情之间的万丈沟壑" class="headerlink" title="现实爱情与理想爱情之间的万丈沟壑"></a>现实爱情与理想爱情之间的万丈沟壑</h4><p>嗯……4年的对象去年因为现实问题和平分手了，当时为她写了首歌纪念一下校园时期的美好恋爱。</p>
+<p>今年遇到了喜欢的人，是微风，是晚霞，是心跳，是无可替代。</p>
+<p>over！</p>
+<h3 id="写文"><a href="#写文" class="headerlink" title="写文"></a>写文</h3><p>今年上半年确实是没怎么写文，除了参加了一个新春的创意活动，整理了两篇Cesium相关的文章，就一直没有产出了，没有时间是一个原因，还有一个原因是感觉这半年在生活中自己变懒，不够自律了，需要警醒。</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/7051372704787595277">「新春创意」写个福字送给新年的自己吧！</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/7051459515887616036">「新春创意」用喜庆的音乐送自己一场音乐烟花show🎊🎊</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/7053721788567519239">「新春创意」快打开摄像头召唤属于你的虎年吉祥物</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/7063072999074693150">🏂抢不到冰墩墩？快用canvas画一个谁也抢不走的冰墩墩吧！</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/7065885596295626788">Cesium | Camera类介绍及其业务场景的简单实现</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/7068204674066677767">Cesium | Ceisum双球体鹰眼图实现（Property与Camera实现）</a></p>
+</li>
+</ul>
+<h3 id="工作"><a href="#工作" class="headerlink" title="工作"></a>工作</h3><h4 id="前端转后端的两个月"><a href="#前端转后端的两个月" class="headerlink" title="前端转后端的两个月"></a>前端转后端的两个月</h4><blockquote>
+<p>一个字 卷！</p>
+</blockquote>
+<p>首先，我不得不说，前端开发的思维方式和后端开发的思维方式上有着极大的不同，数据库设计啊，ioc，aop啊之类的，这种思维方式的转变其实还是挺煎熬的一开始，但转变过来以后你会发现你对待问题思考的维度会扩增，解决方案也会更加健壮。</p>
+<p>话说回来，因为有过express和koa的技术基础，所以我当时没有选择去回归java的怀抱，而是想用node搭建一套后端框架，正好在掘金看到了<a target="_blank" rel="noopener" href="https://juejin.cn/post/7032079740982788132">学完这篇 Nest.js 实战，还没入门的来锤我！(长文预警)
+</a>,于是乎我决定用nest去从0到1搭建一套后端基本框架，并在公司的小型项目中投入使用。</p>
+<p>在掘金看了很多文章，也在社区看了很多大佬的成品，最后确立了nest+sequelize+jwt的技术选型，然后开始了自己闷头摸索的一个多月，终于在三月初成功搭建了一套基本的后端框架。但还没投入使用我就……</p>
+<h4 id="再转数据库开发至今"><a href="#再转数据库开发至今" class="headerlink" title="再转数据库开发至今"></a>再转数据库开发至今</h4><blockquote>
+<p>计划没有变化快</p>
+</blockquote>
+<p>三月份的时候公司有一个开发兼容数据库的坑位，大致了解后得知是使用C语言在postgres的基础上做mysql的兼容，开始并没有想法去转到这个方向，一是想呆在自己的舒适区，二是C语言大学真的学的不好……差点挂科。结果后来被贩卖焦虑，同时自己也通过两个月的后端学习知道人的眼界不能局限在自己的舒适区内，所以咬咬牙入坑了。</p>
+<p>差不多3月中旬开始决定进入这个项目后，首先花了小一个月整体复习了一下C，正好公司有C相关的资料，我选的是《C和指针》，因为指针是C语言的核心，也是它最重要的部分（也是我大学没学明白的部分），主要回炉重造了以下几个方面：</p>
+<ul>
+<li><p>指针</p>
+</li>
+<li><p>数组</p>
+</li>
+<li><p>结构和联合</p>
+</li>
+<li><p>内存分配</p>
+</li>
+<li><p>结构和指针的结合使用</p>
+</li>
+</ul>
+<p>然后简单的看了一下经典抽象数据类型，比如堆栈、队列、二叉树之类的。</p>
+<p>计划没有变化快，学习的进度还没完成就进入了需求调研和开发的阶段，事实证明果然实战是最好的学习，因为需要对mysql的相关兼容函数以及postgres中相关函数进行充分的调研分析，所以我对mysql和postgres的源码开始了攻坚，找到数据库函数对应的源码，分析它的实现，在其间疯狂的百度了各种C和C++的语法以及使用，对C的理解是突飞猛进的进步。</p>
+<p>题外话，写文档永远是我最头疼的事，而需求文档和测试文档又是项目中不可缺少的一部分。</p>
+<p>放一下我在pg源码和mysql源码中记录的部分标签：<br><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/04a56f9128e34b29a9744d84a0c9e12b~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p>在拜读源码的时候，也不由得吐槽（佩服）mysql的大佬一些对日期时间处理的神操作：<br><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/39fdde418d61421c8cdda40551806932~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="51e04dfeb9a8cb61b0227fec3ba8316.jpg"></p>
+<p>然后到了真正函数的开发阶段，真正头疼的事情来了，因为是基于C开发，很多语法习惯不同，很多操作是没有足够的api支撑的，比如字符串的复杂操作，我总会忍不住的想splice和split，比较字符串相等时总想用<code>===</code>，数字精度超过16位该怎么办，语句的结尾不愿意加分号等等，大到存储问题，小到编码习惯问题，真是折磨得我头秃，但同样的，一步一个🕳也是让人快速成长的方式，至少目前来看，我确实是从一个个问题中趟出来的。</p>
+<p>整体的调研开发比我预计中要顺利的多，而项目也基本到了收尾的阶段。<em>★,°</em>:.☆(￣▽￣)/$:<em>.°★</em> </p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3ac69635b188405e950db826f4a07798~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>上半年过去了，兼容mysql开发的50个日期时间函数也基本收尾，不得不说这半年是我最具有挑战性的半年，也是我成长的半年。下半年也许会回归前端，也许会在数据库开发这条路上渐行渐远，谁又能说的准呢，但有一点不会变，我一定会竭尽所能从掘金进货，立志搬空掘金周边的仓库！</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E4%BA%BA%E7%94%9F%E4%B9%8B%E4%BA%8B/" class="category-chain-item">人生之事</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%80%BB%E7%BB%93%EF%BC%8C%E5%B9%B4%E4%B8%AD/">#总结，年中</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>2022年中总结 | 拒绝摆烂！卷人想唠唠2022前半年</div>
+      <div>https://moewang0321.github.io/2022/06/23/年中总结/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Moe Wang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月23日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/18/CesiumCamera%E7%B1%BB%E4%BB%8B%E7%BB%8D%E5%8F%8A%E5%85%B6%E4%B8%9A%E5%8A%A1%E5%9C%BA%E6%99%AF%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/" title="Cesium | Camera类介绍及其业务场景的简单实现">
+                        <span class="hidden-mobile">Cesium | Camera类介绍及其业务场景的简单实现</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+    <div id="giscus" class="giscus"></div>
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#giscus', function() {
+        var options = {"repo":"moewang0321/moewang0321.github.io","repo-id":"MDEwOlJlcG9zaXRvcnkyMDEyNDI0NTY=","category":"Show and tell","category-id":"DIC_kwDOC_63WM4CUMsH","theme-light":"light_protanopia","theme-dark":"dark_dimmed","mapping":"pathname","reactions-enabled":1,"emit-metadata":1,"input-position":"top","loading":"lazy","lang":"zh-CN"};
+        var attributes = {};
+        for (let option in options) {
+          if (!option.startsWith('theme-')) {
+            var key = option.startsWith('data-') ? option : 'data-' + option;
+            attributes[key] = options[option];
+          }
+        }
+        var light = 'light_protanopia';
+        var dark = 'dark_dimmed';
+        window.GiscusThemeLight = light;
+        window.GiscusThemeDark = dark;
+        attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
+        for (let attribute in attributes) {
+          var value = attributes[attribute];
+          if (value === undefined || value === null || value === '') {
+            delete attributes[attribute];
+          }
+        }
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('crossorigin', 'anonymous');
+        for (let attribute in attributes) {
+          s.setAttribute(attribute, attributes[attribute]);
+        }
+        var ss = document.getElementsByTagName('script');
+        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+        e.parentNode.insertBefore(s, e.nextSibling);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
